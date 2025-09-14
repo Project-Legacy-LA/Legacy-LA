@@ -11,7 +11,7 @@ load_dotenv()
 SUPERUSER_DB = os.getenv('SUPERUSER_DB', 'postgres')
 SUPERUSER_USER = os.getenv('SUPERUSER_USER', 'postgres')
 SUPERUSER_PASSWORD = os.getenv('SUPERUSER_PASSWORD')
-
+ 
 APP_DB_NAME = os.getenv('DB_NAME')
 APP_USER = os.getenv('DB_USER')
 APP_PASSWORD = os.getenv('DB_PASSWORD')

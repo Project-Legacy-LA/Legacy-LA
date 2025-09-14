@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Orpheus Pro";
+  src: local("Orpheus Pro Regular"),
+    url("/src/assets/fonts/Orpheus\ Pro.ttf") format("woff2"),
+    url("/src/assets/fonts/Orpheus\ Pro.ttf") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Orpheus Pro";
+  src: local("Orpheus Pro Bold"),
+    url("/src/assets/fonts/Orpheus\ Pro.ttf") format("woff2"),
+    url("/src/assets/fonts/Orpheus\ Pro.ttf") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root{
+  --ll-font: "Orpheus Pro",
+    "Poppins",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial;
+  --ll-bg-1: #0b3b4a;      /* deep teal */
+  --ll-bg-2: #0f6b5a;      /* greenish teal */
+  --ll-accent: #d9a441;    /* warm gold */
+  --ll-accent-2: #ffd37a;  /* lighter gold for gradients */
+  --ll-text: #f4f7f7;
+  --ll-muted: rgba(199,212,213,0.9);
+
+  /* default page background gray (approx. Legacy Louisiana gray) */
+  --ll-bg-default: #4a4a48;
+
+  /* new safe dark accent color (HSL literal) + derived HSL color */
+  --safeDarkAccent-hsl: 218.18181818, 37.28813559%, 23.1372549%;
+  --safeDarkAccent: hsl(var(--safeDarkAccent-hsl));
+}
+
+/* new utility: apply the site's default gray page background */
+.bg-ll-default {
+  background-color: var(--ll-bg-default);
+  color: var(--ll-text);
+  min-height: 100vh;
+}
+
+.ll-bg{
+  background: radial-gradient(900px 400px at 10% 10%, rgba(13,88,76,0.12), transparent 8%),
+              linear-gradient(135deg, var(--ll-bg-1) 0%, var(--ll-bg-2) 100%);
+  color: var(--ll-text);
+  min-height: 100vh;
+}
+
+.ll-card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.06));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 12px 30px rgba(2,8,10,0.45);
+  backdrop-filter: blur(6px);
+}
+
+
+.ll-text{ color: var(--ll-text) }
+.ll-muted{ color: var(--ll-muted) }
+
+
+.bg-ll-accent{ background: linear-gradient(180deg, var(--ll-accent), var(--ll-accent-2)) }
+.shadow-accent{ box-shadow: 0 8px 18px rgba(217,164,65,0.12) }
+.shadow-input{ box-shadow: 0 8px 20px rgba(3,80,70,0.12) }
+
+
+.w-ll-1{ width: 6px; height: 48px }
+
+
+.accent-ll-accent { accent-color: var(--ll-accent) }
+
+/* utility to use the new safe dark accent as background */
+.bg-safe-dark-accent { background-color: var(--safeDarkAccent); color: #fff; }
+
+html,
+body {
+  font-family: var(--ll-font);
+}
