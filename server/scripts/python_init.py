@@ -12,12 +12,16 @@ SUPERUSER_DB = os.getenv('SUPERUSER_DB', 'postgres')
 SUPERUSER_USER = os.getenv('SUPERUSER_USER', 'postgres')
 SUPERUSER_PASSWORD = os.getenv('SUPERUSER_PASSWORD')
 
-APP_DB_NAME = os.getenv('APP_DB_NAME')
-APP_USER = os.getenv('APP_USER')
-APP_PASSWORD = os.getenv('APP_PASSWORD')
+APP_DB_NAME = os.getenv('DB_NAME')
+APP_USER = os.getenv('DB_USER')
+APP_PASSWORD = os.getenv('DB_PASSWORD')
 
 # Path to the SQL file that creates your tables and policies.
 SQL_SCRIPT_PATH = 'server/models/001_init_v2.sql'
+var_dotenv = [SUPERUSER_DB, SUPERUSER_USER, SUPERUSER_PASSWORD, APP_DB_NAME, APP_USER, APP_PASSWORD]
+var_str = " ".join(var_dotenv)
+
+print(f"{var_str}")
 
 def create_database_and_user():
     """Connects as a superuser to create the database and user idempotently."""
@@ -120,7 +124,7 @@ if __name__ == "__main__":
     
     create_database_and_user()
     setup_database_schema()
-    print("\n✅ PostgreSQL setup is complete. Your collaborator can now connect.")
-    print(f"   DB Name: {APP_DB_NAME}")
-    print(f"   User:    {APP_USER}")
-    print(f"   Password: [set in your .env file]")
+    print("\n PostgreSQL setup is complete. Your collaborator can now connect.")
+    print(f" DB Name: {APP_DB_NAME}")
+    print(f" User:    {APP_USER}")
+    print(f" Password: [set in your .env file]")
