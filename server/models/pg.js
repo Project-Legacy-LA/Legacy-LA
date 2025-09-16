@@ -1,9 +1,7 @@
 import dotenv from "dotenv";
-import path from "path";
 import {Pool} from "pg";
 
 dotenv.config();
-
 
 // Create a new Pool instance to manage connections
 
@@ -15,4 +13,4 @@ const pg_pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-export {pg_pool}
+export {pg_pool};

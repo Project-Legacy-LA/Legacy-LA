@@ -26,5 +26,3 @@ app.use(cors)
 app.listen(port, ()=>{
   console.log(`the server is running on port: ${port}`)
 })
-
-listTables(pool)
