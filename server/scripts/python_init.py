@@ -101,7 +101,7 @@ def setup_database_schema():
         
         with open(SQL_SCRIPT_PATH, 'r') as f:
             sql_script = f.read()
-
+        print(sql_script)
         cursor.execute(sql_script)
         
         print("SQL script executed successfully. Tables and policies are set up.")
