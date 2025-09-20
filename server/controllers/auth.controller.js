@@ -1,164 +1,78 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const pool = require('../config/db.config');
+const authService = require('../services/auth.service');
+const ResponseUtil = require('../utils/response.util');
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                status: 'error',
-                message: 'Email and password are required'
-            });
-        }
-
         // Check if user exists
-        const userExists = await pool.query(
-            'SELECT * FROM "user" WHERE email = $1',
-            [email]
-        );
-
-        if (userExists.rows.length > 0) {
-            return res.status(400).json({ 
-                status: 'error',
-                message: 'User already exists' 
-            });
+        const existingUser = await authService.findUserByEmail(email);
+        if (existingUser) {
+            return ResponseUtil.error(res, 'Email already registered');
         }
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        // Create new user
+        const newUser = await authService.createUser(email, password);
+        
+        // Generate token
+        const token = await authService.generateToken(newUser.user_id);
 
-        // Create user
-        const result = await pool.query(
-            'INSERT INTO "user" (email, password_digest, status) VALUES ($1, $2, $3) RETURNING user_id, email, status, created_at',
-            [email, hashedPassword, 'active']
-        );
-
-        const user = result.rows[0];
-
-        // Generate JWT
-        const token = jwt.sign(
-            { user_id: user.user_id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
-
-        res.status(201).json({
-            status: 'success',
-            data: {
-                user,
-                token
-            }
+        return ResponseUtil.created(res, {
+            user: newUser,
+            token
         });
     } catch (error) {
-        console.error('Register error:', error);
-        res.status(500).json({ 
-            status: 'error',
-            message: 'Error registering user' 
-        });
+        next(error);
     }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                status: 'error',
-                message: 'Email and password are required'
-            });
-        }
-
-        // Check if user exists
-        const result = await pool.query(
-            'SELECT * FROM "user" WHERE email = $1',
-            [email]
-        );
-
-        const user = result.rows[0];
-
+        // Find user
+        const user = await authService.findUserByEmail(email);
         if (!user) {
-            return res.status(401).json({ 
-                status: 'error',
-                message: 'Invalid credentials' 
-            });
+            return ResponseUtil.unauthorized(res, 'Invalid credentials');
         }
 
-        // Check if user is active
+        // Check status
         if (user.status !== 'active') {
-            return res.status(403).json({
-                status: 'error',
-                message: 'Account is disabled'
-            });
+            return ResponseUtil.forbidden(res, 'Account is disabled');
         }
 
-        // Check password
-        const validPassword = await bcrypt.compare(password, user.password_digest);
-
+        // Verify password
+        const validPassword = await authService.comparePasswords(password, user.password_digest);
         if (!validPassword) {
-            return res.status(401).json({ 
-                status: 'error',
-                message: 'Invalid credentials' 
-            });
+            return ResponseUtil.unauthorized(res, 'Invalid credentials');
         }
 
-        // Generate JWT
-        const token = jwt.sign(
-            { id: user.id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
+        // Generate token
+        const token = await authService.generateToken(user.user_id);
 
-        // Remove password from response
-        delete user.password;
+        // Remove sensitive data
+        delete user.password_digest;
 
-        res.json({
-            status: 'success',
-            data: {
-                user,
-                token
-            }
+        return ResponseUtil.success(res, {
+            user,
+            token
         });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ 
-            status: 'error',
-            message: 'Error logging in' 
-        });
+        next(error);
     }
 };
 
-const getCurrentUser = async (req, res) => {
+const getCurrentUser = async (req, res, next) => {
     try {
-        const result = await pool.query(
-            'SELECT user_id, email, status, created_at, updated_at FROM "user" WHERE user_id = $1',
-            [req.user.user_id]
-        );
-
-        const user = result.rows[0];
-
+        const user = await authService.findUserById(req.user.user_id);
+        
         if (!user) {
-            return res.status(404).json({ 
-                status: 'error',
-                message: 'User not found' 
-            });
+            return ResponseUtil.notFound(res, 'User not found');
         }
 
-        res.json({
-            status: 'success',
-            data: {
-                user
-            }
-        });
+        return ResponseUtil.success(res, { user });
     } catch (error) {
-        console.error('Get current user error:', error);
-        res.status(500).json({ 
-            status: 'error',
-            message: 'Error getting user data' 
-        });
+        next(error);
     }
 };
 
