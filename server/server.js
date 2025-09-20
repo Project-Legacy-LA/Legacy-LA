@@ -1,28 +1,34 @@
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import https from "https"
-import dotenv from "dotenv"
-import {Pool} from "pg"
-import { listTables } from "./models/pg.js";
-
-
-dotenv.config()
+const express = require('express');
+const cors = require('cors');
+const pool = require('./config/db.config');
+const authRoutes = require('./routes/auth.routes');
+require('dotenv').config();
 
 const app = express();
-const port = process.env.APP_PORT || 400;
+const PORT = process.env.PORT || 3001;
 
-// database config
-const pool = new Pool({user:process.env.DB_USER,
-                      host: process.env.DB_HOST,
-                      database: process.env.DB_DATABASE,
-                      password: process.env.DB_PASSWORD,
-                      port: process.env.DB_PORT,
-                    })
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(bodyParser.json())
-app.use(cors)
+// Basic route for testing
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to Legacy LA API' });
+});
 
-app.listen(port, ()=>{
-  console.log(`the server is running on port: ${port}`)
-})
+// Routes
+app.use('/api/auth', authRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ 
+        status: 'error',
+        message: 'Something went wrong!' 
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
