@@ -39,7 +39,7 @@ class AuthService {
                     status,
                     created_at,
                     updated_at
-                FROM "user" 
+                FROM app.users 
                 WHERE email = $1
             `;
             const result = await pool.query(query, [email]);
@@ -53,7 +53,7 @@ class AuthService {
         try {
             const hashedPassword = await this.hashPassword(password);
             const query = `
-                INSERT INTO "user" (
+                INSERT INTO app.users (
                     email, 
                     password_digest, 
                     status
@@ -84,7 +84,7 @@ class AuthService {
                     status,
                     created_at,
                     updated_at
-                FROM "user" 
+                FROM app.users 
                 WHERE user_id = $1
             `;
             const result = await pool.query(query, [user_id]);

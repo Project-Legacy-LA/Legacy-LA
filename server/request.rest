@@ -1,0 +1,47 @@
+### Test 1: Register a new user successfully
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "hussein@legacyla.org",
+    "password": "yourSecurePassword123"
+}
+
+### Test 2: Register with invalid email format
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "invalidemail",
+    "password": "password123"
+}
+
+### Test 3: Register with short password
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "test@legacyla.org",
+    "password": "short"
+}
+
+### Test 4: Login successfully
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "hussein@legacyla.org",
+    "password": "yourSecurePassword123"
+}
+
+### Test 5: Login with missing credentials
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "hussein@legacyla.org"
+}
+
+### Test 6: Get current user (requires auth token from login response)
+GET http://localhost:3000/api/auth/me
+Authorization:

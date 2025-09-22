@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS tenant (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS "user" (
+CREATE TABLE IF NOT EXISTS "users" (
   user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   email citext UNIQUE NOT NULL,
   password_digest text NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 
 CREATE TABLE IF NOT EXISTS membership (
   tenant_id uuid NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES "user"(user_id) ON DELETE CASCADE,
+  user_id uuid NOT NULL REFERENCES "users"(user_id) ON DELETE CASCADE,
   role membership_role_enum NOT NULL,
   is_active boolean NOT NULL DEFAULT true,
   PRIMARY KEY (tenant_id, user_id)
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS membership (
 CREATE TABLE IF NOT EXISTS client (
   client_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   tenant_id uuid NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
-  primary_attorney_user_id uuid NOT NULL REFERENCES "user"(user_id),
+  primary_attorney_user_id uuid NOT NULL REFERENCES "users"(user_id),
   label text NOT NULL,
   status client_status_enum NOT NULL,
   relationship_status relationship_status_enum NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS client_account (
   client_account_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   tenant_id uuid NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
   client_id uuid NOT NULL REFERENCES client(client_id) ON DELETE CASCADE,
-  user_id uuid NOT NULL REFERENCES "user"(user_id) ON DELETE CASCADE,
+  user_id uuid NOT NULL REFERENCES "users"(user_id) ON DELETE CASCADE,
   role text NOT NULL CHECK (role IN ('owner','spouse','delegate')),
   is_enabled boolean NOT NULL DEFAULT true
 );
@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS client_grant (
   client_grant_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   tenant_id uuid NOT NULL REFERENCES tenant(tenant_id) ON DELETE CASCADE,
   client_id uuid NOT NULL REFERENCES client(client_id) ON DELETE CASCADE,
-  grantee_user_id uuid NOT NULL REFERENCES "user"(user_id) ON DELETE CASCADE,
+  grantee_user_id uuid NOT NULL REFERENCES "users"(user_id) ON DELETE CASCADE,
   permissions text[] NOT NULL,
   is_enabled boolean NOT NULL DEFAULT true,
   CONSTRAINT uq_client_grant UNIQUE (client_id, grantee_user_id)
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS person (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-ALTER TABLE "user" ADD CONSTRAINT fk_user_person FOREIGN KEY (person_id) REFERENCES person(person_id);
+ALTER TABLE "users" ADD CONSTRAINT fk_user_person FOREIGN KEY (person_id) REFERENCES person(person_id);
 
 CREATE TABLE IF NOT EXISTS person_role (
   person_role_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -586,6 +586,6 @@ CREATE INDEX IF NOT EXISTS idx_liability_client_kind ON liability(client_id, kin
 CREATE INDEX IF NOT EXISTS idx_asset_valuation_asset_date ON asset_valuation(asset_id, valuation_date);
 
 -- Example seed (commented)
--- INSERT INTO "user"(email, password_digest, status) VALUES ('owner@example.com','<bcrypt>','active') RETURNING user_id;
+-- INSERT INTO "users"(email, password_digest, status) VALUES ('owner@example.com','<bcrypt>','active') RETURNING user_id;
 -- INSERT INTO tenant(owner_user_id, display_name) VALUES ('<user_uuid>','A. Smith, Esq.') RETURNING tenant_id;
 -- INSERT INTO membership(tenant_id, user_id, role) VALUES ('<tenant_uuid>','<user_uuid>','attorney_owner');
