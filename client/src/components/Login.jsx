@@ -29,8 +29,9 @@ export default function Login() {
   }
 
   return (
-    /* use the site's default gray background utility from index.css; ensure text is black */
-    <div className="bg-ll-default flex items-center justify-center min-h-screen p-4 text-black">
+    <div className="min-h-screen text-black bg-white">
+      {/* use the site's default gray background utility from index.css; ensure text is black */}
+      <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-7rem)] lg:min-h-[calc(100vh-8rem)] p-4">
       <div
         ref={cardRef}
         className="w-full max-w-sm bg-white rounded-lg p-6 shadow-lg"
@@ -86,6 +87,7 @@ export default function Login() {
             By signing in you agree to the terms.
           </p>
         </form>
+      </div>
       </div>
     </div>
   )
