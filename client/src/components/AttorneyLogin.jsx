@@ -24,7 +24,8 @@ export default function AttorneyLogin() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 text-black">
+    <div className="min-h-screen text-black bg-white">
+      <div className="flex items-center justify-center min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-6rem)] md:min-h-[calc(100vh-7rem)] lg:min-h-[calc(100vh-8rem)] p-4">
       <div ref={cardRef} className="w-full max-w-sm bg-white rounded-lg p-6 shadow-lg" style={{ backdropFilter: 'blur(6px)' }}>
         <div className="mb-4">
           <div className="text-xl font-bold text-black">Legacy Louisiana — Attorney Login</div>
@@ -50,6 +51,7 @@ export default function AttorneyLogin() {
             Need an attorney account? Contact support or register.
           </p>
         </form>
+      </div>
       </div>
     </div>
   )
