@@ -1,6 +1,6 @@
 # Legacy-LA
 
-🚀 **Legacy-LA** is a Node.js + Express backend with **PostgreSQL** and **Redis-backed session authentication**.
+**Legacy-LA** is a Node.js + Express backend with **PostgreSQL** and **Redis-backed session authentication**.
 It powers a multi-tenant estate planning platform where users can securely log in, manage assets, and generate financial reports.
 
 ---
