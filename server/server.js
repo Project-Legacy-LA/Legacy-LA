@@ -1,28 +1,13 @@
 const express = require('express');
-const cors = require('cors');
-const authRoutes = require('./routes/auth.routes');
-const errorHandler = require('./middleware/error.middleware');
-require('dotenv').config();
+const cookieParser = require('cookie-parser');
+const authRoutesV1 = require('./routes/v1/auth.routes');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// Basic route for testing
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to Legacy LA API' });
-});
+// versioned API mount
+app.use('/api/v1/auth', authRoutesV1);
 
-// Routes
-app.use('/api/auth', authRoutes);
-
-// Error handling middleware
-app.use(errorHandler);
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app;

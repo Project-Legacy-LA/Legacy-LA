@@ -1,27 +1,21 @@
-const jwt = require('jsonwebtoken');
+const authService = require('../services/auth.service');
 const ResponseUtil = require('../utils/response.util');
 
-const authMiddleware = (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return ResponseUtil.unauthorized(res, 'No token provided');
-        }
+const authMiddleware = async (req, res, next) => {
+  try {
+    const sid = req.cookies?.sid;
+    if (!sid) return ResponseUtil.unauthorized(res, 'No session');
 
-        const token = authHeader.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        req.user = {
-            user_id: decoded.user_id
-        };
-        
-        next();
-    } catch (error) {
-        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return ResponseUtil.unauthorized(res, 'Invalid or expired token');
-        }
-        next(error);
-    }
+    const session = await authService.updateSessionActivity(sid);
+    if (!session) return ResponseUtil.unauthorized(res, 'Session expired');
+
+    req.user = { user_id: session.user_id, email: session.email };
+    req.session = { sid, ...session };
+
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = authMiddleware;
