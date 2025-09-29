@@ -51,36 +51,12 @@ export default function HomePage() {
       completedItems: 4
     },
     { 
-      id: 'concerns', 
-      title: 'Concerns', 
-      time: '2 min', 
-      completed: true,
-      totalItems: 6,
-      completedItems: 6
-    },
-    { 
-      id: 'planning-questions', 
-      title: 'Planning Questions', 
-      time: '5 min', 
-      completed: true,
-      totalItems: 12,
-      completedItems: 12
-    },
-    { 
       id: 'assets', 
       title: 'Assets', 
       time: '15 min', 
       completed: true,
       totalItems: 20,
       completedItems: 20
-    },
-    { 
-      id: 'decisionmakers', 
-      title: 'Decisionmakers', 
-      time: '5 min', 
-      completed: true,
-      totalItems: 8,
-      completedItems: 8
     },
     { 
       id: 'beneficiaries', 
@@ -91,12 +67,12 @@ export default function HomePage() {
       completedItems: 6
     },
     { 
-      id: 'documents', 
-      title: 'Documents', 
-      time: '10 min', 
+      id: 'decisionmakers', 
+      title: 'Decisionmakers', 
+      time: '5 min', 
       completed: true,
-      totalItems: 15,
-      completedItems: 15
+      totalItems: 8,
+      completedItems: 8
     },
     { 
       id: 'contact-details', 
@@ -107,30 +83,45 @@ export default function HomePage() {
       completedItems: 10
     },
     { 
-      id: 'organ-donor', 
-      title: 'Organ Donor/Cremation/Burial', 
-      time: '2 min', 
+      id: 'documents', 
+      title: 'Documents', 
+      time: '10 min', 
       completed: true,
-      totalItems: 4,
-      completedItems: 4
-    },
-    { 
-      id: 'gov-benefits', 
-      title: "Conditional - Gov't Benefits", 
-      time: '1 min', 
-      completed: true,
-      totalItems: 3,
-      completedItems: 3
+      totalItems: 15,
+      completedItems: 15
     }
   ]
 
   const handleSegmentClick = (segmentId) => {
     setSelectedSegment(segmentId)
     // Navigate to the specific form or component
-    if (segmentId === 'about-you') {
-      navigate('/about-you')
-    } else {
-      console.log(`Selected segment: ${segmentId}`)
+    switch (segmentId) {
+      case 'about-you':
+        navigate('/about-you')
+        break
+      case 'children':
+        navigate('/children')
+        break
+      case 'advisors':
+        navigate('/advisors')
+        break
+      case 'assets':
+        navigate('/assets')
+        break
+      case 'beneficiaries':
+        navigate('/beneficiaries')
+        break
+      case 'decisionmakers':
+        navigate('/decisionmakers')
+        break
+      case 'contact-details':
+        navigate('/contact-details')
+        break
+      case 'documents':
+        navigate('/documents')
+        break
+      default:
+        console.log(`Selected segment: ${segmentId}`)
     }
   }
 

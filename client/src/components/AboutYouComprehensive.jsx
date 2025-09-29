@@ -102,7 +102,8 @@ export default function AboutYou() {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
-    // Handle form submission logic here
+    // Navigate to next section
+    navigate('/children')
   }
 
   return (
@@ -134,7 +135,6 @@ export default function AboutYou() {
                   value={formData.legalFirstName}
                   onChange={(e) => handleInputChange('legalFirstName', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
                 />
               </div>
 
@@ -173,7 +173,6 @@ export default function AboutYou() {
                   value={formData.gender}
                   onChange={(e) => handleInputChange('gender', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -223,7 +222,6 @@ export default function AboutYou() {
                     value={formData.maritalStatus}
                     onChange={(e) => handleInputChange('maritalStatus', e.target.value)}
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    required
                   >
                     <option value="Single">Single</option>
                     <option value="Married">Married</option>
@@ -252,7 +250,6 @@ export default function AboutYou() {
                   value={formData.residenceParish}
                   onChange={(e) => handleInputChange('residenceParish', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
                 >
                   <option value="">Choose...</option>
                   <option value="St. Tammany">St. Tammany</option>
@@ -278,7 +275,6 @@ export default function AboutYou() {
                   onChange={(e) => handleInputChange('birthCountry', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                   placeholder="City, State"
-                  required
                 />
               </div>
 
@@ -341,7 +337,6 @@ export default function AboutYou() {
                   value={formData.legalLastName}
                   onChange={(e) => handleInputChange('legalLastName', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  required
                 />
               </div>
 
@@ -370,9 +365,7 @@ export default function AboutYou() {
                   onChange={handleSSNChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                   placeholder="XXX-XX-XXXX"
-                  pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
                   maxLength="11"
-                  required
                 />
               </div>
 
@@ -389,9 +382,6 @@ export default function AboutYou() {
                       value={formData.dateOfBirth.month}
                       onChange={(e) => handleInputChange('dateOfBirth.month', e.target.value)}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      min="1"
-                      max="12"
-                      required
                     />
                   </div>
                   <div>
@@ -401,9 +391,6 @@ export default function AboutYou() {
                       value={formData.dateOfBirth.day}
                       onChange={(e) => handleInputChange('dateOfBirth.day', e.target.value)}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      min="1"
-                      max="31"
-                      required
                     />
                   </div>
                   <div>
@@ -413,9 +400,6 @@ export default function AboutYou() {
                       value={formData.dateOfBirth.year}
                       onChange={(e) => handleInputChange('dateOfBirth.year', e.target.value)}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      min="1900"
-                      max="2024"
-                      required
                     />
                   </div>
                 </div>

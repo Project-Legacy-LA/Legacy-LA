@@ -26,39 +26,56 @@ export default function Breadcrumb() {
   const getBreadcrumbItems = () => {
     const path = location.pathname
     
+    // Define the estate planning flow order
+    const estatePlanningFlow = [
+      { name: 'Home', path: '/' },
+      { name: 'About You', path: '/about-you' },
+      { name: 'Children', path: '/children' },
+      { name: 'Advisors', path: '/advisors' },
+      { name: 'Assets', path: '/assets' },
+      { name: 'Beneficiaries', path: '/beneficiaries' },
+      { name: 'Decision Makers', path: '/decisionmakers' },
+      { name: 'Contact Details', path: '/contact-details' },
+      { name: 'Documents', path: '/documents' }
+    ]
+    
+    // Find the current step in the flow
+    const currentStepIndex = estatePlanningFlow.findIndex(step => step.path === path)
+    
+    if (currentStepIndex !== -1) {
+      // Return all steps up to and including the current step
+      return estatePlanningFlow.slice(0, currentStepIndex + 1).map((step, index) => ({
+        name: step.name,
+        path: step.path,
+        current: index === currentStepIndex
+      }))
+    }
+    
+    // Handle non-estate planning pages
     switch (path) {
-      case '/':
-        return [
-          { name: 'Estate Planning Dashboard', path: '/', current: true }
-        ]
-      case '/about-you':
-        return [
-          { name: 'Estate Planning Dashboard', path: '/', current: false },
-          { name: 'About You', path: '/about-you', current: true }
-        ]
       case '/login':
         return [
-          { name: 'Estate Planning Dashboard', path: '/', current: false },
+          { name: 'Home', path: '/', current: false },
           { name: 'Client Login', path: '/login', current: true }
         ]
       case '/attorney-login':
         return [
-          { name: 'Estate Planning Dashboard', path: '/', current: false },
+          { name: 'Home', path: '/', current: false },
           { name: 'Attorney Login', path: '/attorney-login', current: true }
         ]
       case '/client-signup':
         return [
-          { name: 'Estate Planning Dashboard', path: '/', current: false },
+          { name: 'Home', path: '/', current: false },
           { name: 'Client Registration', path: '/client-signup', current: true }
         ]
       case '/attorney-signup':
         return [
-          { name: 'Estate Planning Dashboard', path: '/', current: false },
+          { name: 'Home', path: '/', current: false },
           { name: 'Attorney Registration', path: '/attorney-signup', current: true }
         ]
       default:
         return [
-          { name: 'Estate Planning Dashboard', path: '/', current: true }
+          { name: 'Home', path: '/', current: true }
         ]
     }
   }
