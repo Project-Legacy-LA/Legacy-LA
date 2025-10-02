@@ -37,7 +37,7 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-  CREATE TYPE person_role_enum AS ENUM ('client_primary','spouse','child','beneficiary','advisor','other');
+  CREATE TYPE person_role_enum AS ENUM ('client_primary','spouse','child','beneficiary','advisor','representative','trustee','other');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
@@ -194,6 +194,11 @@ CREATE TABLE IF NOT EXISTS person (
   birth_country text,
   birth_admin_area text,
   birth_locality text,
+  is_decedent boolean,
+  date_of_death date,
+  death_country text,
+  death_admin_area text,
+  death_locality text,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
