@@ -106,6 +106,7 @@ export default function AboutYou() {
   })
 
   const [children, setChildren] = useState([])
+  const [previousSpouses, setPreviousSpouses] = useState([])
 
   const handleInputChange = (field, value) => {
     if (field.includes('.')) {
@@ -192,6 +193,61 @@ export default function AboutYou() {
     }
   }
 
+  const addPreviousSpouse = () => {
+    const newSpouse = {
+      id: Date.now(),
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      suffix: '',
+      preferredName: '',
+      ssn: '',
+      dateOfBirth: { month: '', day: '', year: '' },
+      birthCountry: '',
+      birthState: '',
+      birthCity: '',
+      phone: '',
+      email: '',
+      marriageDate: '',
+      marriageLocation: '',
+      divorceDate: '',
+      divorceLocation: '',
+      deathDate: '',
+      deathLocation: '',
+      status: 'divorced', // divorced, widowed, separated
+      address: {
+        line1: '',
+        line2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: 'US'
+      }
+    }
+    setPreviousSpouses([...previousSpouses, newSpouse])
+  }
+
+  const removePreviousSpouse = (spouseId) => {
+    setPreviousSpouses(previousSpouses.filter(spouse => spouse.id !== spouseId))
+  }
+
+  const handlePreviousSpouseChange = (spouseId, field, value) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.')
+      setPreviousSpouses(previousSpouses.map(s => 
+        s.id === spouseId 
+          ? { ...s, [parent]: { ...s[parent], [child]: value } }
+          : s
+      ))
+    } else {
+      setPreviousSpouses(previousSpouses.map(s => 
+        s.id === spouseId 
+          ? { ...s, [field]: value }
+          : s
+      ))
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     
@@ -271,6 +327,39 @@ export default function AboutYou() {
             address: child.address
           },
           roles: ['child']
+        })
+      }
+    })
+
+    // Add previous spouses
+    previousSpouses.forEach(spouse => {
+      if (spouse.firstName || spouse.lastName) {
+        addPerson({
+          firstName: spouse.firstName,
+          middleName: spouse.middleName,
+          lastName: spouse.lastName,
+          suffix: spouse.suffix,
+          preferredName: spouse.preferredName,
+          ssn: spouse.ssn,
+          dateOfBirth: spouse.dateOfBirth,
+          birthCountry: spouse.birthCountry,
+          birthState: spouse.birthState,
+          birthCity: spouse.birthCity,
+          contactInfo: {
+            phone: spouse.phone,
+            email: spouse.email,
+            address: spouse.address
+          },
+          roles: ['ex-spouse'],
+          maritalHistory: {
+            marriageDate: spouse.marriageDate,
+            marriageLocation: spouse.marriageLocation,
+            divorceDate: spouse.divorceDate,
+            divorceLocation: spouse.divorceLocation,
+            deathDate: spouse.deathDate,
+            deathLocation: spouse.deathLocation,
+            status: spouse.status
+          }
         })
       }
     })
@@ -1133,6 +1222,220 @@ export default function AboutYou() {
                           onChange={(e) => handleChildChange(child.id, 'email', e.target.value)}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="child.email@example.com"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Previous Spouses Section */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Previous Spouses</h3>
+              <button
+                type="button"
+                onClick={addPreviousSpouse}
+                className="px-4 py-2 text-white rounded-lg transition-colors duration-200 font-medium text-sm"
+                style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+              >
+                + Add Previous Spouse
+              </button>
+            </div>
+            
+            {previousSpouses.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <p>No previous spouses added yet. Click "Add Previous Spouse" to add information about past marriages.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {previousSpouses.map((spouse, index) => (
+                  <div key={spouse.id} className="p-6 border border-gray-200 rounded-lg">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="text-md font-semibold text-gray-800">Previous Spouse {index + 1}</h4>
+                      <button
+                        type="button"
+                        onClick={() => removePreviousSpouse(spouse.id)}
+                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                      >
+                        Remove Spouse
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Personal Information */}
+                      <div className="space-y-4">
+                        <h5 className="text-sm font-medium text-gray-700 border-b border-gray-200 pb-2">Personal Information</h5>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            First Name
+                          </label>
+                          <input
+                            type="text"
+                            value={spouse.firstName}
+                            onChange={(e) => handlePreviousSpouseChange(spouse.id, 'firstName', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Spouse's first name"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name
+                          </label>
+                          <input
+                            type="text"
+                            value={spouse.lastName}
+                            onChange={(e) => handlePreviousSpouseChange(spouse.id, 'lastName', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Spouse's last name"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Preferred Name / Nickname
+                          </label>
+                          <input
+                            type="text"
+                            value={spouse.preferredName}
+                            onChange={(e) => handlePreviousSpouseChange(spouse.id, 'preferredName', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="What they preferred to be called"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Date of Birth
+                          </label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <input
+                              type="number"
+                              value={spouse.dateOfBirth.month}
+                              onChange={(e) => handlePreviousSpouseChange(spouse.id, 'dateOfBirth.month', e.target.value)}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="MM"
+                            />
+                            <input
+                              type="number"
+                              value={spouse.dateOfBirth.day}
+                              onChange={(e) => handlePreviousSpouseChange(spouse.id, 'dateOfBirth.day', e.target.value)}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="DD"
+                            />
+                            <input
+                              type="number"
+                              value={spouse.dateOfBirth.year}
+                              onChange={(e) => handlePreviousSpouseChange(spouse.id, 'dateOfBirth.year', e.target.value)}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="YYYY"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Marriage/Divorce Information */}
+                      <div className="space-y-4">
+                        <h5 className="text-sm font-medium text-gray-700 border-b border-gray-200 pb-2">Marriage & Separation Information</h5>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Status
+                          </label>
+                          <select
+                            value={spouse.status}
+                            onChange={(e) => handlePreviousSpouseChange(spouse.id, 'status', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          >
+                            <option value="divorced">Divorced</option>
+                            <option value="widowed">Widowed</option>
+                            <option value="separated">Separated</option>
+                          </select>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Marriage Date
+                          </label>
+                          <input
+                            type="date"
+                            value={spouse.marriageDate}
+                            onChange={(e) => handlePreviousSpouseChange(spouse.id, 'marriageDate', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Marriage Location
+                          </label>
+                          <input
+                            type="text"
+                            value={spouse.marriageLocation}
+                            onChange={(e) => handlePreviousSpouseChange(spouse.id, 'marriageLocation', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="City, State"
+                          />
+                        </div>
+                        
+                        {(spouse.status === 'divorced' || spouse.status === 'separated') && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              {spouse.status === 'divorced' ? 'Divorce Date' : 'Separation Date'}
+                            </label>
+                            <input
+                              type="date"
+                              value={spouse.divorceDate}
+                              onChange={(e) => handlePreviousSpouseChange(spouse.id, 'divorceDate', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            />
+                          </div>
+                        )}
+                        
+                        {spouse.status === 'widowed' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Date of Death
+                            </label>
+                            <input
+                              type="date"
+                              value={spouse.deathDate}
+                              onChange={(e) => handlePreviousSpouseChange(spouse.id, 'deathDate', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          value={spouse.phone}
+                          onChange={(e) => handlePreviousSpouseChange(spouse.id, 'phone', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          value={spouse.email}
+                          onChange={(e) => handlePreviousSpouseChange(spouse.id, 'email', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="spouse.email@example.com"
                         />
                       </div>
                     </div>
