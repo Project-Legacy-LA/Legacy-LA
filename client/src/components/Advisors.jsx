@@ -123,7 +123,7 @@ export default function Advisors() {
         {/* Header */}
         <div ref={headerRef} className="mb-8">
           <h1 className="text-3xl font-bold text-black mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
-            Professional Advisors
+            Other Professionals & Advisors
           </h1>
           <p className="text-gray-600">
             Add your professional advisors who will help with your estate planning. You can select from people already in your About You section or add new ones.
@@ -154,6 +154,21 @@ export default function Advisors() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Advisor Type *
+                    </label>
+                    <select
+                      value={advisor.advisorType}
+                      onChange={(e) => handleAdvisorChange(advisor.id, 'advisorType', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    >
+                      {advisorTypes.map(type => (
+                        <option key={type.value} value={type.value}>{type.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Person (from About You)
                     </label>
                     <select
@@ -168,21 +183,6 @@ export default function Advisors() {
                         </option>
                       ))}
                       <option value="other">Other (Add new person)</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Advisor Type
-                    </label>
-                    <select
-                      value={advisor.advisorType}
-                      onChange={(e) => handleAdvisorChange(advisor.id, 'advisorType', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    >
-                      {advisorTypes.map(type => (
-                        <option key={type.value} value={type.value}>{type.label}</option>
-                      ))}
                     </select>
                   </div>
                   

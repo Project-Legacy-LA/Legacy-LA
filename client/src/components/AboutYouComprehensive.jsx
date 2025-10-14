@@ -103,7 +103,12 @@ export default function AboutYou() {
     email: '',
     
     // Children Information
-    children: []
+    children: [],
+    
+    // Executor/Administrator Information
+    isExecutor: false,
+    decedentName: '',
+    decedentDateOfDeath: { month: '', day: '', year: '' }
   })
 
   const [children, setChildren] = useState([])
@@ -183,6 +188,12 @@ export default function AboutYou() {
         state: '',
         zipCode: '',
         country: 'US'
+      },
+      specialNeeds: false,
+      specialNeedsDescription: '',
+      parentCheckbox: {
+        client: false,
+        spouse: false
       }
     }
     setChildren([...children, newChild])
@@ -1340,6 +1351,78 @@ export default function AboutYou() {
             </div>
           )}
 
+          {/* Executor/Administrator Section */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Executor/Administrator Information</h3>
+            <div className="mb-6">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.isExecutor}
+                  onChange={(e) => handleInputChange('isExecutor', e.target.checked)}
+                  className="mr-2 text-gray-600 focus:ring-gray-500"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Are you filling this form out as an executor or administrator for someone who has passed away?
+                </span>
+              </label>
+            </div>
+            
+            {formData.isExecutor && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Decedent Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.decedentName}
+                    onChange={(e) => handleInputChange('decedentName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Full name of the deceased person"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date of Death *
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <select
+                      value={formData.decedentDateOfDeath.month}
+                      onChange={(e) => handleDateChange('decedentDateOfDeath.month', e.target.value, 'month')}
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    >
+                      <option value="">Month</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="number"
+                      value={formData.decedentDateOfDeath.day}
+                      onChange={(e) => handleDateChange('decedentDateOfDeath.day', e.target.value, 'day')}
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="Day"
+                      min="1"
+                      max="31"
+                    />
+                    <input
+                      type="number"
+                      value={formData.decedentDateOfDeath.year}
+                      onChange={(e) => handleDateChange('decedentDateOfDeath.year', e.target.value, 'year')}
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="Year"
+                      min="1900"
+                      max={new Date().getFullYear()}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Contact Information Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
@@ -1498,6 +1581,63 @@ export default function AboutYou() {
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="child.email@example.com"
                         />
+                      </div>
+                    </div>
+
+                    {/* Special Needs Section */}
+                    <div className="mt-6">
+                      <label className="flex items-center mb-4">
+                        <input
+                          type="checkbox"
+                          checked={child.specialNeeds}
+                          onChange={(e) => handleChildChange(child.id, 'specialNeeds', e.target.checked)}
+                          className="mr-2 text-gray-600 focus:ring-gray-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          Does this child have any special needs or has there been any sort of formal medical or mental condition that is suspected or diagnosed?
+                        </span>
+                      </label>
+                      
+                      {child.specialNeeds && (
+                        <div className="mt-3">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Please describe the special needs or conditions
+                          </label>
+                          <textarea
+                            value={child.specialNeedsDescription}
+                            onChange={(e) => handleChildChange(child.id, 'specialNeedsDescription', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            rows="3"
+                            placeholder="Describe any special needs, medical conditions, or diagnoses..."
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Parent Checkbox Section */}
+                    <div className="mt-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Whose child is this?
+                      </label>
+                      <div className="space-y-2">
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={child.parentCheckbox.client}
+                            onChange={(e) => handleChildChange(child.id, 'parentCheckbox.client', e.target.checked)}
+                            className="mr-2 text-gray-600 focus:ring-gray-500"
+                          />
+                          <span className="text-sm text-gray-700">Client's child</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={child.parentCheckbox.spouse}
+                            onChange={(e) => handleChildChange(child.id, 'parentCheckbox.spouse', e.target.checked)}
+                            className="mr-2 text-gray-600 focus:ring-gray-500"
+                          />
+                          <span className="text-sm text-gray-700">Spouse's child</span>
+                        </label>
                       </div>
                     </div>
                   </div>
