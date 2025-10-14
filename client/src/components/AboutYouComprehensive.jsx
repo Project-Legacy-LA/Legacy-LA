@@ -59,7 +59,45 @@ export default function AboutYou() {
     marriageCity: '',
     hasPreMaritalAgreement: false,
     hasPostMaritalAgreement: false,
-    livedInCommunityPropertyState: false
+    livedInCommunityPropertyState: false,
+    
+    // Spouse Information (if married)
+    spouseFirstName: '',
+    spouseMiddleName: '',
+    spouseLastName: '',
+    spouseSuffix: '',
+    spousePreferredName: '',
+    spouseSSN: '',
+    spouseDateOfBirth: {
+      month: '',
+      day: '',
+      year: ''
+    },
+    spouseBirthCountry: '',
+    spouseBirthState: '',
+    spouseBirthCity: '',
+    spousePhone: '',
+    spouseEmail: '',
+    
+    // Executor/Administrator Information
+    isExecutorOrAdmin: false,
+    decedentInfo: {
+      firstName: '',
+      lastName: '',
+      dateOfDeath: ''
+    },
+    
+    // Divorce Information
+    exSpouseName: '',
+    divorceDate: '',
+    
+    // Widow Information
+    deceasedSpouseName: '',
+    deceasedSpouseDateOfDeath: '',
+    
+    // Contact Information
+    phone: '',
+    email: ''
   })
 
   const handleInputChange = (field, value) => {
@@ -103,8 +141,21 @@ export default function AboutYou() {
     e.preventDefault()
     console.log('Form submitted:', formData)
     // Navigate to next section
-    navigate('/children')
+    navigate('/estate-wizard')
   }
+
+  // Louisiana Parishes
+  const louisianaParishes = [
+    'Acadia', 'Allen', 'Ascension', 'Assumption', 'Avoyelles', 'Beauregard', 'Bienville', 'Bossier', 
+    'Caddo', 'Calcasieu', 'Caldwell', 'Cameron', 'Catahoula', 'Claiborne', 'Concordia', 'De Soto', 
+    'East Baton Rouge', 'East Carroll', 'East Feliciana', 'Evangeline', 'Franklin', 'Grant', 'Iberia', 
+    'Iberville', 'Jackson', 'Jefferson', 'Jefferson Davis', 'Lafayette', 'Lafourche', 'LaSalle', 'Lincoln', 
+    'Livingston', 'Madison', 'Morehouse', 'Natchitoches', 'Orleans', 'Ouachita', 'Plaquemines', 'Pointe Coupee', 
+    'Rapides', 'Red River', 'Richland', 'Sabine', 'St. Bernard', 'St. Charles', 'St. Helena', 'St. James', 
+    'St. John the Baptist', 'St. Landry', 'St. Martin', 'St. Mary', 'St. Tammany', 'Tangipahoa', 'Tensas', 
+    'Terrebonne', 'Union', 'Vermilion', 'Vernon', 'Washington', 'Webster', 'West Baton Rouge', 'West Carroll', 
+    'West Feliciana', 'Winn'
+  ]
 
   return (
     <div ref={pageRef} className="min-h-screen text-black bg-white">
@@ -116,7 +167,8 @@ export default function AboutYou() {
             About You
           </h1>
           <p className="text-gray-600">
-            Please provide your personal information below. All fields marked with * are required.
+            Please provide your personal information below. Fill in your information if you are conducting your estate planning, 
+            or if you are representing someone as an executor or administrator for another person that has passed away.
           </p>
         </div>
 
@@ -194,7 +246,7 @@ export default function AboutYou() {
                       value="Yes"
                       checked={formData.usCitizen === 'Yes'}
                       onChange={(e) => handleInputChange('usCitizen', e.target.value)}
-                      className="mr-2 text-blue-600 focus:ring-blue-500"
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
                     />
                     <span className="text-sm text-gray-700">Yes</span>
                   </label>
@@ -205,10 +257,65 @@ export default function AboutYou() {
                       value="No"
                       checked={formData.usCitizen === 'No'}
                       onChange={(e) => handleInputChange('usCitizen', e.target.value)}
-                      className="mr-2 text-blue-600 focus:ring-blue-500"
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
                     />
                     <span className="text-sm text-gray-700">No</span>
                   </label>
+                </div>
+              </div>
+
+              {/* Executor/Administrator Section */}
+              <div className="col-span-2">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <label className="flex items-center mb-4">
+                    <input
+                      type="checkbox"
+                      checked={formData.isExecutorOrAdmin}
+                      onChange={(e) => handleInputChange('isExecutorOrAdmin', e.target.checked)}
+                      className="mr-3 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      Are you filling this form out as an executor or administrator for someone who has passed away?
+                    </span>
+                  </label>
+                  
+                  {formData.isExecutorOrAdmin && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Decedent First Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.decedentInfo.firstName}
+                          onChange={(e) => handleInputChange('decedentInfo.firstName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Decedent Last Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.decedentInfo.lastName}
+                          onChange={(e) => handleInputChange('decedentInfo.lastName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Date of Death
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.decedentInfo.dateOfDeath}
+                          onChange={(e) => handleInputChange('decedentInfo.dateOfDeath', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -252,15 +359,10 @@ export default function AboutYou() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                 >
                   <option value="">Choose...</option>
-                  <option value="St. Tammany">St. Tammany</option>
-                  <option value="Tangipahoa">Tangipahoa</option>
-                  <option value="Washington">Washington</option>
-                  <option value="Jefferson">Jefferson</option>
-                  <option value="Orleans">Orleans</option>
-                  <option value="East Baton Rouge">East Baton Rouge</option>
-                  <option value="West Baton Rouge">West Baton Rouge</option>
-                  <option value="Livingston">Livingston</option>
-                  <option value="St. Bernard">St. Bernard</option>
+                  {louisianaParishes.map(parish => (
+                    <option key={parish} value={parish}>{parish}</option>
+                  ))}
+                  <option value="Other">Other (Please specify)</option>
                 </select>
               </div>
 
@@ -495,7 +597,7 @@ export default function AboutYou() {
                         type="checkbox"
                         checked={formData.hasPreMaritalAgreement}
                         onChange={(e) => handleInputChange('hasPreMaritalAgreement', e.target.checked)}
-                        className="mr-2 text-blue-600 focus:ring-blue-500"
+                        className="mr-2 text-gray-600 focus:ring-gray-500"
                       />
                       <span className="text-sm text-gray-700">Has Pre-Marital Agreement</span>
                     </label>
@@ -504,7 +606,7 @@ export default function AboutYou() {
                         type="checkbox"
                         checked={formData.hasPostMaritalAgreement}
                         onChange={(e) => handleInputChange('hasPostMaritalAgreement', e.target.checked)}
-                        className="mr-2 text-blue-600 focus:ring-blue-500"
+                        className="mr-2 text-gray-600 focus:ring-gray-500"
                       />
                       <span className="text-sm text-gray-700">Has Post-Marital Agreement</span>
                     </label>
@@ -513,7 +615,7 @@ export default function AboutYou() {
                         type="checkbox"
                         checked={formData.livedInCommunityPropertyState}
                         onChange={(e) => handleInputChange('livedInCommunityPropertyState', e.target.checked)}
-                        className="mr-2 text-blue-600 focus:ring-blue-500"
+                        className="mr-2 text-gray-600 focus:ring-gray-500"
                       />
                       <span className="text-sm text-gray-700">Lived in Community Property State</span>
                     </label>
@@ -523,6 +625,257 @@ export default function AboutYou() {
             </div>
           )}
 
+          {/* Spouse Information Section (if married) */}
+          {formData.maritalStatus === 'Married' && (
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Spouse Information</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse First Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spouseFirstName}
+                    onChange={(e) => handleInputChange('spouseFirstName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Spouse's first name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Middle Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spouseMiddleName}
+                    onChange={(e) => handleInputChange('spouseMiddleName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Middle name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spouseLastName}
+                    onChange={(e) => handleInputChange('spouseLastName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Spouse's last name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Suffix
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spouseSuffix}
+                    onChange={(e) => handleInputChange('spouseSuffix', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Jr., Sr., II, III, etc."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Preferred Name / Nickname
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spousePreferredName}
+                    onChange={(e) => handleInputChange('spousePreferredName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="What they prefer to be called"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Social Security Number
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spouseSSN}
+                    onChange={(e) => {
+                      const formatted = formatSSN(e.target.value)
+                      handleInputChange('spouseSSN', formatted)
+                    }}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="XXX-XX-XXXX"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Date of Birth
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <select
+                      value={formData.spouseDateOfBirth.month}
+                      onChange={(e) => handleInputChange('spouseDateOfBirth.month', e.target.value)}
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    >
+                      <option value="">Month</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="number"
+                      value={formData.spouseDateOfBirth.day}
+                      onChange={(e) => handleInputChange('spouseDateOfBirth.day', e.target.value)}
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="Day"
+                      min="1"
+                      max="31"
+                    />
+                    <input
+                      type="number"
+                      value={formData.spouseDateOfBirth.year}
+                      onChange={(e) => handleInputChange('spouseDateOfBirth.year', e.target.value)}
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="Year"
+                      min="1900"
+                      max="2024"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Birth Place
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.spouseBirthCountry}
+                    onChange={(e) => handleInputChange('spouseBirthCountry', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="City, State"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.spousePhone}
+                    onChange={(e) => handleInputChange('spousePhone', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Spouse Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.spouseEmail}
+                    onChange={(e) => handleInputChange('spouseEmail', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="spouse.email@example.com"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Divorce Information Section (if divorced) */}
+          {formData.maritalStatus === 'Divorced' && (
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Divorce Information</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ex-Spouse Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.exSpouseName}
+                    onChange={(e) => handleInputChange('exSpouseName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Full name of ex-spouse"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date of Divorce
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.divorceDate}
+                    onChange={(e) => handleInputChange('divorceDate', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Widow Information Section (if widowed) */}
+          {formData.maritalStatus === 'Widowed' && (
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Deceased Spouse Information</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Deceased Spouse Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.deceasedSpouseName}
+                    onChange={(e) => handleInputChange('deceasedSpouseName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Full name of deceased spouse"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date of Death
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.deceasedSpouseDateOfDeath}
+                    onChange={(e) => handleInputChange('deceasedSpouseDateOfDeath', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Contact Information Section */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+            </div>
+          </div>
 
           {/* Action Buttons */}
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
@@ -535,7 +888,7 @@ export default function AboutYou() {
             </button>
             <button
               type="submit"
-              className="px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+              className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
               Continue

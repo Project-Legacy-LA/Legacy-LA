@@ -30,13 +30,8 @@ export default function Breadcrumb() {
     const estatePlanningFlow = [
       { name: 'Home', path: '/' },
       { name: 'About You', path: '/about-you' },
-      { name: 'Children', path: '/children' },
-      { name: 'Advisors', path: '/advisors' },
-      { name: 'Assets', path: '/assets' },
-      { name: 'Beneficiaries', path: '/beneficiaries' },
-      { name: 'Decision Makers', path: '/decisionmakers' },
-      { name: 'Contact Details', path: '/contact-details' },
-      { name: 'Documents', path: '/documents' }
+      { name: 'Estate Planning Wizard', path: '/estate-wizard' },
+      { name: 'Spouse Access', path: '/spouse-access' }
     ]
     
     // Find the current step in the flow

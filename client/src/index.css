@@ -32,8 +32,8 @@
     Roboto,
     "Helvetica Neue",
     Arial;
-  --ll-bg-1: #0b3b4a;      /* deep teal */
-  --ll-bg-2: #0f6b5a;      /* greenish teal */
+  --ll-bg-1: #1e3a3e;      /* deep teal */
+  --ll-bg-2: #2d5a61;      /* lighter teal for gradients */
   --ll-accent: #d9a441;    /* warm gold */
   --ll-accent-2: #ffd37a;  /* lighter gold for gradients */
   --ll-text: #f4f7f7;
