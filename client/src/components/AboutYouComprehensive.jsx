@@ -103,12 +103,7 @@ export default function AboutYou() {
     email: '',
     
     // Children Information
-    children: [],
-    
-    // Executor/Administrator Information
-    isExecutor: false,
-    decedentName: '',
-    decedentDateOfDeath: { month: '', day: '', year: '' }
+    children: []
   })
 
   const [children, setChildren] = useState([])
@@ -1360,77 +1355,6 @@ export default function AboutYou() {
             </div>
           )}
 
-          {/* Executor/Administrator Section */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Executor/Administrator Information</h3>
-            <div className="mb-6">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={formData.isExecutor}
-                  onChange={(e) => handleInputChange('isExecutor', e.target.checked)}
-                  className="mr-2 text-gray-600 focus:ring-gray-500"
-                />
-                <span className="text-sm font-medium text-gray-700">
-                  Are you filling this form out as an executor or administrator for someone who has passed away?
-                </span>
-              </label>
-            </div>
-            
-            {formData.isExecutor && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Decedent Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.decedentName}
-                    onChange={(e) => handleInputChange('decedentName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="Full name of the deceased person"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Date of Death *
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <select
-                      value={formData.decedentDateOfDeath.month}
-                      onChange={(e) => handleDateChange('decedentDateOfDeath.month', e.target.value, 'month')}
-                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    >
-                      <option value="">Month</option>
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="number"
-                      value={formData.decedentDateOfDeath.day}
-                      onChange={(e) => handleDateChange('decedentDateOfDeath.day', e.target.value, 'day')}
-                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="Day"
-                      min="1"
-                      max="31"
-                    />
-                    <input
-                      type="number"
-                      value={formData.decedentDateOfDeath.year}
-                      onChange={(e) => handleDateChange('decedentDateOfDeath.year', e.target.value, 'year')}
-                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="Year"
-                      min="1900"
-                      max={new Date().getFullYear()}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Contact Information Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
