@@ -33,6 +33,30 @@ export default function Advisors() {
     }
   ])
 
+  const [showNewPersonForm, setShowNewPersonForm] = useState(null)
+  const [newPersonData, setNewPersonData] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    suffix: '',
+    preferredName: '',
+    ssn: '',
+    dateOfBirth: { month: '', day: '', year: '' },
+    birthCountry: '',
+    birthState: '',
+    birthCity: '',
+    phone: '',
+    email: '',
+    address: {
+      line1: '',
+      line2: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'US'
+    }
+  })
+
   const advisorTypes = [
     { value: 'attorney', label: 'Attorney' },
     { value: 'financial_advisor', label: 'Financial Advisor' },
@@ -85,6 +109,107 @@ export default function Advisors() {
           : a
       ))
     }
+  }
+
+  const handlePersonSelection = (advisorId, value) => {
+    if (value === 'other') {
+      setShowNewPersonForm(advisorId)
+    } else {
+      setShowNewPersonForm(null)
+      handleAdvisorChange(advisorId, 'personId', parseInt(value) || null)
+    }
+  }
+
+  const handleNewPersonChange = (field, value) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.')
+      setNewPersonData(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }))
+    } else {
+      setNewPersonData(prev => ({
+        ...prev,
+        [field]: value
+      }))
+    }
+  }
+
+  const saveNewPerson = (advisorId) => {
+    if (newPersonData.firstName || newPersonData.lastName) {
+      const newPersonId = addPerson({
+        firstName: newPersonData.firstName,
+        middleName: newPersonData.middleName,
+        lastName: newPersonData.lastName,
+        suffix: newPersonData.suffix,
+        preferredName: newPersonData.preferredName,
+        ssn: newPersonData.ssn,
+        dateOfBirth: newPersonData.dateOfBirth,
+        birthCountry: newPersonData.birthCountry,
+        birthState: newPersonData.birthState,
+        birthCity: newPersonData.birthCity,
+        contactInfo: {
+          phone: newPersonData.phone,
+          email: newPersonData.email,
+          address: newPersonData.address
+        },
+        roles: ['advisor']
+      })
+
+      handleAdvisorChange(advisorId, 'personId', newPersonId)
+      setShowNewPersonForm(null)
+      setNewPersonData({
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        suffix: '',
+        preferredName: '',
+        ssn: '',
+        dateOfBirth: { month: '', day: '', year: '' },
+        birthCountry: '',
+        birthState: '',
+        birthCity: '',
+        phone: '',
+        email: '',
+        address: {
+          line1: '',
+          line2: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: 'US'
+        }
+      })
+    }
+  }
+
+  const cancelNewPerson = () => {
+    setShowNewPersonForm(null)
+    setNewPersonData({
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      suffix: '',
+      preferredName: '',
+      ssn: '',
+      dateOfBirth: { month: '', day: '', year: '' },
+      birthCountry: '',
+      birthState: '',
+      birthCity: '',
+      phone: '',
+      email: '',
+      address: {
+        line1: '',
+        line2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: 'US'
+      }
+    })
   }
 
   const handleSpecializationChange = (advisorId, specialization, isChecked) => {
@@ -173,7 +298,7 @@ export default function Advisors() {
                     </label>
                     <select
                       value={advisor.personId || ''}
-                      onChange={(e) => handleAdvisorChange(advisor.id, 'personId', parseInt(e.target.value) || null)}
+                      onChange={(e) => handlePersonSelection(advisor.id, e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                     >
                       <option value="">Select person...</option>
@@ -249,6 +374,104 @@ export default function Advisors() {
                     ))}
                   </div>
                 </div>
+
+                {/* New Person Form for Advisors */}
+                {showNewPersonForm === advisor.id && (
+                  <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Person</h4>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          First Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={newPersonData.firstName}
+                          onChange={(e) => handleNewPersonChange('firstName', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="First name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Last Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={newPersonData.lastName}
+                          onChange={(e) => handleNewPersonChange('lastName', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Last name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Middle Name
+                        </label>
+                        <input
+                          type="text"
+                          value={newPersonData.middleName}
+                          onChange={(e) => handleNewPersonChange('middleName', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Middle name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Preferred Name
+                        </label>
+                        <input
+                          type="text"
+                          value={newPersonData.preferredName}
+                          onChange={(e) => handleNewPersonChange('preferredName', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Preferred name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          value={newPersonData.phone}
+                          onChange={(e) => handleNewPersonChange('phone', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          value={newPersonData.email}
+                          onChange={(e) => handleNewPersonChange('email', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="email@example.com"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4 flex justify-end space-x-3">
+                      <button
+                        type="button"
+                        onClick={cancelNewPerson}
+                        className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => saveNewPerson(advisor.id)}
+                        className="px-6 py-2 text-white rounded-lg transition-colors duration-200 font-medium"
+                        style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+                      >
+                        Save Person
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Notes */}
                 <div className="mt-6">

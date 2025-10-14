@@ -81,6 +81,35 @@ export default function Assets() {
     }
   ])
 
+  const [showNewPersonForm, setShowNewPersonForm] = useState({
+    beneficiary: null,
+    decisionMaker: null,
+    advisor: null
+  })
+
+  const [newPersonData, setNewPersonData] = useState({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    suffix: '',
+    preferredName: '',
+    ssn: '',
+    dateOfBirth: { month: '', day: '', year: '' },
+    birthCountry: '',
+    birthState: '',
+    birthCity: '',
+    phone: '',
+    email: '',
+    address: {
+      line1: '',
+      line2: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'US'
+    }
+  })
+
   const assetCategories = [
     { value: 'real_estate', label: 'Real Estate' },
     { value: 'personal_property', label: 'Personal Property' },
@@ -225,6 +254,135 @@ export default function Assets() {
         ? { ...liability, [field]: value }
         : liability
     ))
+  }
+
+  const handlePersonSelection = (type, id, value) => {
+    if (value === 'other') {
+      setShowNewPersonForm(prev => ({ ...prev, [type]: id }))
+    } else {
+      setShowNewPersonForm(prev => ({ ...prev, [type]: null }))
+      if (type === 'beneficiary') {
+        handleBeneficiaryChange(id, 'personId', parseInt(value) || null)
+      } else if (type === 'decisionMaker') {
+        handleDecisionMakerChange(id, 'personId', parseInt(value) || null)
+      } else if (type === 'advisor') {
+        handleAdvisorChange(id, 'personId', parseInt(value) || null)
+      }
+    }
+  }
+
+  const handleNewPersonChange = (field, value) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.')
+      setNewPersonData(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value
+        }
+      }))
+    } else {
+      setNewPersonData(prev => ({
+        ...prev,
+        [field]: value
+      }))
+    }
+  }
+
+  const handleNewPersonDateChange = (field, value, type) => {
+    let numValue = parseInt(value) || ''
+    
+    if (type === 'month') {
+      numValue = Math.min(Math.max(numValue, 1), 12)
+    } else if (type === 'day') {
+      numValue = Math.min(Math.max(numValue, 1), 31)
+    } else if (type === 'year') {
+      const currentYear = new Date().getFullYear()
+      numValue = Math.min(Math.max(numValue, 1900), currentYear)
+    }
+    
+    handleNewPersonChange(field, numValue)
+  }
+
+  const saveNewPerson = (type, id) => {
+    if (newPersonData.firstName || newPersonData.lastName) {
+      const newPersonId = addPerson({
+        firstName: newPersonData.firstName,
+        middleName: newPersonData.middleName,
+        lastName: newPersonData.lastName,
+        suffix: newPersonData.suffix,
+        preferredName: newPersonData.preferredName,
+        ssn: newPersonData.ssn,
+        dateOfBirth: newPersonData.dateOfBirth,
+        birthCountry: newPersonData.birthCountry,
+        birthState: newPersonData.birthState,
+        birthCity: newPersonData.birthCity,
+        contactInfo: {
+          phone: newPersonData.phone,
+          email: newPersonData.email,
+          address: newPersonData.address
+        },
+        roles: [type]
+      })
+
+      if (type === 'beneficiary') {
+        handleBeneficiaryChange(id, 'personId', newPersonId)
+      } else if (type === 'decisionMaker') {
+        handleDecisionMakerChange(id, 'personId', newPersonId)
+      } else if (type === 'advisor') {
+        handleAdvisorChange(id, 'personId', newPersonId)
+      }
+
+      setShowNewPersonForm(prev => ({ ...prev, [type]: null }))
+      setNewPersonData({
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        suffix: '',
+        preferredName: '',
+        ssn: '',
+        dateOfBirth: { month: '', day: '', year: '' },
+        birthCountry: '',
+        birthState: '',
+        birthCity: '',
+        phone: '',
+        email: '',
+        address: {
+          line1: '',
+          line2: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          country: 'US'
+        }
+      })
+    }
+  }
+
+  const cancelNewPerson = (type) => {
+    setShowNewPersonForm(prev => ({ ...prev, [type]: null }))
+    setNewPersonData({
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      suffix: '',
+      preferredName: '',
+      ssn: '',
+      dateOfBirth: { month: '', day: '', year: '' },
+      birthCountry: '',
+      birthState: '',
+      birthCity: '',
+      phone: '',
+      email: '',
+      address: {
+        line1: '',
+        line2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: 'US'
+      }
+    })
   }
 
   const handleSubmit = (e) => {
@@ -481,7 +639,7 @@ export default function Assets() {
                       </label>
                       <select
                         value={beneficiary.personId || ''}
-                        onChange={(e) => handleBeneficiaryChange(beneficiary.id, 'personId', parseInt(e.target.value) || null)}
+                        onChange={(e) => handlePersonSelection('beneficiary', beneficiary.id, e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       >
                         <option value="">Select person...</option>
@@ -510,6 +668,104 @@ export default function Assets() {
                       </select>
                     </div>
                   </div>
+
+                  {/* New Person Form for Beneficiaries */}
+                  {showNewPersonForm.beneficiary === beneficiary.id && (
+                    <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Person</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            First Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.firstName}
+                            onChange={(e) => handleNewPersonChange('firstName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="First name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.lastName}
+                            onChange={(e) => handleNewPersonChange('lastName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Last name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Middle Name
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.middleName}
+                            onChange={(e) => handleNewPersonChange('middleName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Middle name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Preferred Name
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.preferredName}
+                            onChange={(e) => handleNewPersonChange('preferredName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Preferred name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Phone Number
+                          </label>
+                          <input
+                            type="tel"
+                            value={newPersonData.phone}
+                            onChange={(e) => handleNewPersonChange('phone', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="(555) 123-4567"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                          </label>
+                          <input
+                            type="email"
+                            value={newPersonData.email}
+                            onChange={(e) => handleNewPersonChange('email', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="email@example.com"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-end space-x-3">
+                        <button
+                          type="button"
+                          onClick={() => cancelNewPerson('beneficiary')}
+                          className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => saveNewPerson('beneficiary', beneficiary.id)}
+                          className="px-6 py-2 text-white rounded-lg transition-colors duration-200 font-medium"
+                          style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+                        >
+                          Save Person
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -782,7 +1038,7 @@ export default function Assets() {
                       </label>
                       <select
                         value={decisionMaker.personId || ''}
-                        onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'personId', parseInt(e.target.value) || null)}
+                        onChange={(e) => handlePersonSelection('decisionMaker', decisionMaker.id, e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       >
                         <option value="">Select person...</option>
@@ -822,6 +1078,104 @@ export default function Assets() {
                       </select>
                     </div>
                   </div>
+
+                  {/* New Person Form for Decision Makers */}
+                  {showNewPersonForm.decisionMaker === decisionMaker.id && (
+                    <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Person</h4>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            First Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.firstName}
+                            onChange={(e) => handleNewPersonChange('firstName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="First name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name *
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.lastName}
+                            onChange={(e) => handleNewPersonChange('lastName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Last name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Middle Name
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.middleName}
+                            onChange={(e) => handleNewPersonChange('middleName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Middle name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Preferred Name
+                          </label>
+                          <input
+                            type="text"
+                            value={newPersonData.preferredName}
+                            onChange={(e) => handleNewPersonChange('preferredName', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="Preferred name"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Phone Number
+                          </label>
+                          <input
+                            type="tel"
+                            value={newPersonData.phone}
+                            onChange={(e) => handleNewPersonChange('phone', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="(555) 123-4567"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                          </label>
+                          <input
+                            type="email"
+                            value={newPersonData.email}
+                            onChange={(e) => handleNewPersonChange('email', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="email@example.com"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-end space-x-3">
+                        <button
+                          type="button"
+                          onClick={() => cancelNewPerson('decisionMaker')}
+                          className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => saveNewPerson('decisionMaker', decisionMaker.id)}
+                          className="px-6 py-2 text-white rounded-lg transition-colors duration-200 font-medium"
+                          style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+                        >
+                          Save Person
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mt-4">
                     <label className="flex items-center">
