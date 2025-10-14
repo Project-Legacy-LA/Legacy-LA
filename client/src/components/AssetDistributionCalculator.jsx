@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
+import { usePeople } from '../contexts/PeopleContext'
 
 export default function AssetDistributionCalculator({ assets, beneficiaries, onDistributionChange }) {
+  const { people } = usePeople()
   const pageRef = useRef(null)
 
   useEffect(() => {
@@ -135,8 +137,10 @@ export default function AssetDistributionCalculator({ assets, beneficiaries, onD
     const beneficiary = beneficiaries.find(b => b.id === beneficiaryId)
     if (!beneficiary) return 'Unknown Beneficiary'
     
-    const person = assets.find(a => a.id === beneficiary.personId) // This should be from people array
-    return person ? `${person.firstName} ${person.lastName}`.trim() : 'Unnamed Beneficiary'
+    const person = people.find(p => p.id === beneficiary.personId)
+    if (!person) return 'Unnamed Beneficiary'
+    
+    return `${person.firstName} ${person.lastName}`.trim() || 'Unnamed Beneficiary'
   }
 
   return (

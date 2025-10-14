@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { usePeople } from '../contexts/PeopleContext'
+import AssetDistributionCalculator from './AssetDistributionCalculator'
 
 export default function Assets() {
   const navigate = useNavigate()
@@ -86,6 +87,9 @@ export default function Assets() {
     decisionMaker: null,
     advisor: null
   })
+
+  const [showDistributionCalculator, setShowDistributionCalculator] = useState(false)
+  const [distributions, setDistributions] = useState({})
 
   const [newPersonData, setNewPersonData] = useState({
     firstName: '',
@@ -383,6 +387,10 @@ export default function Assets() {
         country: 'US'
       }
     })
+  }
+
+  const handleDistributionChange = (newDistributions) => {
+    setDistributions(newDistributions)
   }
 
   const handleSubmit = (e) => {
@@ -839,6 +847,46 @@ export default function Assets() {
                 + Add Another Beneficiary
               </button>
             </div>
+          </div>
+
+          {/* Asset Distribution Calculator Section */}
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Asset Distribution Calculator</h2>
+              <button
+                type="button"
+                onClick={() => setShowDistributionCalculator(!showDistributionCalculator)}
+                className="px-4 py-2 text-white rounded-lg transition-colors duration-200 font-medium text-sm"
+                style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+              >
+                {showDistributionCalculator ? 'Hide Calculator' : 'Show Calculator'}
+              </button>
+            </div>
+            
+            {showDistributionCalculator && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start">
+                  <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h3 className="text-sm font-medium text-blue-800">Structured Distribution Planning</h3>
+                    <p className="text-sm text-blue-700 mt-1">
+                      This calculator helps you plan exact asset distributions using percentages or fixed dollar amounts. 
+                      This eliminates the need for complex text-based distribution instructions that cannot be automatically calculated.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showDistributionCalculator && (
+              <AssetDistributionCalculator
+                assets={assets}
+                beneficiaries={beneficiaries}
+                onDistributionChange={handleDistributionChange}
+              />
+            )}
           </div>
 
           {/* Liabilities Section */}

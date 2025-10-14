@@ -422,8 +422,17 @@ export default function AboutYou() {
     })
 
     console.log('Form submitted:', formData)
+    console.log('About to navigate to /assets')
+    
     // Navigate to assets section
-    navigate('/assets')
+    try {
+      navigate('/assets')
+      console.log('Navigation successful')
+    } catch (error) {
+      console.error('Navigation error:', error)
+      // Fallback navigation
+      window.location.href = '/assets'
+    }
   }
 
   // Louisiana Parishes
@@ -1658,6 +1667,16 @@ export default function AboutYou() {
             </button>
             <button
               type="submit"
+              onClick={(e) => {
+                console.log('Continue button clicked')
+                // Let the form handle submission, but add backup
+                setTimeout(() => {
+                  if (window.location.pathname === '/about-you') {
+                    console.log('Form submission may have failed, using backup navigation')
+                    navigate('/assets')
+                  }
+                }, 100)
+              }}
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
