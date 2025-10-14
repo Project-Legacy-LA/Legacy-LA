@@ -47,9 +47,30 @@ export default function Navigation() {
 
             {/* Navigation Buttons */}
             <div className="hidden md:flex items-center space-x-2.5 lg:space-x-5">
-              <button className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300">
+              <button 
+                onClick={() => navigate('/')}
+                className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+              >
                 <span className="relative">
                   Home
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                </span>
+              </button>
+              <button 
+                onClick={() => navigate('/about-you')}
+                className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+              >
+                <span className="relative">
+                  About You
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                </span>
+              </button>
+              <button 
+                onClick={() => navigate('/assets')}
+                className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+              >
+                <span className="relative">
+                  Assets
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
                 </span>
               </button>
@@ -62,24 +83,6 @@ export default function Navigation() {
               <button className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300">
                 <span className="relative">
                   For Clients
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
-                </span>
-              </button>
-              <button className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300">
-                <span className="relative">
-                  Online Portal
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
-                </span>
-              </button>
-              <button className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300">
-                <span className="relative">
-                  Inquiries
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
-                </span>
-              </button>
-              <button className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300">
-                <span className="relative">
-                  Subscribe
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
                 </span>
               </button>

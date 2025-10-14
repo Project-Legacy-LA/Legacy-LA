@@ -33,17 +33,17 @@ export default function HomePage() {
       completed: false,
       totalItems: 15,
       completedItems: 0,
-      description: 'Provide your personal information, marital status, and contact details.',
+      description: 'Provide your personal information, spouse details, and children information.',
       featured: false
     },
     { 
-      id: 'estate-wizard', 
-      title: 'Estate Planning Wizard', 
-      time: '30 min', 
+      id: 'assets', 
+      title: 'Assets & Distribution', 
+      time: '20 min', 
       completed: false,
-      totalItems: 25,
+      totalItems: 20,
       completedItems: 0,
-      description: 'Complete your entire estate plan in one integrated form with collapsible sections.',
+      description: 'Manage your assets, beneficiaries, and decision makers with data reuse from About You.',
       featured: false
     },
     { 
@@ -62,11 +62,11 @@ export default function HomePage() {
     setSelectedSegment(segmentId)
     // Navigate to the specific form or component
     switch (segmentId) {
-      case 'estate-wizard':
-        navigate('/estate-wizard')
-        break
       case 'about-you':
         navigate('/about-you')
+        break
+      case 'assets':
+        navigate('/assets')
         break
       case 'spouse-access':
         navigate('/spouse-access')

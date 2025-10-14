@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
+import { usePeople } from '../contexts/PeopleContext'
 
 export default function AboutYou() {
   const navigate = useNavigate()
   const pageRef = useRef(null)
   const formRef = useRef(null)
   const headerRef = useRef(null)
+  const { addPerson, updatePerson, people } = usePeople()
 
   useEffect(() => {
     const tl = gsap.timeline()
@@ -97,8 +99,13 @@ export default function AboutYou() {
     
     // Contact Information
     phone: '',
-    email: ''
+    email: '',
+    
+    // Children Information
+    children: []
   })
+
+  const [children, setChildren] = useState([])
 
   const handleInputChange = (field, value) => {
     if (field.includes('.')) {
@@ -137,11 +144,140 @@ export default function AboutYou() {
     handleInputChange('socialSecurityNumber', formatted)
   }
 
+  const addChild = () => {
+    const newChild = {
+      id: Date.now(),
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      suffix: '',
+      preferredName: '',
+      ssn: '',
+      dateOfBirth: { month: '', day: '', year: '' },
+      birthCountry: '',
+      birthState: '',
+      birthCity: '',
+      phone: '',
+      email: '',
+      address: {
+        line1: '',
+        line2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: 'US'
+      }
+    }
+    setChildren([...children, newChild])
+  }
+
+  const removeChild = (childId) => {
+    setChildren(children.filter(child => child.id !== childId))
+  }
+
+  const handleChildChange = (childId, field, value) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.')
+      setChildren(children.map(c => 
+        c.id === childId 
+          ? { ...c, [parent]: { ...c[parent], [child]: value } }
+          : c
+      ))
+    } else {
+      setChildren(children.map(c => 
+        c.id === childId 
+          ? { ...c, [field]: value }
+          : c
+      ))
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
+    
+    // Add main person to people context
+    const mainPersonId = addPerson({
+      firstName: formData.legalFirstName,
+      middleName: formData.middleName,
+      lastName: formData.legalLastName,
+      suffix: formData.suffix,
+      preferredName: formData.preferredName,
+      ssn: formData.socialSecurityNumber,
+      dateOfBirth: formData.dateOfBirth,
+      birthCountry: formData.birthCountry,
+      birthState: formData.birthState,
+      birthCity: formData.birthCity,
+      contactInfo: {
+        phone: formData.phone,
+        email: formData.email,
+        address: {
+          line1: formData.residenceAddress1,
+          line2: formData.residenceAddress2,
+          city: formData.residenceCity,
+          state: formData.residenceState,
+          zipCode: formData.residenceZipCode,
+          country: formData.residenceCountry
+        }
+      },
+      roles: ['client']
+    })
+
+    // Add spouse if married
+    if (formData.maritalStatus === 'Married' && formData.spouseFirstName) {
+      addPerson({
+        firstName: formData.spouseFirstName,
+        middleName: formData.spouseMiddleName,
+        lastName: formData.spouseLastName,
+        suffix: formData.spouseSuffix,
+        preferredName: formData.spousePreferredName,
+        ssn: formData.spouseSSN,
+        dateOfBirth: formData.spouseDateOfBirth,
+        birthCountry: formData.spouseBirthCountry,
+        birthState: formData.spouseBirthState,
+        birthCity: formData.spouseBirthCity,
+        contactInfo: {
+          phone: formData.spousePhone,
+          email: formData.spouseEmail,
+          address: {
+            line1: formData.residenceAddress1,
+            line2: formData.residenceAddress2,
+            city: formData.residenceCity,
+            state: formData.residenceState,
+            zipCode: formData.residenceZipCode,
+            country: formData.residenceCountry
+          }
+        },
+        roles: ['spouse']
+      })
+    }
+
+    // Add children
+    children.forEach(child => {
+      if (child.firstName || child.lastName) {
+        addPerson({
+          firstName: child.firstName,
+          middleName: child.middleName,
+          lastName: child.lastName,
+          suffix: child.suffix,
+          preferredName: child.preferredName,
+          ssn: child.ssn,
+          dateOfBirth: child.dateOfBirth,
+          birthCountry: child.birthCountry,
+          birthState: child.birthState,
+          birthCity: child.birthCity,
+          contactInfo: {
+            phone: child.phone,
+            email: child.email,
+            address: child.address
+          },
+          roles: ['child']
+        })
+      }
+    })
+
     console.log('Form submitted:', formData)
-    // Navigate to next section
-    navigate('/estate-wizard')
+    // Navigate to assets section
+    navigate('/assets')
   }
 
   // Louisiana Parishes
@@ -875,6 +1011,135 @@ export default function AboutYou() {
                 />
               </div>
             </div>
+          </div>
+
+          {/* Children Information Section */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Children Information</h3>
+              <button
+                type="button"
+                onClick={addChild}
+                className="px-4 py-2 text-white rounded-lg transition-colors duration-200 font-medium text-sm"
+                style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+              >
+                + Add Child
+              </button>
+            </div>
+            
+            {children.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <p>No children added yet. Click "Add Child" to add your children's information.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {children.map((child, index) => (
+                  <div key={child.id} className="p-6 border border-gray-200 rounded-lg">
+                    <div className="flex justify-between items-center mb-4">
+                      <h4 className="text-md font-semibold text-gray-800">Child {index + 1}</h4>
+                      <button
+                        type="button"
+                        onClick={() => removeChild(child.id)}
+                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                      >
+                        Remove Child
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          value={child.firstName}
+                          onChange={(e) => handleChildChange(child.id, 'firstName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Child's first name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          value={child.lastName}
+                          onChange={(e) => handleChildChange(child.id, 'lastName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Child's last name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Preferred Name / Nickname
+                        </label>
+                        <input
+                          type="text"
+                          value={child.preferredName}
+                          onChange={(e) => handleChildChange(child.id, 'preferredName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="What they prefer to be called"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Date of Birth
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <input
+                            type="number"
+                            value={child.dateOfBirth.month}
+                            onChange={(e) => handleChildChange(child.id, 'dateOfBirth.month', e.target.value)}
+                            className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="MM"
+                          />
+                          <input
+                            type="number"
+                            value={child.dateOfBirth.day}
+                            onChange={(e) => handleChildChange(child.id, 'dateOfBirth.day', e.target.value)}
+                            className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="DD"
+                          />
+                          <input
+                            type="number"
+                            value={child.dateOfBirth.year}
+                            onChange={(e) => handleChildChange(child.id, 'dateOfBirth.year', e.target.value)}
+                            className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="YYYY"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          value={child.phone}
+                          onChange={(e) => handleChildChange(child.id, 'phone', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          value={child.email}
+                          onChange={(e) => handleChildChange(child.id, 'email', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="child.email@example.com"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
