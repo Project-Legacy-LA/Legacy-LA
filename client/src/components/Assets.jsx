@@ -54,18 +54,6 @@ export default function Assets() {
     }
   ])
 
-  const [decisionMakers, setDecisionMakers] = useState([
-    {
-      id: 1,
-      personId: null,
-      role: 'executor',
-      isCoRole: false,
-      coRolePersonId: null,
-      relationship: '',
-      importantInfo: '',
-      notes: ''
-    }
-  ])
 
   const [liabilities, setLiabilities] = useState([
     {
@@ -88,7 +76,7 @@ export default function Assets() {
     advisor: null
   })
 
-  const [showDistributionCalculator, setShowDistributionCalculator] = useState(false)
+  const [showDistributionCalculator, setShowDistributionCalculator] = useState(true)
   const [distributions, setDistributions] = useState({})
 
   const [newPersonData, setNewPersonData] = useState({
@@ -398,10 +386,10 @@ export default function Assets() {
     console.log('Assets submitted:', {
       assets,
       beneficiaries,
-      decisionMakers
+      liabilities,
+      distributions
     })
-    // Navigate to next section or summary
-    navigate('/')
+    navigate('/decision-makers')
   }
 
   return (
@@ -851,42 +839,28 @@ export default function Assets() {
 
           {/* Asset Distribution Calculator Section */}
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Asset Distribution Calculator</h2>
-              <button
-                type="button"
-                onClick={() => setShowDistributionCalculator(!showDistributionCalculator)}
-                className="px-4 py-2 text-white rounded-lg transition-colors duration-200 font-medium text-sm"
-                style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
-              >
-                {showDistributionCalculator ? 'Hide Calculator' : 'Show Calculator'}
-              </button>
-            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Asset Distribution Calculator</h2>
             
-            {showDistributionCalculator && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <div className="flex items-start">
-                  <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  <div>
-                    <h3 className="text-sm font-medium text-blue-800">Structured Distribution Planning</h3>
-                    <p className="text-sm text-blue-700 mt-1">
-                      This calculator helps you plan exact asset distributions using percentages or fixed dollar amounts. 
-                      This eliminates the need for complex text-based distribution instructions that cannot be automatically calculated.
-                    </p>
-                  </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-start">
+                <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <h3 className="text-sm font-medium text-blue-800">Structured Distribution Planning</h3>
+                  <p className="text-sm text-blue-700 mt-1">
+                    This calculator helps you plan exact asset distributions using percentages or fixed dollar amounts. 
+                    This eliminates the need for complex text-based distribution instructions that cannot be automatically calculated.
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
 
-            {showDistributionCalculator && (
-              <AssetDistributionCalculator
-                assets={assets}
-                beneficiaries={beneficiaries}
-                onDistributionChange={handleDistributionChange}
-              />
-            )}
+            <AssetDistributionCalculator
+              assets={assets}
+              beneficiaries={beneficiaries}
+              onDistributionChange={handleDistributionChange}
+            />
           </div>
 
           {/* Liabilities Section */}
@@ -1058,218 +1032,6 @@ export default function Assets() {
             </div>
           </div>
 
-          {/* Decision Makers Section */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Decision Makers</h2>
-            <div className="space-y-6">
-              {decisionMakers.map((decisionMaker, index) => (
-                <div key={decisionMaker.id} className="p-6 border border-gray-200 rounded-lg">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Decision Maker {index + 1}
-                    </h3>
-                    {decisionMakers.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => setDecisionMakers(decisionMakers.filter(d => d.id !== decisionMaker.id))}
-                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
-                      >
-                        Remove Decision Maker
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Person
-                      </label>
-                      <select
-                        value={decisionMaker.personId || ''}
-                        onChange={(e) => handlePersonSelection('decisionMaker', decisionMaker.id, e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      >
-                        <option value="">Select person...</option>
-                        {getPeopleOptions().map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                        <option value="other">Other (Add new person)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Role
-                      </label>
-                      <select
-                        value={decisionMaker.role}
-                        onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'role', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      >
-                        <option value="executor">Executor</option>
-                        <option value="guardian">Guardian (Tutor)</option>
-                        <option value="trustee">Trustee</option>
-                        <option value="power_of_attorney">Power of Attorney - Financial</option>
-                        <option value="healthcare_proxy">Power of Attorney - Healthcare</option>
-                        <option value="designee_remains">Designee for Remains/Burial/Services</option>
-                        <option value="backup_guardian">Backup Guardian</option>
-                        <option value="undertutor">Undertutor</option>
-                        <option value="backup_undertutor">Backup Undertutor</option>
-                        <option value="backup_executor">Backup Executor</option>
-                        <option value="backup_poa_financial">Backup Power of Attorney - Financial</option>
-                        <option value="backup_poa_medical">Backup Power of Attorney - Medical</option>
-                        <option value="backup_designee_remains">Backup Designee for Remains/Burial/Services</option>
-                        <option value="special_trustee">Special Trustee</option>
-                        <option value="backup_trustee">Backup Trustee</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* New Person Form for Decision Makers */}
-                  {showNewPersonForm.decisionMaker === decisionMaker.id && (
-                    <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Person</h4>
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            First Name *
-                          </label>
-                          <input
-                            type="text"
-                            value={newPersonData.firstName}
-                            onChange={(e) => handleNewPersonChange('firstName', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="First name"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Last Name *
-                          </label>
-                          <input
-                            type="text"
-                            value={newPersonData.lastName}
-                            onChange={(e) => handleNewPersonChange('lastName', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="Last name"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Middle Name
-                          </label>
-                          <input
-                            type="text"
-                            value={newPersonData.middleName}
-                            onChange={(e) => handleNewPersonChange('middleName', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="Middle name"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Preferred Name
-                          </label>
-                          <input
-                            type="text"
-                            value={newPersonData.preferredName}
-                            onChange={(e) => handleNewPersonChange('preferredName', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="Preferred name"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Phone Number
-                          </label>
-                          <input
-                            type="tel"
-                            value={newPersonData.phone}
-                            onChange={(e) => handleNewPersonChange('phone', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="(555) 123-4567"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            value={newPersonData.email}
-                            onChange={(e) => handleNewPersonChange('email', e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="email@example.com"
-                          />
-                        </div>
-                      </div>
-                      <div className="mt-4 flex justify-end space-x-3">
-                        <button
-                          type="button"
-                          onClick={() => cancelNewPerson('decisionMaker')}
-                          className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => saveNewPerson('decisionMaker', decisionMaker.id)}
-                          className="px-6 py-2 text-white rounded-lg transition-colors duration-200 font-medium"
-                          style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
-                        >
-                          Save Person
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="mt-4">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={decisionMaker.isCoRole}
-                        onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'isCoRole', e.target.checked)}
-                        className="mr-2 text-gray-600 focus:ring-gray-500"
-                      />
-                      <span className="text-sm text-gray-700">This is a Co-Role (shared responsibility)</span>
-                    </label>
-                  </div>
-
-                  {decisionMaker.isCoRole && (
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Co-Role Person
-                      </label>
-                      <select
-                        value={decisionMaker.coRolePersonId || ''}
-                        onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'coRolePersonId', parseInt(e.target.value) || null)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      >
-                        <option value="">Select co-role person...</option>
-                        {getPeopleOptions().map(option => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                        <option value="other">Other (Add new person)</option>
-                      </select>
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              <button
-                type="button"
-                onClick={addDecisionMaker}
-                className="px-6 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
-                style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
-              >
-                + Add Another Decision Maker
-              </button>
-            </div>
-          </div>
 
           {/* Action Buttons */}
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
@@ -1285,7 +1047,7 @@ export default function Assets() {
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
-              Continue
+              Continue to Decision Makers
             </button>
           </div>
         </form>

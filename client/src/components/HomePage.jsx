@@ -43,7 +43,17 @@ export default function HomePage() {
       completed: false,
       totalItems: 20,
       completedItems: 0,
-      description: 'Manage your assets, beneficiaries, and decision makers with data reuse from About You.',
+      description: 'Manage your assets, beneficiaries, and distribution planning with data reuse from About You.',
+      featured: false
+    },
+    { 
+      id: 'decision-makers', 
+      title: 'Decision Makers', 
+      time: '15 min', 
+      completed: false,
+      totalItems: 10,
+      completedItems: 0,
+      description: 'Assign roles and responsibilities to people who will help manage your estate.',
       featured: false
     },
     { 
@@ -87,6 +97,9 @@ export default function HomePage() {
         break
       case 'assets':
         navigate('/assets')
+        break
+      case 'decision-makers':
+        navigate('/decision-makers')
         break
       case 'advisors':
         navigate('/advisors')
