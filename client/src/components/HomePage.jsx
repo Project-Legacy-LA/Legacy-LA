@@ -47,6 +47,26 @@ export default function HomePage() {
       featured: false
     },
     { 
+      id: 'advisors', 
+      title: 'Professional Advisors', 
+      time: '10 min', 
+      completed: false,
+      totalItems: 12,
+      completedItems: 0,
+      description: 'Add your professional advisors who will help with your estate planning.',
+      featured: false
+    },
+    { 
+      id: 'documents', 
+      title: 'Documents', 
+      time: '15 min', 
+      completed: false,
+      totalItems: 10,
+      completedItems: 0,
+      description: 'Document your existing estate planning documents, legal papers, and other important documents.',
+      featured: false
+    },
+    { 
       id: 'spouse-access', 
       title: 'Spouse Access', 
       time: '5 min', 
@@ -67,6 +87,12 @@ export default function HomePage() {
         break
       case 'assets':
         navigate('/assets')
+        break
+      case 'advisors':
+        navigate('/advisors')
+        break
+      case 'documents':
+        navigate('/documents')
         break
       case 'spouse-access':
         navigate('/spouse-access')

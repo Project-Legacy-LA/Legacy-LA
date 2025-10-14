@@ -127,6 +127,21 @@ export default function AboutYou() {
     }
   }
 
+  const handleDateChange = (field, value, type) => {
+    let numValue = parseInt(value) || ''
+    
+    if (type === 'month') {
+      numValue = Math.min(Math.max(numValue, 1), 12)
+    } else if (type === 'day') {
+      numValue = Math.min(Math.max(numValue, 1), 31)
+    } else if (type === 'year') {
+      const currentYear = new Date().getFullYear()
+      numValue = Math.min(Math.max(numValue, 1900), currentYear)
+    }
+    
+    handleInputChange(field, numValue)
+  }
+
   const formatSSN = (value) => {
     // Remove all non-numeric characters
     const numbers = value.replace(/\D/g, '')
@@ -194,6 +209,21 @@ export default function AboutYou() {
     }
   }
 
+  const handleChildDateChange = (childId, field, value, type) => {
+    let numValue = parseInt(value) || ''
+    
+    if (type === 'month') {
+      numValue = Math.min(Math.max(numValue, 1), 12)
+    } else if (type === 'day') {
+      numValue = Math.min(Math.max(numValue, 1), 31)
+    } else if (type === 'year') {
+      const currentYear = new Date().getFullYear()
+      numValue = Math.min(Math.max(numValue, 1900), currentYear)
+    }
+    
+    handleChildChange(childId, field, numValue)
+  }
+
   const addPreviousSpouse = () => {
     const newSpouse = {
       id: Date.now(),
@@ -247,6 +277,21 @@ export default function AboutYou() {
           : s
       ))
     }
+  }
+
+  const handlePreviousSpouseDateChange = (spouseId, field, value, type) => {
+    let numValue = parseInt(value) || ''
+    
+    if (type === 'month') {
+      numValue = Math.min(Math.max(numValue, 1), 12)
+    } else if (type === 'day') {
+      numValue = Math.min(Math.max(numValue, 1), 31)
+    } else if (type === 'year') {
+      const currentYear = new Date().getFullYear()
+      numValue = Math.min(Math.max(numValue, 1900), currentYear)
+    }
+    
+    handlePreviousSpouseChange(spouseId, field, numValue)
   }
 
   const handleSubmit = (e) => {
@@ -708,8 +753,10 @@ export default function AboutYou() {
                     <input
                       type="number"
                       value={formData.dateOfBirth.month}
-                      onChange={(e) => handleInputChange('dateOfBirth.month', e.target.value)}
+                      onChange={(e) => handleDateChange('dateOfBirth.month', e.target.value, 'month')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      min="1"
+                      max="12"
                     />
                   </div>
                   <div>
@@ -717,8 +764,10 @@ export default function AboutYou() {
                     <input
                       type="number"
                       value={formData.dateOfBirth.day}
-                      onChange={(e) => handleInputChange('dateOfBirth.day', e.target.value)}
+                      onChange={(e) => handleDateChange('dateOfBirth.day', e.target.value, 'day')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      min="1"
+                      max="31"
                     />
                   </div>
                   <div>
@@ -726,8 +775,10 @@ export default function AboutYou() {
                     <input
                       type="number"
                       value={formData.dateOfBirth.year}
-                      onChange={(e) => handleInputChange('dateOfBirth.year', e.target.value)}
+                      onChange={(e) => handleDateChange('dateOfBirth.year', e.target.value, 'year')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      min="1900"
+                      max={new Date().getFullYear()}
                     />
                   </div>
                 </div>
@@ -938,7 +989,7 @@ export default function AboutYou() {
                   <div className="grid grid-cols-3 gap-2">
                     <select
                       value={formData.spouseDateOfBirth.month}
-                      onChange={(e) => handleInputChange('spouseDateOfBirth.month', e.target.value)}
+                      onChange={(e) => handleDateChange('spouseDateOfBirth.month', e.target.value, 'month')}
                       className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                     >
                       <option value="">Month</option>
@@ -951,7 +1002,7 @@ export default function AboutYou() {
                     <input
                       type="number"
                       value={formData.spouseDateOfBirth.day}
-                      onChange={(e) => handleInputChange('spouseDateOfBirth.day', e.target.value)}
+                      onChange={(e) => handleDateChange('spouseDateOfBirth.day', e.target.value, 'day')}
                       className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       placeholder="Day"
                       min="1"
@@ -960,11 +1011,11 @@ export default function AboutYou() {
                     <input
                       type="number"
                       value={formData.spouseDateOfBirth.year}
-                      onChange={(e) => handleInputChange('spouseDateOfBirth.year', e.target.value)}
+                      onChange={(e) => handleDateChange('spouseDateOfBirth.year', e.target.value, 'year')}
                       className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       placeholder="Year"
                       min="1900"
-                      max="2024"
+                      max={new Date().getFullYear()}
                     />
                   </div>
                 </div>
@@ -1116,27 +1167,33 @@ export default function AboutYou() {
                                   Date of Birth
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
-                                  <input
-                                    type="number"
-                                    value={spouse.dateOfBirth.month}
-                                    onChange={(e) => handlePreviousSpouseChange(spouse.id, 'dateOfBirth.month', e.target.value)}
-                                    className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                    placeholder="MM"
-                                  />
-                                  <input
-                                    type="number"
-                                    value={spouse.dateOfBirth.day}
-                                    onChange={(e) => handlePreviousSpouseChange(spouse.id, 'dateOfBirth.day', e.target.value)}
-                                    className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                    placeholder="DD"
-                                  />
-                                  <input
-                                    type="number"
-                                    value={spouse.dateOfBirth.year}
-                                    onChange={(e) => handlePreviousSpouseChange(spouse.id, 'dateOfBirth.year', e.target.value)}
-                                    className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                    placeholder="YYYY"
-                                  />
+                            <input
+                              type="number"
+                              value={spouse.dateOfBirth.month}
+                              onChange={(e) => handlePreviousSpouseDateChange(spouse.id, 'dateOfBirth.month', e.target.value, 'month')}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="MM"
+                              min="1"
+                              max="12"
+                            />
+                            <input
+                              type="number"
+                              value={spouse.dateOfBirth.day}
+                              onChange={(e) => handlePreviousSpouseDateChange(spouse.id, 'dateOfBirth.day', e.target.value, 'day')}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="DD"
+                              min="1"
+                              max="31"
+                            />
+                            <input
+                              type="number"
+                              value={spouse.dateOfBirth.year}
+                              onChange={(e) => handlePreviousSpouseDateChange(spouse.id, 'dateOfBirth.year', e.target.value, 'year')}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="YYYY"
+                              min="1900"
+                              max={new Date().getFullYear()}
+                            />
                                 </div>
                               </div>
                             </div>
@@ -1392,23 +1449,29 @@ export default function AboutYou() {
                           <input
                             type="number"
                             value={child.dateOfBirth.month}
-                            onChange={(e) => handleChildChange(child.id, 'dateOfBirth.month', e.target.value)}
+                            onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.month', e.target.value, 'month')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="MM"
+                            min="1"
+                            max="12"
                           />
                           <input
                             type="number"
                             value={child.dateOfBirth.day}
-                            onChange={(e) => handleChildChange(child.id, 'dateOfBirth.day', e.target.value)}
+                            onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.day', e.target.value, 'day')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="DD"
+                            min="1"
+                            max="31"
                           />
                           <input
                             type="number"
                             value={child.dateOfBirth.year}
-                            onChange={(e) => handleChildChange(child.id, 'dateOfBirth.year', e.target.value)}
+                            onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.year', e.target.value, 'year')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="YYYY"
+                            min="1900"
+                            max={new Date().getFullYear()}
                           />
                         </div>
                       </div>

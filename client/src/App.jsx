@@ -7,6 +7,8 @@ import AttorneyLogin from './components/AttorneyLogin'
 import HomePage from './components/HomePage'
 import AboutYou from './components/AboutYouComprehensive'
 import Assets from './components/Assets'
+import Advisors from './components/Advisors'
+import Documents from './components/Documents'
 import SpouseAccessManager from './components/SpouseAccessManager'
 import Navigation from './components/Navigation'
 import Breadcrumb from './components/Breadcrumb'
@@ -22,6 +24,8 @@ const App = () => {
             <Route path="/" element={<><Breadcrumb /><HomePage /></>} />
             <Route path="/about-you" element={<><Breadcrumb /><AboutYou /></>} />
             <Route path="/assets" element={<><Breadcrumb /><Assets /></>} />
+            <Route path="/advisors" element={<><Breadcrumb /><Advisors /></>} />
+            <Route path="/documents" element={<><Breadcrumb /><Documents /></>} />
             <Route path="/spouse-access" element={<><Breadcrumb /><SpouseAccessManager /></>} />
             <Route path="/login" element={<><Breadcrumb /><Login /></>} />
             <Route path="/attorney-login" element={<><Breadcrumb /><AttorneyLogin /></>} />
