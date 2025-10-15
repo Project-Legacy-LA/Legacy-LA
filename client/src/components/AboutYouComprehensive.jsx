@@ -772,34 +772,31 @@ export default function AboutYou() {
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Month</label>
                     <input
-                      type="number"
+                      type="text"
                       value={formData.dateOfBirth.month}
                       onChange={(e) => handleDateChange('dateOfBirth.month', e.target.value, 'month')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      min="1"
-                      max="12"
+                      placeholder="MM"
                     />
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Day</label>
                     <input
-                      type="number"
+                      type="text"
                       value={formData.dateOfBirth.day}
                       onChange={(e) => handleDateChange('dateOfBirth.day', e.target.value, 'day')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      min="1"
-                      max="31"
+                      placeholder="DD"
                     />
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Year</label>
                     <input
-                      type="number"
+                      type="text"
                       value={formData.dateOfBirth.year}
                       onChange={(e) => handleDateChange('dateOfBirth.year', e.target.value, 'year')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      min="1900"
-                      max={new Date().getFullYear()}
+                      placeholder="YYYY"
                     />
                   </div>
                 </div>
@@ -923,165 +920,9 @@ export default function AboutYou() {
             </div>
           )}
 
-          {/* Spouse Information Section (if married) */}
-          {formData.maritalStatus === 'Married' && (
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Spouse Information</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse First Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spouseFirstName}
-                    onChange={(e) => handleInputChange('spouseFirstName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="Spouse's first name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Middle Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spouseMiddleName}
-                    onChange={(e) => handleInputChange('spouseMiddleName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="Middle name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Last Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spouseLastName}
-                    onChange={(e) => handleInputChange('spouseLastName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="Spouse's last name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Suffix
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spouseSuffix}
-                    onChange={(e) => handleInputChange('spouseSuffix', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="Jr., Sr., II, III, etc."
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Preferred Name / Nickname
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spousePreferredName}
-                    onChange={(e) => handleInputChange('spousePreferredName', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="What they prefer to be called"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Social Security Number
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spouseSSN}
-                    onChange={(e) => {
-                      const formatted = formatSSN(e.target.value)
-                      handleInputChange('spouseSSN', formatted)
-                    }}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="XXX-XX-XXXX"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Date of Birth
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <select
-                      value={formData.spouseDateOfBirth.month}
-                      onChange={(e) => handleDateChange('spouseDateOfBirth.month', e.target.value, 'month')}
-                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    >
-                      <option value="">Month</option>
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="number"
-                      value={formData.spouseDateOfBirth.day}
-                      onChange={(e) => handleDateChange('spouseDateOfBirth.day', e.target.value, 'day')}
-                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="Day"
-                      min="1"
-                      max="31"
-                    />
-                    <input
-                      type="number"
-                      value={formData.spouseDateOfBirth.year}
-                      onChange={(e) => handleDateChange('spouseDateOfBirth.year', e.target.value, 'year')}
-                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="Year"
-                      min="1900"
-                      max={new Date().getFullYear()}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Birth Place
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.spouseBirthCountry}
-                    onChange={(e) => handleInputChange('spouseBirthCountry', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="City, State"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.spousePhone}
-                    onChange={(e) => handleInputChange('spousePhone', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="(555) 123-4567"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Spouse Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.spouseEmail}
-                    onChange={(e) => handleInputChange('spouseEmail', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="spouse.email@example.com"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
 
-          {/* Divorce Information Section (if divorced) */}
-          {formData.maritalStatus === 'Divorced' && (
+          {/* Divorce Information Section (if divorced) - REMOVED */}
+          {false && (
             <div className="mt-8 pt-6 border-t border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Divorce Information</h3>
               
@@ -1139,52 +980,52 @@ export default function AboutYou() {
                             </button>
                           </div>
 
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Personal Information */}
                             <div className="space-y-4">
                               <h6 className="text-sm font-medium text-gray-700 border-b border-gray-200 pb-2">Personal Information</h6>
                               
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                                   First Name
-                                </label>
-                                <input
-                                  type="text"
+                  </label>
+                  <input
+                    type="text"
                                   value={spouse.firstName}
                                   onChange={(e) => handlePreviousSpouseChange(spouse.id, 'firstName', e.target.value)}
-                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                  placeholder="Spouse's first name"
-                                />
-                              </div>
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Spouse's first name"
+                  />
+                </div>
                               
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                                   Last Name
-                                </label>
-                                <input
-                                  type="text"
+                  </label>
+                  <input
+                    type="text"
                                   value={spouse.lastName}
                                   onChange={(e) => handlePreviousSpouseChange(spouse.id, 'lastName', e.target.value)}
-                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                   placeholder="Spouse's last name"
-                                />
-                              </div>
+                  />
+                </div>
                               
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                                   Preferred Name / Nickname
-                                </label>
-                                <input
-                                  type="text"
+                  </label>
+                  <input
+                    type="text"
                                   value={spouse.preferredName}
                                   onChange={(e) => handlePreviousSpouseChange(spouse.id, 'preferredName', e.target.value)}
-                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                   placeholder="What they preferred to be called"
-                                />
-                              </div>
+                  />
+                </div>
                               
-                              <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                                   Date of Birth
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
@@ -1253,19 +1094,19 @@ export default function AboutYou() {
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                   Marriage Location
-                                </label>
-                                <input
-                                  type="text"
+                  </label>
+                  <input
+                    type="text"
                                   value={spouse.marriageLocation}
                                   onChange={(e) => handlePreviousSpouseChange(spouse.id, 'marriageLocation', e.target.value)}
-                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                   placeholder="City, State"
-                                />
-                              </div>
+                  />
+                </div>
                               
                               {(spouse.status === 'divorced' || spouse.status === 'separated') && (
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                                     {spouse.status === 'divorced' ? 'Divorce Date' : 'Separation Date'}
                                   </label>
                                   <input
@@ -1329,8 +1170,8 @@ export default function AboutYou() {
             </div>
           )}
 
-          {/* Widow Information Section (if widowed) */}
-          {formData.maritalStatus === 'Widowed' && (
+          {/* Widow Information Section (if widowed) - REMOVED */}
+          {false && (
             <div className="mt-8 pt-6 border-t border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Deceased Spouse Information</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1464,18 +1305,18 @@ export default function AboutYou() {
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             First Name *
-                          </label>
-                          <input
-                            type="text"
+                  </label>
+                  <input
+                    type="text"
                             value={spouse.firstName}
                             onChange={(e) => handleSpouseChange(spouse.id, 'firstName', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="First name"
-                          />
-                        </div>
+                  />
+                </div>
 
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                             Last Name *
                           </label>
                           <input
@@ -1518,48 +1359,44 @@ export default function AboutYou() {
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Marriage Date
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                              <select
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    <select
                                 value={spouse.marriageDate.month}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.month', e.target.value, 'month')}
-                                className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              >
-                                <option value="">Month</option>
-                                {Array.from({ length: 12 }, (_, i) => (
-                                  <option key={i + 1} value={i + 1}>
-                                    {new Date(0, i).toLocaleString('default', { month: 'long' })}
-                                  </option>
-                                ))}
-                              </select>
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    >
+                      <option value="">Month</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                        </option>
+                      ))}
+                    </select>
                               <input
-                                type="number"
+                                type="text"
                                 value={spouse.marriageDate.day}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.day', e.target.value, 'day')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Day"
-                                min="1"
-                                max="31"
+                                placeholder="DD"
                               />
                               <input
-                                type="number"
+                                type="text"
                                 value={spouse.marriageDate.year}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.year', e.target.value, 'year')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Year"
-                                min="1900"
-                                max={new Date().getFullYear()}
+                                placeholder="YYYY"
                               />
-                            </div>
-                          </div>
+                  </div>
+                </div>
                         )}
 
                         {/* Divorce Date */}
                         {spouse.relationship === 'divorced' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                               Divorce Date
-                            </label>
+                  </label>
                             <div className="grid grid-cols-3 gap-2">
                               <select
                                 value={spouse.divorceDate.month}
@@ -1574,33 +1411,29 @@ export default function AboutYou() {
                                 ))}
                               </select>
                               <input
-                                type="number"
+                                type="text"
                                 value={spouse.divorceDate.day}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'divorceDate.day', e.target.value, 'day')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Day"
-                                min="1"
-                                max="31"
+                                placeholder="DD"
                               />
                               <input
-                                type="number"
+                                type="text"
                                 value={spouse.divorceDate.year}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'divorceDate.year', e.target.value, 'year')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Year"
-                                min="1900"
-                                max={new Date().getFullYear()}
+                                placeholder="YYYY"
                               />
-                            </div>
-                          </div>
+                  </div>
+                </div>
                         )}
 
                         {/* Death Date */}
                         {spouse.relationship === 'widowed' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                               Date of Death
-                            </label>
+                  </label>
                             <div className="grid grid-cols-3 gap-2">
                               <select
                                 value={spouse.deathDate.month}
@@ -1615,54 +1448,50 @@ export default function AboutYou() {
                                 ))}
                               </select>
                               <input
-                                type="number"
+                                type="text"
                                 value={spouse.deathDate.day}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'deathDate.day', e.target.value, 'day')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Day"
-                                min="1"
-                                max="31"
+                                placeholder="DD"
                               />
                               <input
-                                type="number"
+                                type="text"
                                 value={spouse.deathDate.year}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'deathDate.year', e.target.value, 'year')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Year"
-                                min="1900"
-                                max={new Date().getFullYear()}
+                                placeholder="YYYY"
                               />
-                            </div>
+                </div>
                           </div>
                         )}
 
                         {/* Contact Information */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                             Phone Number
-                          </label>
-                          <input
-                            type="tel"
+                  </label>
+                  <input
+                    type="tel"
                             value={spouse.phone}
                             onChange={(e) => handleSpouseChange(spouse.id, 'phone', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="(555) 123-4567"
-                          />
-                        </div>
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
 
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                             Email Address
-                          </label>
-                          <input
-                            type="email"
+                  </label>
+                  <input
+                    type="email"
                             value={spouse.email}
                             onChange={(e) => handleSpouseChange(spouse.id, 'email', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="email@example.com"
-                          />
-                        </div>
-                      </div>
+                  />
+                </div>
+              </div>
                     </div>
                   ))}
                 </div>
@@ -1671,7 +1500,7 @@ export default function AboutYou() {
           )}
 
           {/* Children Information Section */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Children Information</h3>
               <button
@@ -1703,102 +1532,96 @@ export default function AboutYou() {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                           First Name
-                        </label>
-                        <input
-                          type="text"
+                  </label>
+                  <input
+                    type="text"
                           value={child.firstName}
                           onChange={(e) => handleChildChange(child.id, 'firstName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="Child's first name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                           Last Name
-                        </label>
-                        <input
+                  </label>
+                  <input
                           type="text"
                           value={child.lastName}
                           onChange={(e) => handleChildChange(child.id, 'lastName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="Child's last name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                           Preferred Name / Nickname
-                        </label>
-                        <input
-                          type="text"
+                  </label>
+                  <input
+                    type="text"
                           value={child.preferredName}
                           onChange={(e) => handleChildChange(child.id, 'preferredName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="What they prefer to be called"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                           Date of Birth
-                        </label>
+                  </label>
                         <div className="grid grid-cols-3 gap-2">
                           <input
-                            type="number"
+                            type="text"
                             value={child.dateOfBirth.month}
                             onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.month', e.target.value, 'month')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="MM"
-                            min="1"
-                            max="12"
                           />
                           <input
-                            type="number"
+                            type="text"
                             value={child.dateOfBirth.day}
                             onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.day', e.target.value, 'day')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="DD"
-                            min="1"
-                            max="31"
                           />
                           <input
-                            type="number"
+                            type="text"
                             value={child.dateOfBirth.year}
                             onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.year', e.target.value, 'year')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="YYYY"
-                            min="1900"
-                            max={new Date().getFullYear()}
                           />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone Number
-                        </label>
-                        <input
-                          type="tel"
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
                           value={child.phone}
                           onChange={(e) => handleChildChange(child.id, 'phone', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                          placeholder="(555) 123-4567"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email Address
-                        </label>
-                        <input
-                          type="email"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
                           value={child.email}
                           onChange={(e) => handleChildChange(child.id, 'email', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="child.email@example.com"
-                        />
-                      </div>
-                    </div>
+                />
+              </div>
+            </div>
 
                     {/* Special Needs Section */}
                     <div className="mt-6">
@@ -1828,7 +1651,7 @@ export default function AboutYou() {
                           />
                         </div>
                       )}
-                    </div>
+          </div>
 
                     {/* Parent Checkbox Section */}
                     <div className="mt-6">
