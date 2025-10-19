@@ -74,6 +74,7 @@ export default function AboutYou() {
 
   const [children, setChildren] = useState([])
   const [spouses, setSpouses] = useState([])
+  const [previousSpouses, setPreviousSpouses] = useState([])
 
   const handleInputChange = (field, value) => {
     if (field.includes('.')) {
@@ -94,15 +95,21 @@ export default function AboutYou() {
   }
 
   const handleDateChange = (field, value, type) => {
+    // For year, allow partial input without immediate validation
+    if (type === 'year') {
+      // Allow empty string or partial year input
+      if (value === '' || /^\d{1,4}$/.test(value)) {
+        handleInputChange(field, value)
+      }
+      return
+    }
+    
     let numValue = parseInt(value) || ''
     
     if (type === 'month') {
       numValue = Math.min(Math.max(numValue, 1), 12)
     } else if (type === 'day') {
       numValue = Math.min(Math.max(numValue, 1), 31)
-    } else if (type === 'year') {
-      const currentYear = new Date().getFullYear()
-      numValue = Math.min(Math.max(numValue, 1900), currentYear)
     }
     
     handleInputChange(field, numValue)
@@ -181,15 +188,21 @@ export default function AboutYou() {
   }
 
   const handleSpouseDateChange = (spouseId, field, value, type) => {
+    // For year, allow partial input without immediate validation
+    if (type === 'year') {
+      // Allow empty string or partial year input
+      if (value === '' || /^\d{1,4}$/.test(value)) {
+        handleSpouseChange(spouseId, field, value)
+      }
+      return
+    }
+    
     let numValue = parseInt(value) || ''
     
     if (type === 'month') {
       numValue = Math.min(Math.max(numValue, 1), 12)
     } else if (type === 'day') {
       numValue = Math.min(Math.max(numValue, 1), 31)
-    } else if (type === 'year') {
-      const currentYear = new Date().getFullYear()
-      numValue = Math.min(Math.max(numValue, 1900), currentYear)
     }
     
     handleSpouseChange(spouseId, field, numValue)
@@ -220,10 +233,9 @@ export default function AboutYou() {
       },
       specialNeeds: false,
       specialNeedsDescription: '',
-      parentCheckbox: {
-        client: false,
-        spouse: false
-      }
+      parentRelationship: '', // 'your', 'both', 'spouse'
+      isDeceased: false,
+      dateOfDeath: { month: '', day: '', year: '' }
     }
     setChildren([...children, newChild])
   }
@@ -250,15 +262,42 @@ export default function AboutYou() {
   }
 
   const handleChildDateChange = (childId, field, value, type) => {
+    // For year, allow partial input without immediate validation
+    if (type === 'year') {
+      // Allow empty string or partial year input
+      if (value === '' || /^\d{1,4}$/.test(value)) {
+        handleChildChange(childId, field, value)
+      }
+      return
+    }
+    
     let numValue = parseInt(value) || ''
     
     if (type === 'month') {
       numValue = Math.min(Math.max(numValue, 1), 12)
     } else if (type === 'day') {
       numValue = Math.min(Math.max(numValue, 1), 31)
-    } else if (type === 'year') {
-      const currentYear = new Date().getFullYear()
-      numValue = Math.min(Math.max(numValue, 1900), currentYear)
+    }
+    
+    handleChildChange(childId, field, numValue)
+  }
+
+  const handleChildDeathDateChange = (childId, field, value, type) => {
+    // For year, allow partial input without immediate validation
+    if (type === 'year') {
+      // Allow empty string or partial year input
+      if (value === '' || /^\d{1,4}$/.test(value)) {
+        handleChildChange(childId, field, value)
+      }
+      return
+    }
+    
+    let numValue = parseInt(value) || ''
+    
+    if (type === 'month') {
+      numValue = Math.min(Math.max(numValue, 1), 12)
+    } else if (type === 'day') {
+      numValue = Math.min(Math.max(numValue, 1), 31)
     }
     
     handleChildChange(childId, field, numValue)
@@ -1373,20 +1412,20 @@ export default function AboutYou() {
                         </option>
                       ))}
                     </select>
-                              <input
+                    <input
                                 type="text"
                                 value={spouse.marriageDate.day}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.day', e.target.value, 'day')}
-                                className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                 placeholder="DD"
-                              />
-                              <input
+                    />
+                    <input
                                 type="text"
                                 value={spouse.marriageDate.year}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.year', e.target.value, 'year')}
-                                className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                 placeholder="YYYY"
-                              />
+                    />
                   </div>
                 </div>
                         )}
@@ -1410,8 +1449,8 @@ export default function AboutYou() {
                                   </option>
                                 ))}
                               </select>
-                              <input
-                                type="text"
+                  <input
+                    type="text"
                                 value={spouse.divorceDate.day}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'divorceDate.day', e.target.value, 'day')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
@@ -1423,8 +1462,8 @@ export default function AboutYou() {
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'divorceDate.year', e.target.value, 'year')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                 placeholder="YYYY"
-                              />
-                  </div>
+                  />
+                </div>
                 </div>
                         )}
 
@@ -1490,6 +1529,60 @@ export default function AboutYou() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="email@example.com"
                   />
+                </div>
+
+                {/* Document Upload for Spouse */}
+                <div className="mt-6">
+                  <h4 className="text-md font-semibold text-gray-800 mb-4">Related Documents</h4>
+                  <div className="space-y-4">
+                    {spouse.relationship === 'married' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Marriage Certificate
+                        </label>
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                          />
+                          <span className="text-sm text-gray-500">Upload marriage certificate</span>
+              </div>
+            </div>
+          )}
+
+                    {spouse.relationship === 'divorced' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Divorce Decree
+                  </label>
+                        <div className="flex items-center space-x-4">
+                  <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                          />
+                          <span className="text-sm text-gray-500">Upload divorce decree</span>
+                </div>
+                      </div>
+                    )}
+                    
+                    {spouse.relationship === 'widowed' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Death Certificate
+                  </label>
+                        <div className="flex items-center space-x-4">
+                  <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                          />
+                          <span className="text-sm text-gray-500">Upload death certificate</span>
+                </div>
+              </div>
+                    )}
+                  </div>
                 </div>
               </div>
                     </div>
@@ -1568,7 +1661,7 @@ export default function AboutYou() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="What they prefer to be called"
                   />
-                </div>
+              </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                           Date of Birth
@@ -1595,7 +1688,7 @@ export default function AboutYou() {
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="YYYY"
                           />
-                </div>
+            </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1653,7 +1746,7 @@ export default function AboutYou() {
                       )}
           </div>
 
-                    {/* Parent Checkbox Section */}
+                    {/* Parent Relationship Section */}
                     <div className="mt-6">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Whose child is this?
@@ -1661,22 +1754,134 @@ export default function AboutYou() {
                       <div className="space-y-2">
                         <label className="flex items-center">
                           <input
-                            type="checkbox"
-                            checked={child.parentCheckbox.client}
-                            onChange={(e) => handleChildChange(child.id, 'parentCheckbox.client', e.target.checked)}
+                            type="radio"
+                            name={`parentRelationship_${child.id}`}
+                            value="your"
+                            checked={child.parentRelationship === 'your'}
+                            onChange={(e) => handleChildChange(child.id, 'parentRelationship', e.target.value)}
                             className="mr-2 text-gray-600 focus:ring-gray-500"
                           />
-                          <span className="text-sm text-gray-700">Client's child</span>
+                          <span className="text-sm text-gray-700">Your child</span>
                         </label>
                         <label className="flex items-center">
                           <input
-                            type="checkbox"
-                            checked={child.parentCheckbox.spouse}
-                            onChange={(e) => handleChildChange(child.id, 'parentCheckbox.spouse', e.target.checked)}
+                            type="radio"
+                            name={`parentRelationship_${child.id}`}
+                            value="both"
+                            checked={child.parentRelationship === 'both'}
+                            onChange={(e) => handleChildChange(child.id, 'parentRelationship', e.target.value)}
+                            className="mr-2 text-gray-600 focus:ring-gray-500"
+                          />
+                          <span className="text-sm text-gray-700">You and Spouse's child</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name={`parentRelationship_${child.id}`}
+                            value="spouse"
+                            checked={child.parentRelationship === 'spouse'}
+                            onChange={(e) => handleChildChange(child.id, 'parentRelationship', e.target.value)}
                             className="mr-2 text-gray-600 focus:ring-gray-500"
                           />
                           <span className="text-sm text-gray-700">Spouse's child</span>
                         </label>
+                      </div>
+                    </div>
+
+                    {/* Deceased Status Section */}
+                    <div className="mt-6">
+                      <label className="flex items-center mb-4">
+                        <input
+                          type="checkbox"
+                          checked={child.isDeceased}
+                          onChange={(e) => handleChildChange(child.id, 'isDeceased', e.target.checked)}
+                          className="mr-2 text-gray-600 focus:ring-gray-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">
+                          Is this child deceased?
+                        </span>
+                      </label>
+                      
+                      {child.isDeceased && (
+                        <div className="mt-3">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Date of Death
+                          </label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <input
+                              type="text"
+                              value={child.dateOfDeath.month}
+                              onChange={(e) => handleChildDeathDateChange(child.id, 'dateOfDeath.month', e.target.value, 'month')}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="MM"
+                            />
+                            <input
+                              type="text"
+                              value={child.dateOfDeath.day}
+                              onChange={(e) => handleChildDeathDateChange(child.id, 'dateOfDeath.day', e.target.value, 'day')}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="DD"
+                            />
+                            <input
+                              type="text"
+                              value={child.dateOfDeath.year}
+                              onChange={(e) => handleChildDeathDateChange(child.id, 'dateOfDeath.year', e.target.value, 'year')}
+                              className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="YYYY"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Document Upload Section for Children */}
+                    <div className="mt-6">
+                      <h4 className="text-md font-semibold text-gray-800 mb-4">Related Documents</h4>
+                      <div className="space-y-4">
+                        {child.isDeceased && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Death Certificate
+                            </label>
+                            <div className="flex items-center space-x-4">
+                              <input
+                                type="file"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                              />
+                              <span className="text-sm text-gray-500">Upload death certificate</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Birth Certificate
+                          </label>
+                          <div className="flex items-center space-x-4">
+                            <input
+                              type="file"
+                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                            />
+                            <span className="text-sm text-gray-500">Upload birth certificate</span>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Other Related Documents
+                          </label>
+                          <div className="flex items-center space-x-4">
+                            <input
+                              type="file"
+                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                              multiple
+                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                            />
+                            <span className="text-sm text-gray-500">Upload other documents (adoption papers, medical records, etc.)</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

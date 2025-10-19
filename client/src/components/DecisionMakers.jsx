@@ -11,6 +11,9 @@ export default function DecisionMakers() {
   const { people, addPerson } = usePeople()
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0)
+    
     const tl = gsap.timeline()
     tl.fromTo(pageRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" })
   }, [])
@@ -28,7 +31,10 @@ export default function DecisionMakers() {
     }
   ])
 
-  const [showNewPersonForm, setShowNewPersonForm] = useState(null)
+  const [showNewPersonForm, setShowNewPersonForm] = useState({
+    main: null,
+    coRole: null
+  })
   const [newPersonData, setNewPersonData] = useState({
     firstName: '',
     middleName: '',
@@ -78,12 +84,13 @@ export default function DecisionMakers() {
     ))
   }
 
-  const handlePersonSelection = (decisionMakerId, value) => {
+  const handlePersonSelection = (decisionMakerId, value, type = 'main') => {
     if (value === 'other') {
-      setShowNewPersonForm(decisionMakerId)
+      setShowNewPersonForm(prev => ({ ...prev, [type]: decisionMakerId }))
     } else {
-      setShowNewPersonForm(null)
-      handleDecisionMakerChange(decisionMakerId, 'personId', parseInt(value) || null)
+      setShowNewPersonForm(prev => ({ ...prev, [type]: null }))
+      const field = type === 'main' ? 'personId' : 'coRolePersonId'
+      handleDecisionMakerChange(decisionMakerId, field, parseInt(value) || null)
     }
   }
 
@@ -105,7 +112,7 @@ export default function DecisionMakers() {
     }
   }
 
-  const saveNewPerson = (decisionMakerId) => {
+  const saveNewPerson = (decisionMakerId, type = 'main') => {
     if (newPersonData.firstName || newPersonData.lastName) {
       const newPersonId = addPerson({
         firstName: newPersonData.firstName,
@@ -125,9 +132,10 @@ export default function DecisionMakers() {
         },
         roles: ['decision-maker']
       })
-
-      handleDecisionMakerChange(decisionMakerId, 'personId', newPersonId)
-      setShowNewPersonForm(null)
+      
+      const field = type === 'main' ? 'personId' : 'coRolePersonId'
+      handleDecisionMakerChange(decisionMakerId, field, newPersonId)
+      setShowNewPersonForm(prev => ({ ...prev, [type]: null }))
       setNewPersonData({
         firstName: '',
         middleName: '',
@@ -153,8 +161,8 @@ export default function DecisionMakers() {
     }
   }
 
-  const cancelNewPerson = () => {
-    setShowNewPersonForm(null)
+  const cancelNewPerson = (type = 'main') => {
+    setShowNewPersonForm(prev => ({ ...prev, [type]: null }))
     setNewPersonData({
       firstName: '',
       middleName: '',
@@ -226,27 +234,10 @@ export default function DecisionMakers() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Role and Important Information at the top */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Person
-                    </label>
-                    <select
-                      value={decisionMaker.personId || ''}
-                      onChange={(e) => handlePersonSelection(decisionMaker.id, e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    >
-                      <option value="">Select person...</option>
-                      {getPeopleOptions().map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                      <option value="other">Other (Add new person)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-lg font-bold text-gray-800 mb-3">
                       Role
                     </label>
                     <select
@@ -256,7 +247,7 @@ export default function DecisionMakers() {
                     >
                       <option value="executor">Executor</option>
                       <option value="backup_executor">Backup Executor</option>
-                      <option value="guardian">Guardian (Tutor)</option>
+                      <option value="guardian_tutor">Guardian (Tutor)</option>
                       <option value="backup_guardian">Backup Guardian</option>
                       <option value="undertutor">Undertutor</option>
                       <option value="backup_undertutor">Backup Undertutor</option>
@@ -272,10 +263,42 @@ export default function DecisionMakers() {
                       <option value="other">Other</option>
                     </select>
                   </div>
+                  <div>
+                    <label className="block text-lg font-bold text-gray-800 mb-3">
+                      Important Information
+                    </label>
+                    <textarea
+                      value={decisionMaker.importantInfo}
+                      onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'importantInfo', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      rows="3"
+                      placeholder="Any important information about this decision maker..."
+                    />
+                  </div>
+                </div>
+
+                {/* Person Selection */}
+                <div className="mb-6">
+                  <label className="block text-lg font-bold text-gray-800 mb-3">
+                    Person
+                  </label>
+                  <select
+                    value={decisionMaker.personId || ''}
+                    onChange={(e) => handlePersonSelection(decisionMaker.id, e.target.value, 'main')}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  >
+                    <option value="">Select person...</option>
+                    {getPeopleOptions().map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                    <option value="other">Other (Add new person)</option>
+                  </select>
                 </div>
 
                 {/* New Person Form for Decision Makers */}
-                {showNewPersonForm === decisionMaker.id && (
+                {showNewPersonForm.main === decisionMaker.id && (
                   <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Person</h4>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -355,14 +378,14 @@ export default function DecisionMakers() {
                     <div className="mt-4 flex justify-end space-x-3">
                       <button
                         type="button"
-                        onClick={cancelNewPerson}
+                        onClick={() => cancelNewPerson('main')}
                         className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
                       >
                         Cancel
                       </button>
                       <button
                         type="button"
-                        onClick={() => saveNewPerson(decisionMaker.id)}
+                        onClick={() => saveNewPerson(decisionMaker.id, 'main')}
                         className="px-6 py-2 text-white rounded-lg transition-colors duration-200 font-medium"
                         style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
                       >
@@ -391,7 +414,7 @@ export default function DecisionMakers() {
                     </label>
                     <select
                       value={decisionMaker.coRolePersonId || ''}
-                      onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'coRolePersonId', parseInt(e.target.value) || null)}
+                      onChange={(e) => handlePersonSelection(decisionMaker.id, e.target.value, 'coRole')}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                     >
                       <option value="">Select co-role person...</option>
@@ -400,26 +423,88 @@ export default function DecisionMakers() {
                           {option.label}
                         </option>
                       ))}
+                      <option value="other">Other (Add new person)</option>
                     </select>
                   </div>
                 )}
 
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Important Information
-                  </label>
-                  <textarea
-                    value={decisionMaker.importantInfo}
-                    onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'importantInfo', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    rows="3"
-                    placeholder="Any important information about this decision maker..."
-                  />
-                </div>
+                {/* New Person Form for Co-Role */}
+                {showNewPersonForm.coRole === decisionMaker.id && (
+                  <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Add New Co-Role Person</h4>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          First Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={newPersonData.firstName}
+                          onChange={(e) => handleNewPersonChange('firstName', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="First name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Last Name *
+                        </label>
+                        <input
+                          type="text"
+                          value={newPersonData.lastName}
+                          onChange={(e) => handleNewPersonChange('lastName', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Last name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone Number
+                        </label>
+                        <input
+                          type="tel"
+                          value={newPersonData.phone}
+                          onChange={(e) => handleNewPersonChange('phone', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          value={newPersonData.email}
+                          onChange={(e) => handleNewPersonChange('email', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="email@example.com"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4 flex justify-end space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => cancelNewPerson('coRole')}
+                        className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => saveNewPerson(decisionMaker.id, 'coRole')}
+                        className="px-6 py-2 text-white rounded-lg transition-colors duration-200 font-medium"
+                        style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+                      >
+                        Save Co-Role Person
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Notes
+                <div className="mt-6">
+                  <label className="block text-lg font-bold text-gray-800 mb-3">
+                    Additional Notes
                   </label>
                   <textarea
                     value={decisionMaker.notes}
@@ -442,6 +527,7 @@ export default function DecisionMakers() {
                 + Add Another Decision Maker
               </button>
             </div>
+
           </div>
 
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">

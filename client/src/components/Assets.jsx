@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { usePeople } from '../contexts/PeopleContext'
+import { useAssets } from '../contexts/AssetsContext'
 import AssetDistributionCalculator from './AssetDistributionCalculator'
 
 export default function Assets() {
@@ -9,9 +10,13 @@ export default function Assets() {
   const pageRef = useRef(null)
   const formRef = useRef(null)
   const headerRef = useRef(null)
-  const { people, getPersonDisplayName, getPeopleOptions } = usePeople()
+  const { people, getPersonDisplayName, getPeopleOptions, addPerson } = usePeople()
+  const { assets, setAssetsData } = useAssets()
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0)
+    
     const tl = gsap.timeline()
     
     // Simple fade-in animation
@@ -21,23 +26,6 @@ export default function Assets() {
     )
   }, [])
 
-  const [assets, setAssets] = useState([
-    {
-      id: 1,
-      category: 'real_estate',
-      description: '',
-      valuation: { amount: '', currency: 'USD', valuationDate: '' },
-      ownershipPercentage: 100,
-      isLouisianaProperty: true,
-      probateClass: 'probate',
-      beneficiaryDesignationRequired: false,
-      excludedFromTaxableEstate: false,
-      propertyType: 'community',
-      owners: [],
-      beneficiaries: [],
-      notes: ''
-    }
-  ])
 
   const [beneficiaries, setBeneficiaries] = useState([
     {
@@ -55,26 +43,7 @@ export default function Assets() {
   ])
 
 
-  const [liabilities, setLiabilities] = useState([
-    {
-      id: 1,
-      category: '',
-      description: '',
-      amount: '',
-      creditor: '',
-      accountNumber: '',
-      monthlyPayment: '',
-      isSecured: false,
-      collateral: '',
-      notes: ''
-    }
-  ])
 
-  const [showNewPersonForm, setShowNewPersonForm] = useState({
-    beneficiary: null,
-    decisionMaker: null,
-    advisor: null
-  })
 
   const [showDistributionCalculator, setShowDistributionCalculator] = useState(true)
   const [distributions, setDistributions] = useState({})
@@ -102,6 +71,12 @@ export default function Assets() {
     }
   })
 
+  const [showNewPersonForm, setShowNewPersonForm] = useState({
+    beneficiary: null,
+    decisionMaker: null,
+    advisor: null
+  })
+
   const assetCategories = [
     { value: 'real_estate', label: 'Real Estate' },
     { value: 'personal_property', label: 'Personal Property' },
@@ -111,7 +86,20 @@ export default function Assets() {
     { value: 'retirement', label: 'Retirement Account' },
     { value: 'annuity', label: 'Annuity' },
     { value: 'life_insurance', label: 'Life Insurance' },
+    { value: 'employer_equity', label: 'Employer Equity' },
+    { value: 'education_account', label: 'Education Account' },
+    { value: 'hsa_fsa', label: 'HSA/FSA' },
+    { value: 'cryptocurrency', label: 'Cryptocurrency/Alternatives' },
+    { value: 'reits', label: 'REITs/Interest' },
     { value: 'business', label: 'Business Interest' },
+    { value: 'trust_interest', label: 'Trust Interest' },
+    { value: 'future_interest', label: 'Future Interest/IOU' },
+    { value: 'promissory_note', label: 'Promissory Note' },
+    { value: 'donor_advised_fund', label: 'Donor Advised Fund' },
+    { value: 'patent', label: 'Patent' },
+    { value: 'royalty_interest', label: 'Royalty Interest' },
+    { value: 'mineral_interest', label: 'Mineral Interest' },
+    { value: 'savings_bond', label: 'Savings Bond' },
     { value: 'other', label: 'Other' }
   ]
 
@@ -121,56 +109,120 @@ export default function Assets() {
     { value: 'ancillary_probate', label: 'Ancillary Probate' }
   ]
 
+  const states = [
+    { value: 'AL', label: 'Alabama' },
+    { value: 'AK', label: 'Alaska' },
+    { value: 'AZ', label: 'Arizona' },
+    { value: 'AR', label: 'Arkansas' },
+    { value: 'CA', label: 'California' },
+    { value: 'CO', label: 'Colorado' },
+    { value: 'CT', label: 'Connecticut' },
+    { value: 'DE', label: 'Delaware' },
+    { value: 'FL', label: 'Florida' },
+    { value: 'GA', label: 'Georgia' },
+    { value: 'HI', label: 'Hawaii' },
+    { value: 'ID', label: 'Idaho' },
+    { value: 'IL', label: 'Illinois' },
+    { value: 'IN', label: 'Indiana' },
+    { value: 'IA', label: 'Iowa' },
+    { value: 'KS', label: 'Kansas' },
+    { value: 'KY', label: 'Kentucky' },
+    { value: 'LA', label: 'Louisiana' },
+    { value: 'ME', label: 'Maine' },
+    { value: 'MD', label: 'Maryland' },
+    { value: 'MA', label: 'Massachusetts' },
+    { value: 'MI', label: 'Michigan' },
+    { value: 'MN', label: 'Minnesota' },
+    { value: 'MS', label: 'Mississippi' },
+    { value: 'MO', label: 'Missouri' },
+    { value: 'MT', label: 'Montana' },
+    { value: 'NE', label: 'Nebraska' },
+    { value: 'NV', label: 'Nevada' },
+    { value: 'NH', label: 'New Hampshire' },
+    { value: 'NJ', label: 'New Jersey' },
+    { value: 'NM', label: 'New Mexico' },
+    { value: 'NY', label: 'New York' },
+    { value: 'NC', label: 'North Carolina' },
+    { value: 'ND', label: 'North Dakota' },
+    { value: 'OH', label: 'Ohio' },
+    { value: 'OK', label: 'Oklahoma' },
+    { value: 'OR', label: 'Oregon' },
+    { value: 'PA', label: 'Pennsylvania' },
+    { value: 'RI', label: 'Rhode Island' },
+    { value: 'SC', label: 'South Carolina' },
+    { value: 'SD', label: 'South Dakota' },
+    { value: 'TN', label: 'Tennessee' },
+    { value: 'TX', label: 'Texas' },
+    { value: 'UT', label: 'Utah' },
+    { value: 'VT', label: 'Vermont' },
+    { value: 'VA', label: 'Virginia' },
+    { value: 'WA', label: 'Washington' },
+    { value: 'WV', label: 'West Virginia' },
+    { value: 'WI', label: 'Wisconsin' },
+    { value: 'WY', label: 'Wyoming' },
+    { value: 'DC', label: 'District of Columbia' }
+  ]
+
   const annuityTypes = [
     { value: 'qualified', label: 'Qualified (IRA)' },
     { value: 'non_qualified', label: 'Non-Qualified' }
   ]
 
-  const liabilityCategories = [
-    { value: 'mortgage', label: 'Mortgage' },
-    { value: 'credit_card', label: 'Credit Card' },
-    { value: 'personal_loan', label: 'Personal Loan' },
-    { value: 'auto_loan', label: 'Auto Loan' },
-    { value: 'student_loan', label: 'Student Loan' },
-    { value: 'business_loan', label: 'Business Loan' },
-    { value: 'medical_debt', label: 'Medical Debt' },
-    { value: 'tax_debt', label: 'Tax Debt' },
+  const titleForms = [
+    { value: 'sole_ownership', label: 'Sole Ownership' },
+    { value: 'joint_tenancy', label: 'Joint Tenancy with Right of Survivorship' },
+    { value: 'tenancy_in_common', label: 'Tenancy in Common' },
+    { value: 'trust_titled', label: 'Trust Titled' },
+    { value: 'custodial_utma', label: 'Custodial UTMA' },
+    { value: 'custodial_ugma', label: 'Custodial UGMA' },
+    { value: 'usufruct', label: 'Usufruct' },
+    { value: 'naked_ownership', label: 'Naked Ownership' },
     { value: 'other', label: 'Other' }
   ]
 
+
   const addAsset = () => {
-    const newId = Math.max(...assets.map(a => a.id)) + 1
-    setAssets([...assets, {
+    const newId = Math.max(...assets.map(a => a.id), 0) + 1
+    const newAsset = {
       id: newId,
       category: 'real_estate',
       description: '',
+      institution: '',
+      accountNumber: '',
       valuation: { amount: '', currency: 'USD', valuationDate: '' },
       ownershipPercentage: 100,
       isLouisianaProperty: true,
+      propertyLocation: 'LA',
       probateClass: 'probate',
       beneficiaryDesignationRequired: false,
       excludedFromTaxableEstate: false,
       propertyType: 'community',
+      titleForm: 'sole_ownership',
+      annuityQualified: false,
+      annuityNonQualified: false,
       owners: [],
       beneficiaries: [],
       notes: ''
-    }])
+    }
+    setAssetsData([...assets, newAsset])
   }
 
   const handleAssetChange = (assetId, field, value) => {
     if (field.includes('.')) {
       const [parent, child] = field.split('.')
-      setAssets(assets.map(a => 
+      const updatedAssets = assets.map(a => 
         a.id === assetId 
           ? { ...a, [parent]: { ...a[parent], [child]: value } }
           : a
-      ))
+      )
+      setAssetsData(updatedAssets)
     } else {
-      setAssets(assets.map(a => 
+      const updatedAssets = assets.map(a => 
         a.id === assetId 
           ? { ...a, [field]: value }
           : a
-      ))
+      )
+      setAssetsData(updatedAssets)
     }
   }
 
@@ -220,33 +272,6 @@ export default function Assets() {
     ))
   }
 
-  const addLiability = () => {
-    const newId = Math.max(...liabilities.map(l => l.id)) + 1
-    setLiabilities([...liabilities, {
-      id: newId,
-      category: '',
-      description: '',
-      amount: '',
-      creditor: '',
-      accountNumber: '',
-      monthlyPayment: '',
-      isSecured: false,
-      collateral: '',
-      notes: ''
-    }])
-  }
-
-  const removeLiability = (liabilityId) => {
-    setLiabilities(liabilities.filter(liability => liability.id !== liabilityId))
-  }
-
-  const handleLiabilityChange = (liabilityId, field, value) => {
-    setLiabilities(liabilities.map(liability => 
-      liability.id === liabilityId 
-        ? { ...liability, [field]: value }
-        : liability
-    ))
-  }
 
   const handlePersonSelection = (type, id, value) => {
     if (value === 'other') {
@@ -386,10 +411,9 @@ export default function Assets() {
     console.log('Assets submitted:', {
       assets,
       beneficiaries,
-      liabilities,
       distributions
     })
-    navigate('/decision-makers')
+    navigate('/liabilities')
   }
 
   return (
@@ -432,7 +456,7 @@ export default function Assets() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
                           Asset Category
                         </label>
                         <select
@@ -446,7 +470,7 @@ export default function Assets() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
                           Description
                         </label>
                         <input
@@ -458,8 +482,46 @@ export default function Assets() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Current Value
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Institution/Provider
+                        </label>
+                        <input
+                          type="text"
+                          value={asset.institution || ''}
+                          onChange={(e) => handleAssetChange(asset.id, 'institution', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="e.g., Bank of America, Fidelity"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Account/Policy Number
+                        </label>
+                        <input
+                          type="text"
+                          value={asset.accountNumber || ''}
+                          onChange={(e) => handleAssetChange(asset.id, 'accountNumber', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="Account or policy number"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Title Form *
+                        </label>
+                        <select
+                          value={asset.titleForm || 'sole_ownership'}
+                          onChange={(e) => handleAssetChange(asset.id, 'titleForm', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        >
+                          {titleForms.map(titleForm => (
+                            <option key={titleForm.value} value={titleForm.value}>{titleForm.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Current Value *
                         </label>
                         <div className="flex space-x-2">
                           <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
@@ -475,7 +537,18 @@ export default function Assets() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Valuation Date *
+                        </label>
+                        <input
+                          type="date"
+                          value={asset.valuation.valuationDate || ''}
+                          onChange={(e) => handleAssetChange(asset.id, 'valuation.valuationDate', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
                           Percentage of Ownership
                         </label>
                         <div className="flex space-x-2">
@@ -498,8 +571,22 @@ export default function Assets() {
                     {/* Additional Asset Fields */}
                     <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Probate Class
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Marital Character *
+                        </label>
+                        <select
+                          value={asset.propertyType || 'community'}
+                          onChange={(e) => handleAssetChange(asset.id, 'propertyType', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        >
+                          <option value="community">Community Property</option>
+                          <option value="separate">Separate Property</option>
+                          <option value="quasi_community">Quasi Community Property</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Probate Class *
                         </label>
                         <select
                           value={asset.probateClass}
@@ -513,43 +600,123 @@ export default function Assets() {
                       </div>
                       
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
                           Property Location
                         </label>
-                        <div className="space-y-2">
-                          <label className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={asset.isLouisianaProperty}
-                              onChange={(e) => handleAssetChange(asset.id, 'isLouisianaProperty', e.target.checked)}
-                              className="mr-2 text-gray-600 focus:ring-gray-500"
-                            />
-                            <span className="text-sm text-gray-700">Louisiana Property</span>
-                          </label>
+                        <div className="space-y-3">
+                          <div className="flex space-x-4">
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                name={`property-location-${asset.id}`}
+                                checked={asset.isLouisianaProperty}
+                                onChange={(e) => {
+                                  const updatedAssets = assets.map(a => 
+                                    a.id === asset.id 
+                                      ? { 
+                                          ...a, 
+                                          isLouisianaProperty: true,
+                                          propertyLocation: 'LA',
+                                          probateClass: 'probate'
+                                        }
+                                      : a
+                                  )
+                                  setAssetsData(updatedAssets)
+                                }}
+                                className="mr-2 text-gray-600 focus:ring-gray-500"
+                              />
+                              <span className="text-sm text-gray-700">Louisiana Property</span>
+                            </label>
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                name={`property-location-${asset.id}`}
+                                checked={!asset.isLouisianaProperty}
+                                onChange={(e) => {
+                                  const updatedAssets = assets.map(a => 
+                                    a.id === asset.id 
+                                      ? { 
+                                          ...a, 
+                                          isLouisianaProperty: false,
+                                          probateClass: 'ancillary_probate'
+                                        }
+                                      : a
+                                  )
+                                  setAssetsData(updatedAssets)
+                                }}
+                                className="mr-2 text-gray-600 focus:ring-gray-500"
+                              />
+                              <span className="text-sm text-gray-700">Out of State Property</span>
+                            </label>
+                          </div>
+                          
+                          {!asset.isLouisianaProperty && (
+                            <div className="mt-2">
+                              <label className="block text-lg font-bold text-gray-800 mb-3">
+                                State Location *
+                              </label>
+                              <select
+                                value={asset.propertyLocation || ''}
+                                onChange={(e) => handleAssetChange(asset.id, 'propertyLocation', e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              >
+                                <option value="">Select State</option>
+                                {states.map(state => (
+                                  <option key={state.value} value={state.value}>{state.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                          )}
                         </div>
+                      </div>
+                      <div>
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={asset.excludedFromTaxableEstate}
+                            onChange={(e) => handleAssetChange(asset.id, 'excludedFromTaxableEstate', e.target.checked)}
+                            className="mr-2 text-gray-600 focus:ring-gray-500"
+                          />
+                          <span className="text-sm text-gray-700">Excluded from Taxable Estate</span>
+                        </label>
                       </div>
                     </div>
 
                     {/* Annuity Type (if annuity category) */}
                     {asset.category === 'annuity' && (
                       <div className="mt-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
                           Annuity Type
                         </label>
                         <div className="space-y-2">
-                          {annuityTypes.map(type => (
-                            <label key={type.value} className="flex items-center">
-                              <input
-                                type="radio"
-                                name={`annuityType-${asset.id}`}
-                                value={type.value}
-                                checked={asset.annuityType === type.value}
-                                onChange={(e) => handleAssetChange(asset.id, 'annuityType', e.target.value)}
-                                className="mr-2 text-gray-600 focus:ring-gray-500"
-                              />
-                              <span className="text-sm text-gray-700">{type.label}</span>
-                            </label>
-                          ))}
+                          <label className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={asset.annuityQualified || false}
+                              onChange={(e) => {
+                                handleAssetChange(asset.id, 'annuityQualified', e.target.checked)
+                                if (e.target.checked) {
+                                  handleAssetChange(asset.id, 'annuityNonQualified', false)
+                                }
+                              }}
+                              className="mr-2 text-gray-600 focus:ring-gray-500"
+                            />
+                            <span className="text-sm text-gray-700">Qualified (IRA)</span>
+                          </label>
+                          <label className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={asset.annuityNonQualified || false}
+                              onChange={(e) => {
+                                handleAssetChange(asset.id, 'annuityNonQualified', e.target.checked)
+                                if (e.target.checked) {
+                                  handleAssetChange(asset.id, 'annuityQualified', false)
+                                }
+                              }}
+                              className="mr-2 text-gray-600 focus:ring-gray-500"
+                            />
+                            <span className="text-sm text-gray-700">Non-Qualified</span>
+                          </label>
                         </div>
                       </div>
                     )}
@@ -569,7 +736,7 @@ export default function Assets() {
 
                   {/* Asset Owners - Link to people */}
                   <div className="mt-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-lg font-bold text-gray-800 mb-3">
                       Asset Owners
                     </label>
                     <div className="space-y-2">
@@ -592,6 +759,103 @@ export default function Assets() {
                         </label>
                       ))}
                     </div>
+
+                    {/* Document Upload for Asset */}
+                    <div className="mt-6">
+                      <h4 className="text-md font-semibold text-gray-800 mb-4">Related Documents</h4>
+                      <div className="space-y-4">
+                        {asset.category === 'real_estate' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Property Deed
+                            </label>
+                            <div className="flex items-center space-x-4">
+                              <input
+                                type="file"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                              />
+                              <span className="text-sm text-gray-500">Upload property deed</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {asset.category === 'insurance' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Insurance Policy
+                            </label>
+                            <div className="flex items-center space-x-4">
+                              <input
+                                type="file"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                              />
+                              <span className="text-sm text-gray-500">Upload insurance policy</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {asset.category === 'retirement' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Retirement Account Document
+                            </label>
+                            <div className="flex items-center space-x-4">
+                              <input
+                                type="file"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                              />
+                              <span className="text-sm text-gray-500">Upload retirement account document</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {asset.category === 'business' && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Business Document
+                            </label>
+                            <div className="flex items-center space-x-4">
+                              <input
+                                type="file"
+                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                              />
+                              <span className="text-sm text-gray-500">Upload business document</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* General document upload for any asset */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Other Related Documents
+                          </label>
+                          <div className="flex items-center space-x-4">
+                            <input
+                              type="file"
+                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                              multiple
+                              onChange={(e) => handleFileUpload(asset.id, e.target.files)}
+                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                            />
+                            <span className="text-sm text-gray-500">Upload other related documents</span>
+                          </div>
+                          {asset.documentFiles?.length > 0 && (
+                            <div className="mt-2">
+                              <p className="text-sm text-gray-600">Uploaded files:</p>
+                              <ul className="text-sm text-gray-500 mt-1">
+                                {asset.documentFiles.map(file => (
+                                  <li key={file.id}>• {file.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -602,14 +866,14 @@ export default function Assets() {
                 className="px-6 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
                 style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
               >
-                + Add Another Asset
+                {assets.length === 0 ? '+ Add' : '+ Add Another Asset'}
               </button>
             </div>
           </div>
 
-          {/* Inheritors & Beneficiaries Section */}
+          {/* Inheritor & Beneficiary Page Section */}
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Inheritors & Beneficiaries</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Inheritor & Beneficiary Page</h2>
             <div className="space-y-6">
               {beneficiaries.map((beneficiary, index) => (
                 <div key={beneficiary.id} className="p-6 border border-gray-200 rounded-lg">
@@ -661,6 +925,7 @@ export default function Assets() {
                         <option value="usufruct">Usufruct</option>
                         <option value="naked_ownership">Naked Ownership</option>
                         <option value="super_usufruct">Super Usufruct</option>
+                        <option value="trust">Trust</option>
                       </select>
                     </div>
                   </div>
@@ -863,174 +1128,6 @@ export default function Assets() {
             />
           </div>
 
-          {/* Liabilities Section */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Liabilities</h2>
-            <div className="space-y-6">
-              {liabilities.map((liability, index) => (
-                <div key={liability.id} className="p-6 border border-gray-200 rounded-lg">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Liability #{index + 1}
-                    </h3>
-                    {liabilities.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeLiability(liability.id)}
-                        className="px-4 py-2 text-red-600 hover:text-red-800 transition-colors duration-200 font-medium text-sm"
-                      >
-                        Remove Liability
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Liability Category
-                      </label>
-                      <select
-                        value={liability.category}
-                        onChange={(e) => handleLiabilityChange(liability.id, 'category', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      >
-                        <option value="">Select category...</option>
-                        {liabilityCategories.map(category => (
-                          <option key={category.value} value={category.value}>{category.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Description
-                      </label>
-                      <input
-                        type="text"
-                        value={liability.description}
-                        onChange={(e) => handleLiabilityChange(liability.id, 'description', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Liability description"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Outstanding Balance
-                      </label>
-                      <div className="flex space-x-2">
-                        <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
-                          $
-                        </span>
-                        <input
-                          type="number"
-                          value={liability.amount}
-                          onChange={(e) => handleLiabilityChange(liability.id, 'amount', e.target.value)}
-                          className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                          placeholder="0.00"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Creditor
-                      </label>
-                      <input
-                        type="text"
-                        value={liability.creditor}
-                        onChange={(e) => handleLiabilityChange(liability.id, 'creditor', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Creditor name"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Account Number
-                      </label>
-                      <input
-                        type="text"
-                        value={liability.accountNumber}
-                        onChange={(e) => handleLiabilityChange(liability.id, 'accountNumber', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Account number"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Monthly Payment
-                      </label>
-                      <div className="flex space-x-2">
-                        <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
-                          $
-                        </span>
-                        <input
-                          type="number"
-                          value={liability.monthlyPayment}
-                          onChange={(e) => handleLiabilityChange(liability.id, 'monthlyPayment', e.target.value)}
-                          className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                          placeholder="0.00"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <label className="flex items-center mb-4">
-                      <input
-                        type="checkbox"
-                        checked={liability.isSecured}
-                        onChange={(e) => handleLiabilityChange(liability.id, 'isSecured', e.target.checked)}
-                        className="mr-2 text-gray-600 focus:ring-gray-500"
-                      />
-                      <span className="text-sm text-gray-700">This is a secured debt</span>
-                    </label>
-                    
-                    {liability.isSecured && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Collateral
-                        </label>
-                        <input
-                          type="text"
-                          value={liability.collateral}
-                          onChange={(e) => handleLiabilityChange(liability.id, 'collateral', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                          placeholder="Describe the collateral"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Notes
-                    </label>
-                    <textarea
-                      value={liability.notes}
-                      onChange={(e) => handleLiabilityChange(liability.id, 'notes', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      rows="3"
-                      placeholder="Additional notes about this liability..."
-                    />
-                  </div>
-                </div>
-              ))}
-              
-              <div className="flex justify-center">
-                <button
-                  type="button"
-                  onClick={addLiability}
-                  className="px-6 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
-                  style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
-                >
-                  + Add Another Liability
-                </button>
-              </div>
-            </div>
-          </div>
 
 
           {/* Action Buttons */}
@@ -1047,7 +1144,7 @@ export default function Assets() {
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
-              Continue to Decision Makers
+              Continue to Liabilities
             </button>
           </div>
         </form>

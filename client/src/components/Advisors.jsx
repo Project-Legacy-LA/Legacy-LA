@@ -11,6 +11,9 @@ export default function Advisors() {
   const { people, getPersonDisplayName, getPeopleOptions, addPerson } = usePeople()
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0)
+    
     const tl = gsap.timeline()
     
     // Simple fade-in animation
@@ -26,7 +29,6 @@ export default function Advisors() {
       personId: null, // Links to people array
       advisorType: 'attorney',
       firmName: '',
-      barNumber: '',
       specializations: [],
       yearsOfExperience: '',
       notes: ''
@@ -88,7 +90,6 @@ export default function Advisors() {
       personId: null,
       advisorType: 'attorney',
       firmName: '',
-      barNumber: '',
       specializations: [],
       yearsOfExperience: '',
       notes: ''
@@ -324,20 +325,6 @@ export default function Advisors() {
                     />
                   </div>
                   
-                  {advisor.advisorType === 'attorney' && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Bar Number
-                      </label>
-                      <input
-                        type="text"
-                        value={advisor.barNumber}
-                        onChange={(e) => handleAdvisorChange(advisor.id, 'barNumber', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="State bar number"
-                      />
-                    </div>
-                  )}
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
