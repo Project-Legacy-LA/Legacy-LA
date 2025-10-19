@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
-import LL_Logo from '../assets/images/LL_Logo.webp'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -49,11 +48,6 @@ export default function Login() {
       >
         {/* Branding */}
         <div className="mb-6 text-center">
-          <img 
-            src={LL_Logo} 
-            alt="Legacy Louisiana Logo" 
-            className="w-16 h-16 mx-auto mb-3"
-          />
           <div className="text-2xl font-bold text-gray-900">Legacy Louisiana</div>
           <div className="text-sm text-gray-600 mt-1">Sign in to continue</div>
         </div>
