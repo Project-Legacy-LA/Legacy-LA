@@ -70,7 +70,7 @@ export default function Liabilities() {
     e.preventDefault()
     console.log('Liabilities submitted:', liabilities)
     // In a real application, you would send this data to your backend
-    navigate('/advisors') // Navigate to next page
+    navigate('/decision-makers') // Navigate to next page
   }
 
   // Define which liability types can be associated with assets
@@ -311,7 +311,7 @@ export default function Liabilities() {
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
-              Continue to Advisors
+              Continue to Decision Makers
             </button>
           </div>
         </form>

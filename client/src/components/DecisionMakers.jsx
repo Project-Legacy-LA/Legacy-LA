@@ -198,7 +198,7 @@ export default function DecisionMakers() {
     e.preventDefault()
     console.log('Decision Makers submitted:', decisionMakers)
     // Navigate to next section or summary
-    // navigate('/summary')
+    navigate('/advisors')
   }
 
   return (
@@ -533,7 +533,7 @@ export default function DecisionMakers() {
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => navigate('/assets')}
+              onClick={() => navigate('/liabilities')}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium"
             >
               Back
@@ -543,7 +543,7 @@ export default function DecisionMakers() {
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
-              Continue
+              Continue to Advisors
             </button>
           </div>
         </form>
