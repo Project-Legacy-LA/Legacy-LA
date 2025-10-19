@@ -604,6 +604,50 @@ export default function Assets() {
                         </select>
                       </div>
                       
+                      {/* Address Fields for Real Estate */}
+                      {asset.category === 'real_estate' && (
+                        <>
+                          <div>
+                            <label className="block text-lg font-bold text-gray-800 mb-3">
+                              Street Address *
+                            </label>
+                            <input
+                              type="text"
+                              value={asset.propertyAddress?.street || ''}
+                              onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.street', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                              placeholder="123 Main Street"
+                            />
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-lg font-bold text-gray-800 mb-3">
+                                City *
+                              </label>
+                              <input
+                                type="text"
+                                value={asset.propertyAddress?.city || ''}
+                                onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.city', e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="New Orleans"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-lg font-bold text-gray-800 mb-3">
+                                Zip Code *
+                              </label>
+                              <input
+                                type="text"
+                                value={asset.propertyAddress?.zipCode || ''}
+                                onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.zipCode', e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="70112"
+                              />
+                            </div>
+                          </div>
+                        </>
+                      )}
+
                       <div>
                         <label className="block text-lg font-bold text-gray-800 mb-3">
                           Property Location
@@ -674,50 +718,6 @@ export default function Assets() {
                           )}
                         </div>
                       </div>
-
-                      {/* Address Fields for Real Estate */}
-                      {asset.category === 'real_estate' && (
-                        <>
-                          <div>
-                            <label className="block text-lg font-bold text-gray-800 mb-3">
-                              Street Address *
-                            </label>
-                            <input
-                              type="text"
-                              value={asset.propertyAddress?.street || ''}
-                              onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.street', e.target.value)}
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="123 Main Street"
-                            />
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <label className="block text-lg font-bold text-gray-800 mb-3">
-                                City *
-                              </label>
-                              <input
-                                type="text"
-                                value={asset.propertyAddress?.city || ''}
-                                onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.city', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="New Orleans"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-lg font-bold text-gray-800 mb-3">
-                                Zip Code *
-                              </label>
-                              <input
-                                type="text"
-                                value={asset.propertyAddress?.zipCode || ''}
-                                onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.zipCode', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="70112"
-                              />
-                            </div>
-                          </div>
-                        </>
-                      )}
 
                       <div>
                         <label className="flex items-center">
