@@ -78,28 +78,28 @@ export default function Assets() {
   })
 
   const assetCategories = [
-    { value: 'real_estate', label: 'Real Estate' },
-    { value: 'personal_property', label: 'Personal Property' },
-    { value: 'vehicle', label: 'Vehicle, Boat, Trailer, Other' },
+    { value: 'annuity', label: 'Annuity' },
     { value: 'bank', label: 'Bank Account' },
     { value: 'brokerage', label: 'Brokerage Account' },
-    { value: 'retirement', label: 'Retirement Account' },
-    { value: 'annuity', label: 'Annuity' },
-    { value: 'life_insurance', label: 'Life Insurance' },
-    { value: 'employer_equity', label: 'Employer Equity' },
-    { value: 'education_account', label: 'Education Account' },
-    { value: 'hsa_fsa', label: 'HSA/FSA' },
-    { value: 'cryptocurrency', label: 'Cryptocurrency/Alternatives' },
-    { value: 'reits', label: 'REITs/Interest' },
     { value: 'business', label: 'Business Interest' },
-    { value: 'trust_interest', label: 'Trust Interest' },
-    { value: 'future_interest', label: 'Future Interest/IOU' },
-    { value: 'promissory_note', label: 'Promissory Note' },
+    { value: 'cryptocurrency', label: 'Cryptocurrency/Alternatives' },
     { value: 'donor_advised_fund', label: 'Donor Advised Fund' },
-    { value: 'patent', label: 'Patent' },
-    { value: 'royalty_interest', label: 'Royalty Interest' },
+    { value: 'education_account', label: 'Education Account' },
+    { value: 'employer_equity', label: 'Employer Equity' },
+    { value: 'future_interest', label: 'Future Interest/IOU' },
+    { value: 'hsa_fsa', label: 'HSA/FSA' },
+    { value: 'life_insurance', label: 'Life Insurance' },
     { value: 'mineral_interest', label: 'Mineral Interest' },
+    { value: 'patent', label: 'Patent' },
+    { value: 'personal_property', label: 'Personal Property' },
+    { value: 'promissory_note', label: 'Promissory Note' },
+    { value: 'real_estate', label: 'Real Estate' },
+    { value: 'reits', label: 'REITs/Interest' },
+    { value: 'retirement', label: 'Retirement Account' },
+    { value: 'royalty_interest', label: 'Royalty Interest' },
     { value: 'savings_bond', label: 'Savings Bond' },
+    { value: 'trust_interest', label: 'Trust Interest' },
+    { value: 'vehicle', label: 'Vehicle, Boat, Trailer, Other' },
     { value: 'other', label: 'Other' }
   ]
 
@@ -117,6 +117,7 @@ export default function Assets() {
     { value: 'CA', label: 'California' },
     { value: 'CO', label: 'Colorado' },
     { value: 'CT', label: 'Connecticut' },
+    { value: 'DC', label: 'District of Columbia' },
     { value: 'DE', label: 'Delaware' },
     { value: 'FL', label: 'Florida' },
     { value: 'GA', label: 'Georgia' },
@@ -159,8 +160,7 @@ export default function Assets() {
     { value: 'WA', label: 'Washington' },
     { value: 'WV', label: 'West Virginia' },
     { value: 'WI', label: 'Wisconsin' },
-    { value: 'WY', label: 'Wyoming' },
-    { value: 'DC', label: 'District of Columbia' }
+    { value: 'WY', label: 'Wyoming' }
   ]
 
   const annuityTypes = [
@@ -169,14 +169,14 @@ export default function Assets() {
   ]
 
   const titleForms = [
-    { value: 'sole_ownership', label: 'Sole Ownership' },
+    { value: 'custodial_ugma', label: 'Custodial UGMA' },
+    { value: 'custodial_utma', label: 'Custodial UTMA' },
     { value: 'joint_tenancy', label: 'Joint Tenancy with Right of Survivorship' },
+    { value: 'naked_ownership', label: 'Naked Ownership' },
+    { value: 'sole_ownership', label: 'Sole Ownership' },
     { value: 'tenancy_in_common', label: 'Tenancy in Common' },
     { value: 'trust_titled', label: 'Trust Titled' },
-    { value: 'custodial_utma', label: 'Custodial UTMA' },
-    { value: 'custodial_ugma', label: 'Custodial UGMA' },
     { value: 'usufruct', label: 'Usufruct' },
-    { value: 'naked_ownership', label: 'Naked Ownership' },
     { value: 'other', label: 'Other' }
   ]
 

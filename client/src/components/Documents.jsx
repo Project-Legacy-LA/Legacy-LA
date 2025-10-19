@@ -68,22 +68,22 @@ export default function Documents() {
   })
 
   const documentTypes = [
-    { value: 'will', label: 'Will' },
-    { value: 'trust', label: 'Trust' },
+    { value: 'birth_certificate', label: 'Birth Certificate' },
+    { value: 'business_document', label: 'Business Document' },
+    { value: 'death_certificate', label: 'Death Certificate' },
+    { value: 'divorce_decree', label: 'Divorce Decree' },
+    { value: 'insurance_policy', label: 'Insurance Policy' },
+    { value: 'living_will', label: 'Living Will' },
+    { value: 'marriage_certificate', label: 'Marriage Certificate' },
+    { value: 'military_records', label: 'Military Records' },
     { value: 'power_of_attorney_financial', label: 'Power of Attorney - Financial' },
     { value: 'power_of_attorney_healthcare', label: 'Power of Attorney - Healthcare' },
-    { value: 'living_will', label: 'Living Will' },
     { value: 'prenuptial_agreement', label: 'Prenuptial Agreement' },
-    { value: 'divorce_decree', label: 'Divorce Decree' },
-    { value: 'marriage_certificate', label: 'Marriage Certificate' },
-    { value: 'birth_certificate', label: 'Birth Certificate' },
-    { value: 'death_certificate', label: 'Death Certificate' },
     { value: 'property_deed', label: 'Property Deed' },
-    { value: 'insurance_policy', label: 'Insurance Policy' },
     { value: 'retirement_account', label: 'Retirement Account Document' },
-    { value: 'business_document', label: 'Business Document' },
     { value: 'social_security_card', label: 'Social Security Card' },
-    { value: 'military_records', label: 'Military Records' },
+    { value: 'trust', label: 'Trust' },
+    { value: 'will', label: 'Will' },
     { value: 'other', label: 'Other' }
   ]
 

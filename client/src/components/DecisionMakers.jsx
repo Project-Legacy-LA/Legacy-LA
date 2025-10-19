@@ -188,10 +188,12 @@ export default function DecisionMakers() {
   }
 
   const getPeopleOptions = () => {
-    return people.map(person => ({
-      value: person.id,
-      label: `${person.firstName} ${person.lastName}`.trim() || 'Unnamed Person'
-    }))
+    return people
+      .map(person => ({
+        value: person.id,
+        label: `${person.firstName} ${person.lastName}`.trim() || 'Unnamed Person'
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label))
   }
 
   const handleSubmit = (e) => {

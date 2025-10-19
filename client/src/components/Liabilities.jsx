@@ -102,17 +102,17 @@ export default function Liabilities() {
   }
 
   const liabilityTypes = [
-    { value: 'mortgage', label: 'Mortgage' },
     { value: 'auto_loan', label: 'Auto Loan' },
     { value: 'boat_loan', label: 'Boat Loan' },
-    { value: 'trailer_loan', label: 'Trailer Loan' },
     { value: 'business_loan', label: 'Business Loan' },
-    { value: 'home_equity', label: 'Home Equity Loan' },
     { value: 'construction_loan', label: 'Construction Loan' },
     { value: 'credit_card', label: 'Credit Card Debt' },
+    { value: 'home_equity', label: 'Home Equity Loan' },
+    { value: 'medical_debt', label: 'Medical Debt' },
+    { value: 'mortgage', label: 'Mortgage' },
     { value: 'personal_loan', label: 'Personal Loan' },
     { value: 'student_loan', label: 'Student Loan' },
-    { value: 'medical_debt', label: 'Medical Debt' },
+    { value: 'trailer_loan', label: 'Trailer Loan' },
     { value: 'other', label: 'Other' }
   ]
 

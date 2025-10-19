@@ -60,25 +60,25 @@ export default function Advisors() {
   })
 
   const advisorTypes = [
-    { value: 'attorney', label: 'Attorney' },
-    { value: 'financial_advisor', label: 'Financial Advisor' },
     { value: 'accountant', label: 'Accountant' },
-    { value: 'insurance_agent', label: 'Insurance Agent' },
+    { value: 'attorney', label: 'Attorney' },
     { value: 'banker', label: 'Banker' },
+    { value: 'financial_advisor', label: 'Financial Advisor' },
+    { value: 'insurance_agent', label: 'Insurance Agent' },
     { value: 'real_estate_agent', label: 'Real Estate Agent' },
     { value: 'tax_preparer', label: 'Tax Preparer' },
     { value: 'other', label: 'Other' }
   ]
 
   const specializations = [
-    { value: 'estate_planning', label: 'Estate Planning' },
-    { value: 'tax_law', label: 'Tax Law' },
-    { value: 'family_law', label: 'Family Law' },
     { value: 'business_law', label: 'Business Law' },
-    { value: 'real_estate_law', label: 'Real Estate Law' },
-    { value: 'investment_planning', label: 'Investment Planning' },
-    { value: 'retirement_planning', label: 'Retirement Planning' },
+    { value: 'estate_planning', label: 'Estate Planning' },
+    { value: 'family_law', label: 'Family Law' },
     { value: 'insurance_planning', label: 'Insurance Planning' },
+    { value: 'investment_planning', label: 'Investment Planning' },
+    { value: 'real_estate_law', label: 'Real Estate Law' },
+    { value: 'retirement_planning', label: 'Retirement Planning' },
+    { value: 'tax_law', label: 'Tax Law' },
     { value: 'tax_preparation', label: 'Tax Preparation' },
     { value: 'other', label: 'Other' }
   ]

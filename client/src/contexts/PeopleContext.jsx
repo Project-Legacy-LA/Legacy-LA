@@ -83,11 +83,13 @@ export const PeopleProvider = ({ children }) => {
   }
 
   const getPeopleOptions = () => {
-    return people.map(person => ({
-      value: person.id,
-      label: getPersonDisplayName(person.id),
-      person
-    }))
+    return people
+      .map(person => ({
+        value: person.id,
+        label: getPersonDisplayName(person.id),
+        person
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label))
   }
 
   const value = {
