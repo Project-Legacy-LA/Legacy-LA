@@ -119,8 +119,6 @@ export default function SpouseAccessManager() {
                   </p>
                 </div>
               </div>
-            </div>
-              
               
               <div className="mt-4">
                 <label className="flex items-center mb-2">
