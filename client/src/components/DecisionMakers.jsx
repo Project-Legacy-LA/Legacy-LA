@@ -255,12 +255,12 @@ export default function DecisionMakers() {
                       <option value="designee_remains">Designee for Remains / Burial / Services</option>
                       <option value="executor">Executor</option>
                       <option value="guardian_tutor">Guardian (Tutor)</option>
-                      <option value="other">Other</option>
                       <option value="power_of_attorney_financial">Power of Attorney – Financial</option>
                       <option value="power_of_attorney_healthcare">Power of Attorney – Healthcare</option>
                       <option value="special_trustee">Special Trustee</option>
                       <option value="trustee">Trustee</option>
                       <option value="undertutor">Undertutor</option>
+                      <option value="other">Other</option>
                     </select>
                   </div>
                   <div>
