@@ -92,7 +92,7 @@ export default function Login() {
           </button>
 
           <p className="text-xs text-gray-500 text-center mt-4">
-            By signing in you agree to the terms.
+            By signing in you agree to all the terms and conditions, privacy policy, and user agreement.
           </p>
           
           <div className="mt-4 text-center">
