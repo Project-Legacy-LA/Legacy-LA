@@ -200,6 +200,11 @@ export default function Assets() {
       titleForm: 'sole_ownership',
       annuityQualified: false,
       annuityNonQualified: false,
+      propertyAddress: {
+        street: '',
+        city: '',
+        zipCode: ''
+      },
       owners: [],
       beneficiaries: [],
       notes: ''
@@ -580,8 +585,8 @@ export default function Assets() {
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                         >
                           <option value="community">Community Property</option>
-                          <option value="separate">Separate Property</option>
                           <option value="quasi_community">Quasi Community Property</option>
+                          <option value="separate">Separate Property</option>
                         </select>
                       </div>
                       <div>
@@ -669,6 +674,56 @@ export default function Assets() {
                           )}
                         </div>
                       </div>
+
+                      {/* Address Fields for Real Estate */}
+                      {asset.category === 'real_estate' && (
+                        <div className="mt-6">
+                          <label className="block text-lg font-bold text-gray-800 mb-3">
+                            Property Address
+                          </label>
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Street Address *
+                              </label>
+                              <input
+                                type="text"
+                                value={asset.propertyAddress?.street || ''}
+                                onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.street', e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="123 Main Street"
+                              />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  City *
+                                </label>
+                                <input
+                                  type="text"
+                                  value={asset.propertyAddress?.city || ''}
+                                  onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.city', e.target.value)}
+                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="New Orleans"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Zip Code *
+                                </label>
+                                <input
+                                  type="text"
+                                  value={asset.propertyAddress?.zipCode || ''}
+                                  onChange={(e) => handleAssetChange(asset.id, 'propertyAddress.zipCode', e.target.value)}
+                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="70112"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <div>
                         <label className="flex items-center">
                           <input
@@ -922,10 +977,10 @@ export default function Assets() {
                       >
                         <option value="">Select inheritance type...</option>
                         <option value="full_ownership">Full Ownership</option>
-                        <option value="usufruct">Usufruct</option>
                         <option value="naked_ownership">Naked Ownership</option>
                         <option value="super_usufruct">Super Usufruct</option>
                         <option value="trust">Trust</option>
+                        <option value="usufruct">Usufruct</option>
                       </select>
                     </div>
                   </div>

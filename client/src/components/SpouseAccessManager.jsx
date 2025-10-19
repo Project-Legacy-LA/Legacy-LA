@@ -118,43 +118,11 @@ export default function SpouseAccessManager() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                 >
                   <option value="current">Current Spouse</option>
-                  <option value="former">Former Spouse</option>
-                  <option value="deceased">Deceased Spouse</option>
                 </select>
               </div>
               
-              {accessSettings.spouseStatus === 'former' && (
-                <div className="space-y-4">
-                  <div>
-                    <label className="flex items-center mb-2">
-                      <input
-                        type="checkbox"
-                        checked={accessSettings.hasDivorceDecree}
-                        onChange={(e) => handleInputChange('hasDivorceDecree', e.target.checked)}
-                        className="mr-2 text-gray-600 focus:ring-gray-500"
-                      />
-                      <span className="text-sm font-medium text-gray-700">
-                        I have a divorce decree
-                      </span>
-                    </label>
-                    {accessSettings.hasDivorceDecree && (
-                      <div className="mt-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Divorce Decree Date
-                        </label>
-                        <input
-                          type="date"
-                          value={accessSettings.divorceDecreeDate}
-                          onChange={(e) => handleInputChange('divorceDecreeDate', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
               
-              {(accessSettings.spouseStatus === 'current' || accessSettings.spouseStatus === 'former') && (
+              {accessSettings.spouseStatus === 'current' && (
                 <div className="mt-4">
                   <label className="flex items-center mb-2">
                     <input

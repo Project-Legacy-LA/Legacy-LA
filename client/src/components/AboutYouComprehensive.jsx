@@ -555,8 +555,8 @@ export default function AboutYou() {
                   onChange={(e) => handleInputChange('gender', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                 >
-                  <option value="Male">Male</option>
                   <option value="Female">Female</option>
+                  <option value="Male">Male</option>
                   <option value="Other">Other</option>
                   <option value="Prefer not to say">Prefer not to say</option>
                 </select>
@@ -721,11 +721,11 @@ export default function AboutYou() {
                   onChange={(e) => handleInputChange('additionalCitizenship', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                 >
-                  <option value="None">None</option>
                   <option value="Canada">Canada</option>
                   <option value="Mexico">Mexico</option>
-                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="None">None</option>
                   <option value="Other">Other</option>
+                  <option value="United Kingdom">United Kingdom</option>
                 </select>
                 {formData.additionalCitizenship === 'Other' && (
                   <div className="mt-3">
@@ -1113,8 +1113,8 @@ export default function AboutYou() {
                                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                 >
                                   <option value="divorced">Divorced</option>
-                                  <option value="widowed">Widowed</option>
                                   <option value="separated">Separated</option>
+                                  <option value="widowed">Widowed</option>
                                 </select>
                               </div>
                               
@@ -1320,10 +1320,10 @@ export default function AboutYou() {
                             onChange={(e) => handleSpouseChange(spouse.id, 'relationship', e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           >
-                            <option value="married">Currently Married</option>
                             <option value="divorced">Divorced</option>
-                            <option value="widowed">Widowed</option>
+                            <option value="married">Currently Married</option>
                             <option value="separated">Separated</option>
+                            <option value="widowed">Widowed</option>
                           </select>
                         </div>
 
@@ -1538,18 +1538,31 @@ export default function AboutYou() {
                     {spouse.relationship === 'married' && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Marriage Certificate
+                          Marriage Documents
                         </label>
-                        <div className="flex items-center space-x-4">
-                          <input
-                            type="file"
-                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                          />
-                          <span className="text-sm text-gray-500">Upload marriage certificate</span>
-              </div>
-            </div>
-          )}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Document Type
+                            </label>
+                            <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200">
+                              <option value="">Select document type...</option>
+                              <option value="marriage_certificate">Marriage Certificate</option>
+                              <option value="prenuptial_agreement">Prenuptial Agreement</option>
+                              <option value="divorce_decree">Divorce Decree</option>
+                            </select>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <input
+                              type="file"
+                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                            />
+                            <span className="text-sm text-gray-500">Upload selected document</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     {spouse.relationship === 'divorced' && (
                 <div>

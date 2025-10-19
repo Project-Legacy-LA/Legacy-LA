@@ -1,6 +1,7 @@
 // Simple, minimal login page using Tailwind + small GSAP entrance animation
 import React, { useRef, useEffect, useState } from 'react'
 import { gsap } from 'gsap'
+import LL_Logo from '../assets/images/LL_Logo.webp'
 
 export default function Login() {
   const cardRef = useRef(null)
@@ -38,35 +39,40 @@ export default function Login() {
         style={{ backdropFilter: 'blur(6px)' }}
       >
         {/* Branding */}
-        <div className="mb-4">
-          <div className="text-xl font-bold text-black">Legacy Louisiana</div>
-          <div className="text-xs text-black">Sign in to continue</div>
+        <div className="mb-6 text-center">
+          <img 
+            src={LL_Logo} 
+            alt="Legacy Louisiana Logo" 
+            className="w-16 h-16 mx-auto mb-3"
+          />
+          <div className="text-2xl font-bold text-gray-900">Legacy Louisiana</div>
+          <div className="text-sm text-gray-600 mt-1">Sign in to continue</div>
         </div>
 
         {/* Form */}
-        <form onSubmit={submit} className="space-y-3">
+        <form onSubmit={submit} className="space-y-4">
           <div>
-            <label className="text-xs text-black block mb-1" htmlFor="email">Email</label>
+            <label className="text-sm font-medium text-gray-700 block mb-2" htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded bg-transparent border border-gray-200 outline-none text-black"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-gray-900"
               placeholder="you@domain.com"
             />
           </div>
 
           <div>
-            <label className="text-xs text-black block mb-1" htmlFor="password">Password</label>
+            <label className="text-sm font-medium text-gray-700 block mb-2" htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded bg-transparent border border-gray-200 outline-none text-black"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-gray-900"
               placeholder="••••••••"
             />
           </div>
@@ -74,16 +80,15 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 mt-1 rounded font-medium"
+            className="w-full py-3 mt-4 rounded-lg font-medium text-white transition-all duration-200 hover:opacity-90 disabled:opacity-50"
             style={{
-              background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))',
-              color: 'white'
+              background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))'
             }}
           >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
 
-          <p className="text-xs text-black text-center mt-2">
+          <p className="text-xs text-gray-500 text-center mt-4">
             By signing in you agree to the terms.
           </p>
         </form>

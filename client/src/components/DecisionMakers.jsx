@@ -245,27 +245,27 @@ export default function DecisionMakers() {
                       onChange={(e) => handleDecisionMakerChange(decisionMaker.id, 'role', e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                     >
-                      <option value="executor">Executor</option>
-                      <option value="backup_executor">Backup Executor</option>
-                      <option value="guardian_tutor">Guardian (Tutor)</option>
-                      <option value="backup_guardian">Backup Guardian</option>
-                      <option value="undertutor">Undertutor</option>
-                      <option value="backup_undertutor">Backup Undertutor</option>
-                      <option value="trustee">Trustee</option>
-                      <option value="special_trustee">Special Trustee</option>
-                      <option value="backup_trustee">Backup Trustee</option>
-                      <option value="power_of_attorney_financial">Power of Attorney – Financial</option>
-                      <option value="backup_power_of_attorney_financial">Backup Power of Attorney – Financial</option>
-                      <option value="power_of_attorney_healthcare">Power of Attorney – Healthcare</option>
-                      <option value="backup_power_of_attorney_healthcare">Backup Power of Attorney – Healthcare</option>
-                      <option value="designee_remains">Designee for Remains / Burial / Services</option>
                       <option value="backup_designee_remains">Backup Designee for Remains / Burial / Services</option>
+                      <option value="backup_executor">Backup Executor</option>
+                      <option value="backup_guardian">Backup Guardian</option>
+                      <option value="backup_power_of_attorney_financial">Backup Power of Attorney – Financial</option>
+                      <option value="backup_power_of_attorney_healthcare">Backup Power of Attorney – Healthcare</option>
+                      <option value="backup_trustee">Backup Trustee</option>
+                      <option value="backup_undertutor">Backup Undertutor</option>
+                      <option value="designee_remains">Designee for Remains / Burial / Services</option>
+                      <option value="executor">Executor</option>
+                      <option value="guardian_tutor">Guardian (Tutor)</option>
                       <option value="other">Other</option>
+                      <option value="power_of_attorney_financial">Power of Attorney – Financial</option>
+                      <option value="power_of_attorney_healthcare">Power of Attorney – Healthcare</option>
+                      <option value="special_trustee">Special Trustee</option>
+                      <option value="trustee">Trustee</option>
+                      <option value="undertutor">Undertutor</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-lg font-bold text-gray-800 mb-3">
-                      Important Information
+                      Additional Information
                     </label>
                     <textarea
                       value={decisionMaker.importantInfo}
