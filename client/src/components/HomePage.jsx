@@ -47,6 +47,16 @@ export default function HomePage() {
       featured: false
     },
     { 
+      id: 'liabilities', 
+      title: 'Liabilities & Debts', 
+      time: '20 min', 
+      completed: false,
+      totalItems: 8,
+      completedItems: 0,
+      description: 'List all your debts and liabilities. Some can be associated with specific assets.',
+      featured: false
+    },
+    { 
       id: 'decision-makers', 
       title: 'Decision Makers', 
       time: '15 min', 
@@ -97,6 +107,9 @@ export default function HomePage() {
         break
       case 'assets':
         navigate('/assets')
+        break
+      case 'liabilities':
+        navigate('/liabilities')
         break
       case 'decision-makers':
         navigate('/decision-makers')

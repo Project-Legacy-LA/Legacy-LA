@@ -30,7 +30,11 @@ export default function Breadcrumb() {
     const estatePlanningFlow = [
       { name: 'Home', path: '/' },
       { name: 'About You', path: '/about-you' },
-      { name: 'Estate Planning Wizard', path: '/estate-wizard' },
+      { name: 'Assets & Distribution', path: '/assets' },
+      { name: 'Liabilities & Debts', path: '/liabilities' },
+      { name: 'Decision Makers', path: '/decision-makers' },
+      { name: 'Professional Advisors', path: '/advisors' },
+      { name: 'Documents', path: '/documents' },
       { name: 'Spouse Access', path: '/spouse-access' }
     ]
     
