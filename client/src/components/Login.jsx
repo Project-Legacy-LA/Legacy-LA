@@ -1,9 +1,11 @@
 // Simple, minimal login page using Tailwind + small GSAP entrance animation
 import React, { useRef, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import LL_Logo from '../assets/images/LL_Logo.webp'
 
 export default function Login() {
+  const navigate = useNavigate()
   const cardRef = useRef(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,7 +28,14 @@ export default function Login() {
   const submit = (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => setLoading(false), 700)
+    
+    // Simulate login process
+    setTimeout(() => {
+      setLoading(false)
+      // For demo purposes, navigate to home page after "successful" login
+      // In a real app, you would validate credentials first
+      navigate('/')
+    }, 1000)
   }
 
   return (
@@ -91,6 +100,16 @@ export default function Login() {
           <p className="text-xs text-gray-500 text-center mt-4">
             By signing in you agree to the terms.
           </p>
+          
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200"
+            >
+              ← Back to Home
+            </button>
+          </div>
         </form>
       </div>
       </div>
