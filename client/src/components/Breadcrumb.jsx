@@ -10,7 +10,7 @@ export default function Breadcrumb() {
   useEffect(() => {
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Breadcrumb entrance animation
     tl.fromTo(breadcrumbRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.3, ease: "none" }

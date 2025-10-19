@@ -16,7 +16,7 @@ export default function Documents() {
     
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Page entrance animation
     tl.fromTo(pageRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }
@@ -289,8 +289,8 @@ export default function Documents() {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Documents submitted:', documents)
-    // In a real application, you would send this data to your backend
-    navigate('/spouse-access') // Navigate to next page
+    // Submit data to backend service
+    navigate('/spouse-access')
   }
 
   return (

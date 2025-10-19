@@ -1,4 +1,4 @@
-// Simple, minimal login page using Tailwind + small GSAP entrance animation
+// Clean login interface with smooth animations
 import React, { useRef, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'

@@ -9,7 +9,7 @@ export default function AssetDistributionCalculator({ assets, beneficiaries, onD
   useEffect(() => {
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Page entrance animation
     tl.fromTo(pageRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }
@@ -18,9 +18,9 @@ export default function AssetDistributionCalculator({ assets, beneficiaries, onD
 
   const [distributions, setDistributions] = useState({})
   const [totalValue, setTotalValue] = useState(0)
-  const [distributionType, setDistributionType] = useState('percentage') // 'percentage' or 'fixed_amount'
+  const [distributionType, setDistributionType] = useState('percentage')
 
-  // Calculate total asset value
+  // Compute total portfolio value
   useEffect(() => {
     const total = assets.reduce((sum, asset) => {
       return sum + (parseFloat(asset.valuation.amount) || 0)

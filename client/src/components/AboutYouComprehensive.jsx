@@ -13,7 +13,7 @@ export default function AboutYou() {
   useEffect(() => {
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Page entrance animation
     tl.fromTo(pageRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }
@@ -46,7 +46,7 @@ export default function AboutYou() {
     residenceAddress1: '',
     residenceAddress2: '',
     
-    // Additional fields from ER diagram
+    // Extended person data fields
     gender: '',
     usCitizen: '',
     additionalCitizenship: '',
@@ -376,7 +376,7 @@ export default function AboutYou() {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    // Add main person to people context
+    // Register primary person in context
     const mainPersonId = addPerson({
       firstName: formData.legalFirstName,
       middleName: formData.middleName,
@@ -403,7 +403,7 @@ export default function AboutYou() {
       roles: ['client']
     })
 
-    // Add spouses
+    // Register spouse information
     spouses.forEach(spouse => {
       if (spouse.firstName || spouse.lastName) {
         addPerson({
@@ -434,7 +434,7 @@ export default function AboutYou() {
       }
     })
 
-    // Add children
+    // Register children information
     children.forEach(child => {
       if (child.firstName || child.lastName) {
         addPerson({
@@ -1970,7 +1970,7 @@ export default function AboutYou() {
               type="submit"
               onClick={(e) => {
                 console.log('Continue button clicked')
-                // Let the form handle submission, but add backup
+                // Ensure form submission completes
                 setTimeout(() => {
                   if (window.location.pathname === '/about-you') {
                     console.log('Form submission may have failed, using backup navigation')

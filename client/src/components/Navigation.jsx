@@ -12,7 +12,7 @@ export default function Navigation() {
   useEffect(() => {
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Navigation entrance animation
     tl.fromTo(navRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }

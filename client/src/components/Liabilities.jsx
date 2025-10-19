@@ -18,7 +18,7 @@ export default function Liabilities() {
     
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Page entrance animation
     tl.fromTo(pageRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }
@@ -69,8 +69,8 @@ export default function Liabilities() {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Liabilities submitted:', liabilities)
-    // In a real application, you would send this data to your backend
-    navigate('/decision-makers') // Navigate to next page
+    // Submit data to backend service
+    navigate('/decision-makers')
   }
 
   // Define which liability types can be associated with assets

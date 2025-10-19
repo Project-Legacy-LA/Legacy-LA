@@ -19,7 +19,7 @@ export default function Assets() {
     
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Page entrance animation
     tl.fromTo(pageRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }
@@ -38,6 +38,26 @@ export default function Assets() {
       inheritanceType: '',
       percentage: 0,
       specificAssets: [],
+      notes: ''
+    }
+  ])
+
+  const [charitableGifts, setCharitableGifts] = useState([
+    {
+      id: 1,
+      charityName: '',
+      charityType: 'nonprofit',
+      taxId: '',
+      contactPerson: '',
+      contactEmail: '',
+      contactPhone: '',
+      giftType: 'percentage',
+      percentage: 0,
+      fixedAmount: 0,
+      specificAssets: [],
+      allAssets: false,
+      residualAssets: false,
+      purpose: '',
       notes: ''
     }
   ])
@@ -180,6 +200,23 @@ export default function Assets() {
     { value: 'other', label: 'Other' }
   ]
 
+  const charityTypes = [
+    { value: 'nonprofit', label: '501(c)(3) Nonprofit Organization' },
+    { value: 'foundation', label: 'Private Foundation' },
+    { value: 'donor_advised_fund', label: 'Donor Advised Fund' },
+    { value: 'religious', label: 'Religious Organization' },
+    { value: 'educational', label: 'Educational Institution' },
+    { value: 'healthcare', label: 'Healthcare Organization' },
+    { value: 'other', label: 'Other' }
+  ]
+
+  const giftTypes = [
+    { value: 'percentage', label: 'Percentage of Estate' },
+    { value: 'fixed_amount', label: 'Fixed Dollar Amount' },
+    { value: 'specific_assets', label: 'Specific Assets' },
+    { value: 'residual', label: 'Residual (After Other Distributions)' }
+  ]
+
 
   const addAsset = () => {
     const newId = Math.max(...assets.map(a => a.id), 0) + 1
@@ -247,11 +284,40 @@ export default function Assets() {
     }])
   }
 
+  const addCharitableGift = () => {
+    const newId = Math.max(...charitableGifts.map(c => c.id)) + 1
+    setCharitableGifts([...charitableGifts, {
+      id: newId,
+      charityName: '',
+      charityType: 'nonprofit',
+      taxId: '',
+      contactPerson: '',
+      contactEmail: '',
+      contactPhone: '',
+      giftType: 'percentage',
+      percentage: 0,
+      fixedAmount: 0,
+      specificAssets: [],
+      allAssets: false,
+      residualAssets: false,
+      purpose: '',
+      notes: ''
+    }])
+  }
+
   const handleBeneficiaryChange = (beneficiaryId, field, value) => {
     setBeneficiaries(beneficiaries.map(b => 
       b.id === beneficiaryId 
         ? { ...b, [field]: value }
         : b
+    ))
+  }
+
+  const handleCharitableGiftChange = (giftId, field, value) => {
+    setCharitableGifts(charitableGifts.map(g => 
+      g.id === giftId 
+        ? { ...g, [field]: value }
+        : g
     ))
   }
 
@@ -416,6 +482,7 @@ export default function Assets() {
     console.log('Assets submitted:', {
       assets,
       beneficiaries,
+      charitableGifts,
       distributions
     })
     navigate('/liabilities')
@@ -1148,6 +1215,261 @@ export default function Assets() {
                 style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
               >
                 + Add Another Beneficiary
+              </button>
+            </div>
+          </div>
+
+          {/* Charitable Giving Section */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Charitable Giving</h2>
+            <div className="space-y-6">
+              {charitableGifts.map((gift, index) => (
+                <div key={gift.id} className="p-6 border border-gray-200 rounded-lg">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Charitable Gift {index + 1}
+                    </h3>
+                    {charitableGifts.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => setCharitableGifts(charitableGifts.filter(g => g.id !== gift.id))}
+                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                      >
+                        Remove Gift
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Charity Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={gift.charityName}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'charityName', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="e.g., American Red Cross"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Charity Type *
+                      </label>
+                      <select
+                        value={gift.charityType}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'charityType', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      >
+                        {charityTypes.map(type => (
+                          <option key={type.value} value={type.value}>{type.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tax ID (EIN)
+                      </label>
+                      <input
+                        type="text"
+                        value={gift.taxId}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'taxId', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="12-3456789"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Person
+                      </label>
+                      <input
+                        type="text"
+                        value={gift.contactPerson}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'contactPerson', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="Contact person name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Email
+                      </label>
+                      <input
+                        type="email"
+                        value={gift.contactEmail}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'contactEmail', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="contact@charity.org"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Phone
+                      </label>
+                      <input
+                        type="tel"
+                        value={gift.contactPhone}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'contactPhone', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Gift Type and Amount */}
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gift Type *
+                    </label>
+                    <select
+                      value={gift.giftType}
+                      onChange={(e) => handleCharitableGiftChange(gift.id, 'giftType', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    >
+                      {giftTypes.map(type => (
+                        <option key={type.value} value={type.value}>{type.label}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Gift Amount/Percentage */}
+                  <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {gift.giftType === 'percentage' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Percentage of Estate
+                        </label>
+                        <div className="flex space-x-2">
+                          <input
+                            type="number"
+                            value={gift.percentage}
+                            onChange={(e) => handleCharitableGiftChange(gift.id, 'percentage', parseFloat(e.target.value) || 0)}
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="0"
+                            min="0"
+                            max="100"
+                            step="0.01"
+                          />
+                          <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-700">
+                            %
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    {gift.giftType === 'fixed_amount' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Fixed Dollar Amount
+                        </label>
+                        <div className="flex space-x-2">
+                          <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={gift.fixedAmount}
+                            onChange={(e) => handleCharitableGiftChange(gift.id, 'fixedAmount', parseFloat(e.target.value) || 0)}
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Asset Designation */}
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Asset Designation
+                    </label>
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={gift.allAssets}
+                          onChange={(e) => handleCharitableGiftChange(gift.id, 'allAssets', e.target.checked)}
+                          className="mr-2 text-gray-600 focus:ring-gray-500"
+                        />
+                        <span className="text-sm text-gray-700">All Assets</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={gift.residualAssets}
+                          onChange={(e) => handleCharitableGiftChange(gift.id, 'residualAssets', e.target.checked)}
+                          className="mr-2 text-gray-600 focus:ring-gray-500"
+                        />
+                        <span className="text-sm text-gray-700">Residual (if other distributions are fulfilled)</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Specific Asset Selection */}
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Specific Assets
+                    </label>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {assets.map(asset => (
+                        <label key={asset.id} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={gift.specificAssets.includes(asset.id)}
+                            onChange={(e) => {
+                              const isChecked = e.target.checked
+                              const newSpecificAssets = isChecked
+                                ? [...gift.specificAssets, asset.id]
+                                : gift.specificAssets.filter(id => id !== asset.id)
+                              handleCharitableGiftChange(gift.id, 'specificAssets', newSpecificAssets)
+                            }}
+                            className="mr-2 text-gray-600 focus:ring-gray-500"
+                          />
+                          <span className="text-sm text-gray-700">{asset.description || `Asset #${asset.id}`}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Purpose and Notes */}
+                  <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Purpose of Gift
+                      </label>
+                      <input
+                        type="text"
+                        value={gift.purpose}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'purpose', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="e.g., General support, specific program, endowment"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Additional Notes
+                      </label>
+                      <textarea
+                        value={gift.notes}
+                        onChange={(e) => handleCharitableGiftChange(gift.id, 'notes', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        rows="3"
+                        placeholder="Any additional information about this charitable gift..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addCharitableGift}
+                className="px-6 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
+                style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+              >
+                + Add Another Charitable Gift
               </button>
             </div>
           </div>

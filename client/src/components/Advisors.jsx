@@ -16,7 +16,7 @@ export default function Advisors() {
     
     const tl = gsap.timeline()
     
-    // Simple fade-in animation
+    // Page entrance animation
     tl.fromTo(pageRef.current, 
       { opacity: 0 },
       { opacity: 1, duration: 0.4, ease: "none" }
@@ -229,10 +229,9 @@ export default function Advisors() {
   const handleSubmit = (e) => {
     e.preventDefault()
     
-    // Add advisors to people context if they're not already there
+    // Validate advisor person references
     advisors.forEach(advisor => {
       if (advisor.personId && !people.find(p => p.id === advisor.personId)) {
-        // This shouldn't happen, but just in case
         console.warn('Advisor person not found in people context')
       }
     })
