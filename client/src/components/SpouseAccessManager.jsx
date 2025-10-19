@@ -106,55 +106,53 @@ export default function SpouseAccessManager() {
           
           {/* Spouse Status */}
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Spouse Status</h2>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Spouse Status
-                </label>
-                <select
-                  value={accessSettings.spouseStatus}
-                  onChange={(e) => handleInputChange('spouseStatus', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                >
-                  <option value="current">Current Spouse</option>
-                </select>
-              </div>
-              
-              
-              {accessSettings.spouseStatus === 'current' && (
-                <div className="mt-4">
-                  <label className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={accessSettings.hasPrenup}
-                      onChange={(e) => handleInputChange('hasPrenup', e.target.checked)}
-                      className="mr-2 text-gray-600 focus:ring-gray-500"
-                    />
-                    <span className="text-sm font-medium text-gray-700">
-                      I have a prenuptial agreement
-                    </span>
-                  </label>
-                  {accessSettings.hasPrenup && (
-                    <div className="mt-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Prenuptial Agreement Date
-                      </label>
-                      <input
-                        type="date"
-                        value={accessSettings.prenupDate}
-                        onChange={(e) => handleInputChange('prenupDate', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      />
-                    </div>
-                  )}
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Spouse Access</h2>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-blue-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <h3 className="text-sm font-medium text-blue-800">Current Spouse Access Only</h3>
+                  <p className="text-sm text-blue-700 mt-1">
+                    This section is for managing access permissions for your current spouse only.
+                  </p>
                 </div>
-              )}
+              </div>
+            </div>
+              
+              
+              <div className="mt-4">
+                <label className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={accessSettings.hasPrenup}
+                    onChange={(e) => handleInputChange('hasPrenup', e.target.checked)}
+                    className="mr-2 text-gray-600 focus:ring-gray-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    I have a prenuptial agreement
+                  </span>
+                </label>
+                {accessSettings.hasPrenup && (
+                  <div className="mt-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Prenuptial Agreement Date
+                    </label>
+                    <input
+                      type="date"
+                      value={accessSettings.prenupDate}
+                      onChange={(e) => handleInputChange('prenupDate', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Spouse Login Information */}
-          {accessSettings.spouseStatus === 'current' && accessSettings.spouseHasAccess && (
+          {accessSettings.spouseHasAccess && (
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Spouse Login Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -187,7 +185,7 @@ export default function SpouseAccessManager() {
           )}
 
           {/* View Permissions */}
-          {accessSettings.spouseStatus === 'current' && accessSettings.spouseHasAccess && (
+          {accessSettings.spouseHasAccess && (
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">View Permissions</h2>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
@@ -252,7 +250,7 @@ export default function SpouseAccessManager() {
           )}
 
           {/* Edit Permissions */}
-          {accessSettings.spouseStatus === 'current' && accessSettings.spouseHasAccess && (
+          {accessSettings.spouseHasAccess && (
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Edit Permissions</h2>
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
@@ -328,7 +326,7 @@ export default function SpouseAccessManager() {
           )}
 
           {/* Delete Permissions */}
-          {accessSettings.spouseStatus === 'current' && accessSettings.spouseHasAccess && (
+          {accessSettings.spouseHasAccess && (
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Delete Permissions</h2>
               <div className="bg-red-50 border border-red-200 rounded-lg p-6">
