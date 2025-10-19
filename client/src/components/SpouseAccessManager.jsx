@@ -48,6 +48,14 @@ export default function SpouseAccessManager() {
     canEditDecisionMakers: false,
     canEditAdvisors: false,
     
+    // Delete permissions
+    canDeletePersonalInfo: false,
+    canDeleteChildren: false,
+    canDeleteAssets: false,
+    canDeleteBeneficiaries: false,
+    canDeleteDecisionMakers: false,
+    canDeleteAdvisors: false,
+    
     // Emergency access
     emergencyAccess: false,
     emergencyContact: '',
@@ -351,88 +359,76 @@ export default function SpouseAccessManager() {
             </div>
           )}
 
-          {/* Emergency Access */}
+          {/* Delete Permissions */}
           {accessSettings.spouseStatus === 'current' && accessSettings.spouseHasAccess && (
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Emergency Access</h2>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                <label className="flex items-center mb-4">
-                  <input
-                    type="checkbox"
-                    checked={accessSettings.emergencyAccess}
-                    onChange={(e) => handleInputChange('emergencyAccess', e.target.checked)}
-                    className="mr-3 text-gray-600 focus:ring-gray-500"
-                  />
-                  <span className="text-lg font-medium text-gray-700">
-                    Enable emergency access for spouse
-                  </span>
-                </label>
-                <p className="text-sm text-gray-600 ml-6 mb-4">
-                  This allows your spouse to access your estate plan in case of emergency, even if other permissions are restricted.
-                </p>
-                
-                {accessSettings.emergencyAccess && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Emergency Contact Name
-                      </label>
-                      <input
-                        type="text"
-                        value={accessSettings.emergencyContact}
-                        onChange={(e) => handleInputChange('emergencyContact', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Emergency contact person"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Emergency Contact Phone
-                      </label>
-                      <input
-                        type="tel"
-                        value={accessSettings.emergencyPhone}
-                        onChange={(e) => handleInputChange('emergencyPhone', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="(555) 123-4567"
-                      />
-                    </div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Delete Permissions</h2>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                <div className="flex items-start mb-4">
+                  <svg className="w-5 h-5 text-red-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h3 className="text-sm font-medium text-red-800">Delete Permissions Warning</h3>
+                    <p className="text-sm text-red-700 mt-1">
+                      Granting delete permissions allows your spouse to permanently remove data from your estate plan. Use with extreme caution.
+                    </p>
                   </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Access Settings */}
-          {accessSettings.spouseStatus === 'current' && accessSettings.spouseHasAccess && (
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Access Settings</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Access Expiry Date (Optional)
-                  </label>
-                  <input
-                    type="date"
-                    value={accessSettings.accessExpiry}
-                    onChange={(e) => handleInputChange('accessExpiry', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  />
-                  <p className="text-sm text-gray-500 mt-1">
-                    Leave empty for permanent access
-                  </p>
                 </div>
-                <div className="flex items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={accessSettings.notifyOnAccess}
-                      onChange={(e) => handleInputChange('notifyOnAccess', e.target.checked)}
+                      checked={accessSettings.canDeletePersonalInfo}
+                      onChange={(e) => handlePermissionChange('canDeletePersonalInfo', e.target.checked)}
                       className="mr-2 text-gray-600 focus:ring-gray-500"
                     />
-                    <span className="text-sm text-gray-700">
-                      Notify me when spouse accesses the account
-                    </span>
+                    <span className="text-sm text-gray-700">Personal Information</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={accessSettings.canDeleteChildren}
+                      onChange={(e) => handlePermissionChange('canDeleteChildren', e.target.checked)}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Children Information</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={accessSettings.canDeleteAssets}
+                      onChange={(e) => handlePermissionChange('canDeleteAssets', e.target.checked)}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Assets & Distribution</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={accessSettings.canDeleteBeneficiaries}
+                      onChange={(e) => handlePermissionChange('canDeleteBeneficiaries', e.target.checked)}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Beneficiaries</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={accessSettings.canDeleteDecisionMakers}
+                      onChange={(e) => handlePermissionChange('canDeleteDecisionMakers', e.target.checked)}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Decision Makers</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={accessSettings.canDeleteAdvisors}
+                      onChange={(e) => handlePermissionChange('canDeleteAdvisors', e.target.checked)}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Professional Advisors</span>
                   </label>
                 </div>
               </div>
