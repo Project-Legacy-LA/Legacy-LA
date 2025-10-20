@@ -1,61 +1,96 @@
-@name=LegacyLA
-@cookieJar
+@baseUrl = http://localhost:3000/api/v1
+@superEmail = superuser@example.com
+@superPass = SuperPass123
+@attorneyEmail = attorney1@example.com
+@attorneyPass = AttorneyPass123
 
-### Test 1: Register a new user successfully
-POST http://localhost:3000/api/v1/auth/register
+### 0) Health check
+# @name health
+GET {{baseUrl}}/health
+
+### 1) Superuser SIGN-IN (login)
+# @name loginSuper
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-    "email": "hussein@legacyla.org",
-    "password": "yourSecurePassword123"
+  "email": "{{superEmail}}",
+  "password": "{{superPass}}"
 }
 
-### Test 2: Register with invalid email format
-POST http://localhost:3000/api/v1/auth/register
+### 2) Who am I? (superuser session)
+# @name meSuper
+GET {{baseUrl}}/auth/me
+Cookie: {{loginSuper.response.headers.Set-Cookie}}
+
+### 3) Onboard a new tenant (superuser only)
+# Creates tenant + invited attorney (status=disabled) and returns an invite token
+# @name onboardTenant
+POST {{baseUrl}}/tenant/onboard
+Content-Type: application/json
+Cookie: {{loginSuper.response.headers.Set-Cookie}}
+
+{
+  "email": "{{attorneyEmail}}",
+  "display_name": "Attorney Smith PLLC"
+}
+
+### 4) Attorney accepts invite (set password; no auto-login)
+# Uses the invite token returned by the onboarding step
+# @name acceptInviteAttorney
+POST {{baseUrl}}/auth/accept-invite
 Content-Type: application/json
 
 {
-    "email": "invalidemail",
-    "password": "password123"
+  "token": "{{onboardTenant.response.body.token}}",
+  "password": "{{attorneyPass}}"
 }
 
-### Test 3: Register with short password
-POST http://localhost:3000/api/v1/auth/register
+### 5) Attorney SIGN-IN (login)
+# @name loginAttorney
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@legacyla.org",
-    "password": "short"
+  "email": "{{attorneyEmail}}",
+  "password": "{{attorneyPass}}"
 }
 
-### Test 4: Login successfully
-POST http://localhost:3000/api/v1/auth/login
+### 6) Who am I? (attorney session)
+# @name meAttorney
+GET {{baseUrl}}/auth/me
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
+
+### 7) Attorney creates a client under their tenant
+# Use the tenant_id returned from onboarding in an X-Tenant-Id header
+# @name createClient
+POST {{baseUrl}}/client
 Content-Type: application/json
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
+X-Tenant-Id: {{onboardTenant.response.body.tenant_id}}
 
 {
-    "email": "hussein@legacyla.org",
-    "password": "yourSecurePassword123"
+  "label": "John Smith Estate",
+  "relationship_status": "married",
+  "residence_country": "USA",
+  "residence_admin_area": "Louisiana",
+  "residence_locality": "New Orleans",
+  "residence_postal_code": "70112",
+  "residence_line1": "123 Main St",
+  "residence_line2": "Apt 4B"
 }
 
-### Test 5: Login with missing credentials
-POST http://localhost:3000/api/v1/auth/login
-Content-Type: application/json
+### 8) Check session again (attorney)
+# @name meAttorneyAfterClient
+GET {{baseUrl}}/auth/me
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
 
-{
-    "email": "hussein@legacyla.org"
-}
+### 9) Attorney logout
+# @name logoutAttorney
+POST {{baseUrl}}/auth/logout
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
 
-### Test 6: Get current user (requires sid cookie from login)
-GET http://localhost:3000/api/v1/auth/me
-
-### Test 7: List all sessions
-GET http://localhost:3000/api/v1/auth/sessions
-
-### Test 8: Logout current session
-POST http://localhost:3000/api/v1/auth/logout
-
-### Test 9: Logout all sessions
-DELETE http://localhost:3000/api/v1/auth/sessions
-
-### Test 10: Logout specific session
-DELETE http://localhost:3000/api/v1/auth/sessions/{{sid}}
+### 10) Superuser logout
+# @name logoutSuper
+POST {{baseUrl}}/auth/logout
+Cookie: {{loginSuper.response.headers.Set-Cookie}}

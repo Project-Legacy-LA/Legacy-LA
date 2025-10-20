@@ -1,28 +1,27 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const authRoutesV1 = require('./routes/v1/auth.routes');
-const errorHandler = require('./middleware/error.middleware');
+
+// Route imports
+const authRoutes = require('./routes/v1/auth');
+const tenantRoutes = require('./routes/v1/tenant');
+const clientRoutes = require('./routes/v1/client');
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
-// versioned API mount
-app.use('/api/v1/auth', authRoutesV1);
+// Versioned API
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/tenant', tenantRoutes);
+app.use('/api/v1/client', clientRoutes);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ status: 'error', message: 'Route not found' });
+// Health check
+app.get('/api/v1/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
 });
 
-// error handler
-app.use(errorHandler);
-
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log(` Server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
