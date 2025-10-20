@@ -1,7 +1,7 @@
 const errorHandler = (err, req, res, next) => {
   console.error(err.stack);
 
-  // Handle Postgres unique constraint violation
+  // Handle database constraint violations
   if (err.code === '23505') {
     return res.status(400).json({
       status: 'error',
