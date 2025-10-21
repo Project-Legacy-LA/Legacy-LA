@@ -213,7 +213,7 @@ export default function DecisionMakers() {
             Decision Makers
           </h1>
           <p className="text-gray-600">
-            Assign roles and responsibilities to people who will help manage your estate and make decisions on your behalf.
+            In this section, you will be able to add decision makers e.g. Executor, Power of Attorney, etc. Assign roles and responsibilities to people who will help manage your estate and make decisions on your behalf.
           </p>
         </div>
 

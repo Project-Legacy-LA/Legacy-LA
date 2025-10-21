@@ -126,7 +126,7 @@ export default function Liabilities() {
             Liabilities & Debts
           </h1>
           <p className="text-gray-600">
-            List all your debts and liabilities. Some debts can be associated with specific assets.
+            Please list all of your debts and liabilities. Some debts can be linked to specific assets entered in the previous section.
           </p>
         </div>
 

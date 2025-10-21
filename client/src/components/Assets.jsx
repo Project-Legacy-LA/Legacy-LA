@@ -435,7 +435,7 @@ export default function Assets() {
             Assets & Distribution
           </h1>
           <p className="text-gray-600">
-            Manage your assets, beneficiaries, and decision makers. Select people from your About You section or add new ones as needed.
+            Please enter your personal asset details. In this section you will be able to assign beneficiaries for your assets.
           </p>
         </div>
 
