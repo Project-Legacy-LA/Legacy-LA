@@ -4,7 +4,7 @@ const sessionService = require('./sessionService');
 
 /**
  * Login with email + password.
- * Hydrates memberships, builds session payload (is_superuser, tenant_ids, roles).
+ * Hydrates memberships and client grants, builds session payload.
  */
 async function login(email, password, { activeTenant = null } = {}) {
   const user = await userModel.findByEmail(email);
@@ -13,7 +13,6 @@ async function login(email, password, { activeTenant = null } = {}) {
   }
 
   if (user.status !== 'active') {
-    // Still disabled (e.g., hasn’t accepted invite)
     throw new Error('Account is disabled');
   }
 
@@ -22,12 +21,17 @@ async function login(email, password, { activeTenant = null } = {}) {
     throw new Error('Invalid credentials');
   }
 
+  // fetch tenant memberships (could be empty)
   const memberships = await userModel.getMemberships(user.user_id);
 
-  const { sid, session } = await sessionService.createSession(user, memberships, activeTenant);
+  // fetch explicit client grants (could be empty) — people granted by clients
+  const clientGrants = await userModel.getClientGrants(user.user_id);
+
+  const { sid, session } = await sessionService.createSession(user, memberships, clientGrants, activeTenant);
 
   return { sid, user: session };
 }
+
 
 /**
  * Logout by sid

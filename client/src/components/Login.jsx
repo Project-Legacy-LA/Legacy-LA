@@ -17,7 +17,7 @@ export default function Login() {
     gsap.fromTo(
       el,
       { autoAlpha: 0, y: 12 },
-      { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power1.out', clearProps: 'opacity,visibility' }
+      { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power1.out', clearProps: 'opacity,visihttp://localhost:5173/bility' }
     );
   }, []);
 

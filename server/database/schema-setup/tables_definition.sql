@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS "users" (
   password_digest text NOT NULL,
   status user_status_enum NOT NULL,
   person_id uuid,
-  is_admin boolean DEFAULT false,
+  is_superuser boolean DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );

@@ -2,7 +2,116 @@
 @superEmail = superuser@example.com
 @superPass = SuperPass123
 @attorneyEmail = attorney1@example.com
+@attorneyPass = AttorneyPass123@baseUrl 
+@adminSecret = mtumwema
+@superEmail = superuser@example.com
+@superPass = SuperPass123
+@attorneyEmail = attorney1@example.com
 @attorneyPass = AttorneyPass123
+
+### 0) Health check
+# @name health
+GET {{baseUrl}}/health
+
+### 0.5) Create bootstrap superuser (DEV ONLY)
+# Provide X-Admin-Secret header matching SERVER env ADMIN_SECRET
+# @name createSuper
+POST {{baseUrl}}/users/superuser
+Content-Type: application/json
+X-Admin-Secret: {{adminSecret}}
+
+{
+  "email": "{{superEmail}}",
+  "password": "{{superPass}}"
+}
+
+### 1) Superuser SIGN-IN (login)
+# @name loginSuper
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{superEmail}}",
+  "password": "{{superPass}}"
+}
+
+### 2) Who am I? (superuser session)
+# @name meSuper
+GET {{baseUrl}}/auth/me
+Cookie: {{loginSuper.response.headers.Set-Cookie}}
+
+### 3) Onboard a new tenant (superuser only)
+# Creates tenant + invited attorney (status=disabled) and returns an invite token
+# @name onboardTenant
+POST {{baseUrl}}/tenant/onboard
+Content-Type: application/json
+Cookie: {{loginSuper.response.headers.Set-Cookie}}
+
+{
+  "email": "{{attorneyEmail}}",
+  "display_name": "Attorney Smith PLLC"
+}
+
+### 4) Attorney accepts invite (set password; no auto-login)
+# Uses the invite token returned by the onboarding step
+# @name acceptInviteAttorney
+POST {{baseUrl}}/auth/accept-invite
+Content-Type: application/json
+
+{
+  "token": "{{onboardTenant.response.body.token}}",
+  "password": "{{attorneyPass}}"
+}
+
+### 5) Attorney SIGN-IN (login)
+# @name loginAttorney
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{attorneyEmail}}",
+  "password": "{{attorneyPass}}"
+}
+
+### 6) Who am I? (attorney session)
+# @name meAttorney
+GET {{baseUrl}}/auth/me
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
+
+### 7) Attorney creates a client under their tenant
+# Use the tenant_id returned from onboarding in an X-Tenant-Id header
+# @name createClient
+POST {{baseUrl}}/client
+Content-Type: application/json
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
+X-Tenant-Id: {{onboardTenant.response.body.tenant_id}}
+
+{
+  "label": "John Smith Estate",
+  "relationship_status": "married",
+  "residence_country": "USA",
+  "residence_admin_area": "Louisiana",
+  "residence_locality": "New Orleans",
+  "residence_postal_code": "70112",
+  "residence_line1": "123 Main St",
+  "residence_line2": "Apt 4B"
+}
+
+### 8) Check session again (attorney)
+# @name meAttorneyAfterClient
+GET {{baseUrl}}/auth/me
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
+
+### 9) Attorney logout
+# @name logoutAttorney
+POST {{baseUrl}}/auth/logout
+Cookie: {{loginAttorney.response.headers.Set-Cookie}}
+
+### 10) Superuser logout
+# @name logoutSuper
+POST {{baseUrl}}/auth/logout
+Cookie: {{loginSuper.response.headers.Set-Cookie}}
+
 
 ### 0) Health check
 # @name health

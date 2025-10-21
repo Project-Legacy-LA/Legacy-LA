@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/v1/auth');
 const tenantRoutes = require('./routes/v1/tenant');
 const clientRoutes = require('./routes/v1/client');
-
+const usersRoutes = require('./routes/v1/superUser');
 const app = express();
 
 app.use(express.json());
@@ -15,11 +15,12 @@ app.use(cookieParser());
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/tenant', tenantRoutes);
 app.use('/api/v1/client', clientRoutes);
-
+app.use('/api/v1/users', usersRoutes);
 // Health check
 app.get('/api/v1/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() });
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

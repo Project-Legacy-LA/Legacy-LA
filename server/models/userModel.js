@@ -63,6 +63,19 @@ async function activateUser(userId, passwordDigest) {
   return rows[0] || null;
 }
 
+async function deactivateUser(userId, passwordDigest){
+  const {rows} = await pool.query(
+    `
+    UPDATE app.users
+    SET password_digest = $2, status = 'disabled', updated_at = now()
+    WHERE user_id = $1
+    RETURNING user_id, email, status, person_id, is_superuser, updated_at
+    `,
+    [userId, passwordDigest]
+  );
+  return rows[0] || null;
+}
+
 /**
  * Update password only (keeps current status)
  */
@@ -75,22 +88,6 @@ async function updatePassword(userId, passwordDigest) {
     RETURNING user_id, email, status, person_id, is_superuser, updated_at
     `,
     [userId, passwordDigest]
-  );
-  return rows[0] || null;
-}
-
-/**
- * Toggle superuser flag
- */
-async function setSuperuser(userId, isSuperuser) {
-  const { rows } = await pool.query(
-    `
-    UPDATE app.users
-    SET is_superuser = $2, updated_at = now()
-    WHERE user_id = $1
-    RETURNING user_id, email, status, person_id, is_superuser, updated_at
-    `,
-    [userId, !!isSuperuser]
   );
   return rows[0] || null;
 }
@@ -110,6 +107,49 @@ async function getMemberships(userId) {
   );
   return rows; // [{ tenant_id, role }, ...]
 }
+/**
+ * Get enabled client grants for a user
+ */
+async function getClientGrants(userId) {
+  const { rows } = await pool.query(
+    `SELECT client_grant_id, tenant_id::text, client_id::text, permissions, is_enabled
+     FROM app.client_grant
+     WHERE grantee_user_id = $1
+       AND is_enabled = true`,
+    [userId]
+  );
+  return rows;
+}
+
+/**
+ * Get client_account record(s) for user and client
+ */
+async function getClientAccount(userId, clientId) {
+  const { rows } = await pool.query(
+    `SELECT ca.client_account_id, ca.role, ca.is_enabled
+     FROM app.client_account ca
+     WHERE ca.user_id = $1 AND ca.client_id = $2
+     LIMIT 1`,
+    [userId, clientId]
+  );
+  return rows[0] || null;
+}
+
+/**
+ * Get client row and minimal fields we need (primary_attorney_user_id, tenant_id, editing_frozen)
+ */
+async function getClientById(clientId) {
+  const { rows } = await pool.query(
+    `SELECT client_id, tenant_id::text, primary_attorney_user_id::text, editing_frozen
+     FROM app.client
+     WHERE client_id = $1
+     LIMIT 1`,
+    [clientId]
+  );
+  return rows[0] || null;
+}
+
+
 
 module.exports = {
   findByEmail,
@@ -117,6 +157,9 @@ module.exports = {
   createUser,
   activateUser,
   updatePassword,
-  setSuperuser,
+  deactivateUser,
   getMemberships,
+  getClientGrants,
+  getClientAccount,
+  getClientById,
 };
