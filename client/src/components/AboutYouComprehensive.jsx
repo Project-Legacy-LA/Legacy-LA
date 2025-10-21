@@ -586,23 +586,12 @@ export default function AboutYou() {
                 />
               </div>
 
-              {/* US Citizen */}
+              {/* Additional Citizenship */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  US Citizen? *
+                  Do you have additional citizenship? *
                 </label>
                 <div className="flex space-x-6">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="usCitizen"
-                      value="Yes"
-                      checked={formData.usCitizen === 'Yes'}
-                      onChange={(e) => handleInputChange('usCitizen', e.target.value)}
-                      className="mr-2 text-gray-600 focus:ring-gray-500"
-                    />
-                    <span className="text-sm text-gray-700">Yes</span>
-                  </label>
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -614,14 +603,25 @@ export default function AboutYou() {
                     />
                     <span className="text-sm text-gray-700">No</span>
                   </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="usCitizen"
+                      value="Yes"
+                      checked={formData.usCitizen === 'Yes'}
+                      onChange={(e) => handleInputChange('usCitizen', e.target.value)}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Yes</span>
+                  </label>
                 </div>
               </div>
 
-              {/* Citizenship if not US Citizen */}
-              {formData.usCitizen === 'No' && (
+              {/* Citizenship Country if Yes */}
+              {formData.usCitizen === 'Yes' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Citizenship *
+                    Additional Citizenship Country *
                   </label>
                   <select
                     value={formData.citizenship}
@@ -637,14 +637,14 @@ export default function AboutYou() {
                   {formData.citizenship === 'Other' && (
                     <div className="mt-3">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Please specify citizenship
+                        Please specify country
                       </label>
                       <input
                         type="text"
                         value={formData.otherCitizenship}
                         onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Enter citizenship"
+                        placeholder="Enter country name"
                       />
                     </div>
                   )}
@@ -654,15 +654,17 @@ export default function AboutYou() {
               {/* Prior Names Section */}
               <div className="col-span-2">
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Prior Names / Former Names</h3>
-                      <p className="text-sm text-gray-600 mt-1">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
+                  <div className="mb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Prior Names / Former Names</h3>
+                        <p className="text-sm text-gray-600 mt-1">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
+                      </div>
                     </div>
                     <button
                       type="button"
                       onClick={addPriorName}
-                      className="px-4 py-2 text-sm text-white rounded-lg transition-colors duration-200 font-medium"
+                      className="mt-4 px-6 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
                       style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
                     >
                       + Add Prior Name
