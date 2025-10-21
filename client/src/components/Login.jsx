@@ -11,18 +11,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const el = cardRef.current
-    if (!el) return
+    const el = cardRef.current;
+    if (!el) return;
 
     gsap.fromTo(
       el,
       { autoAlpha: 0, y: 12 },
-      {
-        autoAlpha: 1, y: 0, duration: 0.45, ease: 'power1.out',
-        clearProps: 'opacity,visibility'
-      }
-    )
-  }, [])
+      { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power1.out', clearProps: 'opacity,visihttp://localhost:5173/bility' }
+    );
+  }, []);
 
   const submit = (e) => {
     e.preventDefault()
@@ -108,5 +105,5 @@ export default function Login() {
       </div>
       </div>
     </div>
-  )
+  );
 }
