@@ -47,11 +47,10 @@ export default function AboutYou() {
     residenceAddress2: '',
     
     // Extended person data fields
-    gender: '',
     usCitizen: '',
-    additionalCitizenship: '',
+    citizenship: '',
     otherCitizenship: '',
-    priorNames: '',
+    priorNames: [],
     
     // Marriage Status
     hasBeenMarried: false,
@@ -61,7 +60,8 @@ export default function AboutYou() {
     decedentInfo: {
       firstName: '',
       lastName: '',
-      dateOfDeath: ''
+      dateOfDeath: '',
+      placeOfDeath: ''
     },
     
     // Contact Information
@@ -75,6 +75,7 @@ export default function AboutYou() {
   const [children, setChildren] = useState([])
   const [spouses, setSpouses] = useState([])
   const [previousSpouses, setPreviousSpouses] = useState([])
+  const [priorNames, setPriorNames] = useState([])
 
   const handleInputChange = (field, value) => {
     if (field.includes('.')) {
@@ -301,6 +302,59 @@ export default function AboutYou() {
     }
     
     handleChildChange(childId, field, numValue)
+  }
+
+  const addPriorName = () => {
+    const newPriorName = {
+      id: Date.now(),
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      suffix: '',
+      effectiveDate: { month: '', day: '', year: '' },
+      reason: '' // marriage, divorce, legal name change, etc.
+    }
+    setPriorNames([...priorNames, newPriorName])
+  }
+
+  const removePriorName = (nameId) => {
+    setPriorNames(priorNames.filter(name => name.id !== nameId))
+  }
+
+  const handlePriorNameChange = (nameId, field, value) => {
+    if (field.includes('.')) {
+      const [parent, child] = field.split('.')
+      setPriorNames(priorNames.map(n => 
+        n.id === nameId 
+          ? { ...n, [parent]: { ...n[parent], [child]: value } }
+          : n
+      ))
+    } else {
+      setPriorNames(priorNames.map(n => 
+        n.id === nameId 
+          ? { ...n, [field]: value }
+          : n
+      ))
+    }
+  }
+
+  const handlePriorNameDateChange = (nameId, field, value, type) => {
+    if (type === 'year') {
+      if (value === '' || /^\d{1,4}$/.test(value)) {
+        handlePriorNameChange(nameId, field, value)
+      }
+      return
+    }
+    
+    let numValue = parseInt(value) || ''
+    
+    if (type === 'month') {
+      numValue = Math.min(Math.max(numValue, 1), 12)
+    } else if (type === 'day') {
+      numValue = Math.min(Math.max(numValue, 1), 31)
+    }
+    
+    handlePriorNameChange(nameId, field, numValue)
   }
 
   const addPreviousSpouse = () => {
@@ -532,36 +586,6 @@ export default function AboutYou() {
                 />
               </div>
 
-              {/* Prior names */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Prior names / Other names known by
-                </label>
-                <input
-                  type="text"
-                  value={formData.priorNames}
-                  onChange={(e) => handleInputChange('priorNames', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                />
-              </div>
-
-              {/* Gender */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Gender *
-                </label>
-                <select
-                  value={formData.gender}
-                  onChange={(e) => handleInputChange('gender', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                >
-                  <option value="Female">Female</option>
-                  <option value="Male">Male</option>
-                  <option value="Other">Other</option>
-                  <option value="Prefer not to say">Prefer not to say</option>
-                </select>
-              </div>
-
               {/* US Citizen */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -593,6 +617,177 @@ export default function AboutYou() {
                 </div>
               </div>
 
+              {/* Citizenship if not US Citizen */}
+              {formData.usCitizen === 'No' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Citizenship *
+                  </label>
+                  <select
+                    value={formData.citizenship}
+                    onChange={(e) => handleInputChange('citizenship', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  >
+                    <option value="">Select Country</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  {formData.citizenship === 'Other' && (
+                    <div className="mt-3">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Please specify citizenship
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.otherCitizenship}
+                        onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="Enter citizenship"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Prior Names Section */}
+              <div className="col-span-2">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Prior Names / Former Names</h3>
+                      <p className="text-sm text-gray-600 mt-1">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addPriorName}
+                      className="px-4 py-2 text-sm text-white rounded-lg transition-colors duration-200 font-medium"
+                      style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+                    >
+                      + Add Prior Name
+                    </button>
+                  </div>
+                  
+                  {priorNames.length === 0 ? (
+                    <p className="text-sm text-gray-500 italic">No prior names added yet.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {priorNames.map((name, index) => (
+                        <div key={name.id} className="p-4 bg-white border border-gray-200 rounded-lg">
+                          <div className="flex justify-between items-center mb-3">
+                            <h4 className="text-sm font-semibold text-gray-800">Prior Name {index + 1}</h4>
+                            <button
+                              type="button"
+                              onClick={() => removePriorName(name.id)}
+                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                First Name
+                              </label>
+                              <input
+                                type="text"
+                                value={name.firstName}
+                                onChange={(e) => handlePriorNameChange(name.id, 'firstName', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Middle Name
+                              </label>
+                              <input
+                                type="text"
+                                value={name.middleName}
+                                onChange={(e) => handlePriorNameChange(name.id, 'middleName', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Last Name
+                              </label>
+                              <input
+                                type="text"
+                                value={name.lastName}
+                                onChange={(e) => handlePriorNameChange(name.id, 'lastName', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Suffix
+                              </label>
+                              <input
+                                type="text"
+                                value={name.suffix}
+                                onChange={(e) => handlePriorNameChange(name.id, 'suffix', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                                placeholder="Jr., Sr., II, etc."
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Reason for Change
+                              </label>
+                              <select
+                                value={name.reason}
+                                onChange={(e) => handlePriorNameChange(name.id, 'reason', e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                              >
+                                <option value="">Select reason</option>
+                                <option value="marriage">Marriage</option>
+                                <option value="divorce">Divorce</option>
+                                <option value="legal_change">Legal Name Change</option>
+                                <option value="adoption">Adoption</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-medium text-gray-700 mb-1">
+                                Effective Date (MM/DD/YYYY)
+                              </label>
+                              <div className="grid grid-cols-3 gap-2">
+                                <input
+                                  type="text"
+                                  value={name.effectiveDate.month}
+                                  onChange={(e) => handlePriorNameDateChange(name.id, 'effectiveDate.month', e.target.value, 'month')}
+                                  className="px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                                  placeholder="MM"
+                                  maxLength="2"
+                                />
+                                <input
+                                  type="text"
+                                  value={name.effectiveDate.day}
+                                  onChange={(e) => handlePriorNameDateChange(name.id, 'effectiveDate.day', e.target.value, 'day')}
+                                  className="px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                                  placeholder="DD"
+                                  maxLength="2"
+                                />
+                                <input
+                                  type="text"
+                                  value={name.effectiveDate.year}
+                                  onChange={(e) => handlePriorNameDateChange(name.id, 'effectiveDate.year', e.target.value, 'year')}
+                                  className="px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
+                                  placeholder="YYYY"
+                                  maxLength="4"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Executor/Administrator Section */}
               <div className="col-span-2">
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -609,7 +804,7 @@ export default function AboutYou() {
                   </label>
                   
                   {formData.isExecutorOrAdmin && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Decedent First Name
@@ -641,6 +836,18 @@ export default function AboutYou() {
                           value={formData.decedentInfo.dateOfDeath}
                           onChange={(e) => handleInputChange('decedentInfo.dateOfDeath', e.target.value)}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Place of Death
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.decedentInfo.placeOfDeath}
+                          onChange={(e) => handleInputChange('decedentInfo.placeOfDeath', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="City, State"
                         />
                       </div>
                     </div>
@@ -679,6 +886,24 @@ export default function AboutYou() {
                 </div>
               </div>
 
+              {/* Country of Residence */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Country of Residence *
+                </label>
+                <select
+                  value={formData.residenceCountry}
+                  onChange={(e) => handleInputChange('residenceCountry', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                >
+                  <option value="">Select Country</option>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                  <option value="MX">Mexico</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
               {/* Parish */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -711,37 +936,6 @@ export default function AboutYou() {
                 />
               </div>
 
-              {/* Additional Citizenship */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Additional Citizenship?
-                </label>
-                <select
-                  value={formData.additionalCitizenship}
-                  onChange={(e) => handleInputChange('additionalCitizenship', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                >
-                  <option value="Canada">Canada</option>
-                  <option value="Mexico">Mexico</option>
-                  <option value="None">None</option>
-                  <option value="Other">Other</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                </select>
-                {formData.additionalCitizenship === 'Other' && (
-                  <div className="mt-3">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Please specify other citizenship
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.otherCitizenship}
-                      onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="Enter citizenship"
-                    />
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Right Column */}
