@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+const clientService = require('../services/clientService');
 const { success, error } = require('../utils/response');
 
 /**
@@ -10,6 +10,11 @@ async function createClient(req, res) {
   const actor = req.user; // set by session middleware
   if (!actor) {
     return error(res, 'Not authenticated', 401);
+  }
+
+  const tenantId = actor.active_tenant;
+  if (!tenantId) {
+    return error(res, 'Active tenant context required', 400);
   }
 
   const {
@@ -28,43 +33,18 @@ async function createClient(req, res) {
   }
 
   try {
-    // insert into client
-    const query = `
-      INSERT INTO app.client (
-        tenant_id,
-        primary_attorney_user_id,
-        label,
-        status,
-        relationship_status,
-        residence_country,
-        residence_admin_area,
-        residence_locality,
-        residence_postal_code,
-        residence_line1,
-        residence_line2
-      )
-      VALUES (
-        $1, $2, $3,
-        'active', $4, $5, $6, $7, $8, $9, $10
-      )
-      RETURNING client_id, label, status, relationship_status, created_at
-    `;
-
-    const values = [
-      actor.tenant_id,
-      actor.user_id, // attorney is set as primary_attorney_user_id
+    const client = await clientService.createClient({
+      tenantId,
+      primaryAttorneyUserId: actor.user_id,
       label,
-      relationship_status,
-      residence_country,
-      residence_admin_area,
-      residence_locality,
-      residence_postal_code || null,
-      residence_line1 || null,
-      residence_line2 || null
-    ];
-
-    const { rows } = await pool.query(query, values);
-    const client = rows[0];
+      relationshipStatus: relationship_status,
+      residenceCountry: residence_country,
+      residenceAdminArea: residence_admin_area,
+      residenceLocality: residence_locality,
+      residencePostalCode: residence_postal_code || null,
+      residenceLine1: residence_line1 || null,
+      residenceLine2: residence_line2 || null,
+    });
 
     return success(res, { client }, 'Client created successfully');
   } catch (err) {

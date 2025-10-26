@@ -10,13 +10,13 @@ router.post('/', session, clientController.createClient);
 
 //read client (requires read)
 
-router.get('/:client_id', session, requireClientPermission('read'), clientController.getClient);
+//router.get('/:client_id', session, requireClientPermission('read'), clientController.getClient);
 
 // update client (requires write)
-router.put('/:client_id', session, requireClientPermission('write'), clientController.updateClient);
+//router.put('/:client_id', session, requireClientPermission('write'), clientController.updateClient);
 
 // delete client (requires delete)
-router.delete('/:client_id', session, requireClientPermission('delete'), clientController.deleteClient);
+//router.delete('/:client_id', session, requireClientPermission('delete'), clientController.deleteClient);
 
 
 module.exports = router;

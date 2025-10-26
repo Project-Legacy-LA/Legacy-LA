@@ -8,6 +8,7 @@ const sessionService = require('./sessionService');
  */
 async function login(email, password, { activeTenant = null } = {}) {
   const user = await userModel.findByEmail(email);
+  console.log(user)
   if (!user) {
     throw new Error('Invalid credentials');
   }

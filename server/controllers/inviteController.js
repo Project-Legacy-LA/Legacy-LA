@@ -1,6 +1,4 @@
-const pool = require('../config/db');
-const userService = require('../services/userService');
-const { createInviteToken, deleteInviteToken } = require('../utils/tokens');
+const inviteService = require('../services/inviteService');
 const { success, error } = require('../utils/response');
 
 /**
@@ -8,31 +6,19 @@ const { success, error } = require('../utils/response');
  */
 async function inviteAttorney(req, res) {
   const { email } = req.body;
-  const tenantId = req.user?.tenant_id;
+  const tenantId = req.user?.active_tenant;
 
   if (!email) {
     return error(res, 'Email is required', 400);
   }
 
+  if (!tenantId) {
+    return error(res, 'Active tenant context required', 400);
+  }
+
   try {
-    // 1. Create disabled user
-    const { user } = await userService.createInvitedUser(email);
+    const { token } = await inviteService.inviteAttorney({ email, tenantId });
 
-    // 2. Link to tenant via membership
-    await pool.query(
-      `INSERT INTO app.membership (tenant_id, user_id, role, is_active)
-       VALUES ($1, $2, 'attorney_owner', false)`,
-      [tenantId, user.user_id]
-    );
-
-    // 3. Create invite token in Redis
-    const token = await createInviteToken({
-      user_id: user.user_id,
-      tenant_id: tenantId,
-      role: 'attorney_owner',
-    });
-
-    // 4. Return invite link (in prod you’d email this)
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Attorney invited');
   } catch (err) {
     console.error('Invite attorney error:', err);
@@ -45,28 +31,18 @@ async function inviteAttorney(req, res) {
  */
 async function inviteClient(req, res) {
   const { email, clientId } = req.body;
-  const tenantId = req.user?.tenant_id;
+  const tenantId = req.user?.active_tenant;
 
   if (!email || !clientId) {
     return error(res, 'Email and clientId required', 400);
   }
 
+  if (!tenantId) {
+    return error(res, 'Active tenant context required', 400);
+  }
+
   try {
-    const { user } = await userService.createInvitedUser(email);
-
-    // Link user to client
-    await pool.query(
-      `INSERT INTO app.client_account (tenant_id, client_id, user_id, role, is_enabled)
-       VALUES ($1, $2, $3, 'owner', false)`,
-      [tenantId, clientId, user.user_id]
-    );
-
-    const token = await createInviteToken({
-      user_id: user.user_id,
-      tenant_id: tenantId,
-      client_id: clientId,
-      role: 'client_owner',
-    });
+    const { token } = await inviteService.inviteClient({ email, tenantId, clientId });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Client invited');
   } catch (err) {
@@ -80,10 +56,14 @@ async function inviteClient(req, res) {
  */
 async function inviteDelegate(req, res) {
   const { email, clientId, role } = req.body;
-  const tenantId = req.user?.tenant_id;
+  const tenantId = req.user?.active_tenant;
 
   if (!email || !clientId || !role) {
     return error(res, 'Email, clientId, and role required', 400);
+  }
+
+  if (!tenantId) {
+    return error(res, 'Active tenant context required', 400);
   }
 
   if (!['spouse', 'delegate'].includes(role)) {
@@ -91,21 +71,7 @@ async function inviteDelegate(req, res) {
   }
 
   try {
-    const { user } = await userService.createInvitedUser(email);
-
-    // Link user to client
-    await pool.query(
-      `INSERT INTO app.client_account (tenant_id, client_id, user_id, role, is_enabled)
-       VALUES ($1, $2, $3, $4, false)`,
-      [tenantId, clientId, user.user_id, role]
-    );
-
-    const token = await createInviteToken({
-      user_id: user.user_id,
-      tenant_id: tenantId,
-      client_id: clientId,
-      role,
-    });
+    const { token } = await inviteService.inviteDelegate({ email, tenantId, clientId, role });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Delegate invited');
   } catch (err) {

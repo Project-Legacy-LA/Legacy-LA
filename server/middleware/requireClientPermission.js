@@ -1,5 +1,5 @@
 // middleware/requireClientPermission.js
-const userModel = require('../models/userModel');
+const clientModel = require('../models/clientModel');
 const { error } = require('../utils/response');
 
 /**
@@ -28,7 +28,7 @@ function requireClientPermission(needed) {
       if (!clientId) return error(res, 'client_id required', 400);
 
       // load client info
-      const client = await userModel.getClientById(clientId);
+      const client = await clientModel.getClientById(clientId);
       if (!client) return error(res, 'Client not found', 404);
 
       const actorId = String(req.user.user_id);
@@ -43,7 +43,7 @@ function requireClientPermission(needed) {
       }
 
       // 2) client_account - client themselves or household (enabled)
-      const ca = await userModel.getClientAccount(actorId, clientId);
+      const ca = await clientModel.getClientAccount(actorId, clientId);
       if (ca && ca.is_enabled) {
         // client_account users: can read; can write/delete only if permission logic allows and client not frozen
         if (needed === 'read') {

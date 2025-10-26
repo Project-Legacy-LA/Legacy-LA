@@ -1,43 +1,52 @@
+// utils/tokens.js
 const { v4: uuidv4 } = require('uuid');
 const redis = require('../config/redis');
 
 const INVITE_PREFIX = 'invite:';
-const DEFAULT_TTL = 60 * 60 * 24; // 24 hours in seconds
+const DEFAULT_TTL = parseInt(process.env.INVITE_TTL_SECS || '', 10) || 60 * 60 * 24; // 24h
+
+// normalize: accept "a-b-c" or "invite:a-b-c" and always produce "invite:a-b-c"
+const key = (token) => token.startsWith(INVITE_PREFIX) ? token : INVITE_PREFIX + token;
 
 /**
- * Create a new invite token in Redis
- * @param {Object} payload - data to store (user_id, tenant_id, role, client_id?)
- * @param {number} ttl - expiration in seconds (default = 24h)
- * @returns {string} token
+ * Create a new invite token in Redis.
+ * Returns the RAW token (UUID) — keep prefixes internal only.
  */
 async function createInviteToken(payload, ttl = DEFAULT_TTL) {
-  const token = uuidv4();
+  if (!payload || !payload.user_id) {
+    throw new Error('createInviteToken requires payload.user_id');
+  }
 
-  await redis.setex(
-    INVITE_PREFIX + token,
-    ttl,
-    JSON.stringify(payload)
-  );
+  const token = uuidv4(); // raw
+  await redis.setex(key(token), ttl, JSON.stringify({
+    ...payload,
+    created_at: new Date().toISOString(),
+  }));
 
-  return token;
+  // dev log (safe)
+  console.log({
+    inviteKey: key(token),
+    ttl_seconds: ttl,
+    payload: { ...payload, /* omit sensitive secrets if any */ },
+  });
+
+  return token; // return RAW token to caller
 }
 
-/**
- * Verify token and return payload
- * @param {string} token
- * @returns {Object|null}
- */
+/** Verify token and return payload object, or null if missing/expired. */
 async function verifyInviteToken(token) {
-  const data = await redis.get(INVITE_PREFIX + token);
-  return data ? JSON.parse(data) : null;
+  if (!token) return null;
+  console.log({"inVerifyToken":token,
+    "with the key func":key(token)
+  })
+  const raw = await redis.get(key(token));
+  return raw ? JSON.parse(raw) : null;
 }
 
-/**
- * Delete token (after use or cancellation)
- * @param {string} token
- */
+/** Delete token (after successful accept or cancellation). */
 async function deleteInviteToken(token) {
-  await redis.del(INVITE_PREFIX + token);
+  if (!token) return;
+  await redis.del(key(token));
 }
 
 module.exports = {
