@@ -1,13 +1,15 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import LL_Logo from '../assets/images/LL_Logo.webp'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Navigation() {
   const navigate = useNavigate()
   const navRef = useRef(null)
   const logoRef = useRef(null)
-  const userRef = useRef(null)
+  const { user, logout, initializing } = useAuth()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   useEffect(() => {
     const tl = gsap.timeline()
@@ -21,6 +23,17 @@ export default function Navigation() {
 
   const handleLogoClick = () => {
     navigate('/')
+  }
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+    try {
+      await logout()
+      navigate('/login')
+    } finally {
+      setIsLoggingOut(false)
+    }
   }
 
   return (
@@ -68,15 +81,33 @@ export default function Navigation() {
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
                 </span>
               </button>
-              <button 
-                onClick={() => navigate('/login')}
-                className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
-              >
-                <span className="relative">
-                  Login
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
-                </span>
-              </button>
+              {user ? (
+                <div className="flex items-center space-x-3 text-white">
+                  <span className="text-sm lg:text-base font-medium truncate max-w-[12rem]">
+                    {user.email}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    disabled={isLoggingOut || initializing}
+                    className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300 disabled:opacity-60"
+                  >
+                    <span className="relative">
+                      {isLoggingOut ? 'Signing out…' : 'Logout'}
+                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                    </span>
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => navigate('/login')}
+                  className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+                >
+                  <span className="relative">
+                    {initializing ? 'Loading…' : 'Login'}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                  </span>
+                </button>
+              )}
             </div>
 
           </div>

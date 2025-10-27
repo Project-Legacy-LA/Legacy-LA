@@ -1,4 +1,4 @@
-const clientService = require('../services/clientService');
+const clientModel = require('../models/clientModel');
 const { success, error } = require('../utils/response');
 
 /**
@@ -33,7 +33,7 @@ async function createClient(req, res) {
   }
 
   try {
-    const client = await clientService.createClient({
+    const client = await clientModel.createClient({
       tenantId,
       primaryAttorneyUserId: actor.user_id,
       label,

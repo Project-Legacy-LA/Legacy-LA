@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 // Route imports
@@ -7,6 +8,25 @@ const tenantRoutes = require('./routes/v1/tenant');
 const clientRoutes = require('./routes/v1/client');
 const usersRoutes = require('./routes/v1/superUser');
 const app = express();
+
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
+
+const corsConfig = {
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+};
+
+app.use(cors(corsConfig));
+app.options('*', cors(corsConfig));
 
 app.use(express.json());
 app.use(cookieParser());

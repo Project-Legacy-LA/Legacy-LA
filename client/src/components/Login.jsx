@@ -2,13 +2,16 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const cardRef = useRef(null)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const el = cardRef.current;
@@ -17,21 +20,25 @@ export default function Login() {
     gsap.fromTo(
       el,
       { autoAlpha: 0, y: 12 },
-      { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power1.out', clearProps: 'opacity,visihttp://localhost:5173/bility' }
+      { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power1.out', clearProps: 'opacity,visibility' }
     );
   }, []);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
+    if (loading) return
     setLoading(true)
-    
-    // Simulate login process
-    setTimeout(() => {
-      setLoading(false)
-      // For demo purposes, navigate to home page after "successful" login
-      // In a real app, you would validate credentials first
+    setError('')
+
+    try {
+      await login(email, password)
       navigate('/')
-    }, 1000)
+    } catch (err) {
+      const message = err?.message || 'Unable to sign in. Please try again.'
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -51,6 +58,11 @@ export default function Login() {
 
         {/* Form */}
         <form onSubmit={submit} className="space-y-4">
+          {error && (
+            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+              {error}
+            </div>
+          )}
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2" htmlFor="email">Email</label>
             <input

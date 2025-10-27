@@ -16,15 +16,17 @@ import Navigation from './components/Navigation'
 import Breadcrumb from './components/Breadcrumb'
 import { PeopleProvider } from './contexts/PeopleContext'
 import { AssetsProvider } from './contexts/AssetsContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 const App = () => {
   return (
-    <PeopleProvider>
-      <AssetsProvider>
-        <Router>
-          <div className="min-h-screen bg-white">
-            <Navigation />
-            <Routes>
+    <AuthProvider>
+      <PeopleProvider>
+        <AssetsProvider>
+          <Router>
+            <div className="min-h-screen bg-white">
+              <Navigation />
+              <Routes>
             <Route path="/" element={<><Breadcrumb /><HomePage /></>} />
             <Route path="/about-you" element={<><Breadcrumb /><AboutYou /></>} />
             <Route path="/assets" element={<><Breadcrumb /><Assets /></>} />
@@ -37,11 +39,12 @@ const App = () => {
             <Route path="/attorney-login" element={<><Breadcrumb /><AttorneyLogin /></>} />
             <Route path="/client-signup" element={<><Breadcrumb /><ClientSignUp /></>} />
             <Route path="/attorney-signup" element={<><Breadcrumb /><AttorneySignUp /></>} />
-          </Routes>
-          </div>
-        </Router>
-      </AssetsProvider>
-    </PeopleProvider>
+            </Routes>
+            </div>
+          </Router>
+        </AssetsProvider>
+      </PeopleProvider>
+    </AuthProvider>
   )
 }
 

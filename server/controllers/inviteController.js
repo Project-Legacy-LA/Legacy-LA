@@ -1,4 +1,7 @@
-const inviteService = require('../services/inviteService');
+const membershipModel = require('../models/membershipModel');
+const clientModel = require('../models/clientModel');
+const userService = require('../services/userService');
+const { createInviteToken } = require('../utils/tokens');
 const { success, error } = require('../utils/response');
 
 /**
@@ -17,7 +20,20 @@ async function inviteAttorney(req, res) {
   }
 
   try {
-    const { token } = await inviteService.inviteAttorney({ email, tenantId });
+    const { user } = await userService.createInvitedUser(email);
+
+    await membershipModel.createMembership({
+      tenantId,
+      userId: user.user_id,
+      role: 'attorney_owner',
+      isActive: false,
+    });
+
+    const token = await createInviteToken({
+      user_id: user.user_id,
+      tenant_id: tenantId,
+      role: 'attorney_owner',
+    });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Attorney invited');
   } catch (err) {
@@ -42,7 +58,22 @@ async function inviteClient(req, res) {
   }
 
   try {
-    const { token } = await inviteService.inviteClient({ email, tenantId, clientId });
+    const { user } = await userService.createInvitedUser(email);
+
+    await clientModel.createClientAccount({
+      tenantId,
+      clientId,
+      userId: user.user_id,
+      role: 'owner',
+      isEnabled: false,
+    });
+
+    const token = await createInviteToken({
+      user_id: user.user_id,
+      tenant_id: tenantId,
+      client_id: clientId,
+      role: 'client_owner',
+    });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Client invited');
   } catch (err) {
@@ -71,7 +102,22 @@ async function inviteDelegate(req, res) {
   }
 
   try {
-    const { token } = await inviteService.inviteDelegate({ email, tenantId, clientId, role });
+    const { user } = await userService.createInvitedUser(email);
+
+    await clientModel.createClientAccount({
+      tenantId,
+      clientId,
+      userId: user.user_id,
+      role,
+      isEnabled: false,
+    });
+
+    const token = await createInviteToken({
+      user_id: user.user_id,
+      tenant_id: tenantId,
+      client_id: clientId,
+      role,
+    });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Delegate invited');
   } catch (err) {
