@@ -53,7 +53,7 @@ export default function Login() {
         {/* Branding */}
         <div className="mb-6 text-center">
           <div className="text-2xl font-bold text-gray-900">Legacy Louisiana</div>
-          <div className="text-sm text-gray-600 mt-1">Sign in to continue</div>
+          <div className="text-sm text-gray-600 mt-1">Log in to continue</div>
         </div>
 
         {/* Form */}
@@ -72,7 +72,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-gray-900"
-              placeholder="you@domain.com"
+              placeholder="example@domain.com"
             />
           </div>
 
@@ -97,7 +97,7 @@ export default function Login() {
               background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))'
             }}
           >
-            {loading ? 'Signing in…' : 'Sign in'}
+            {loading ? 'Signing in…' : 'Log in'}
           </button>
 
           <p className="text-xs text-gray-500 text-center mt-4">

@@ -97,22 +97,28 @@ export default function AboutYou() {
   const handleDateChange = (field, value, type) => {
     // For year, allow partial input without immediate validation
     if (type === 'year') {
-      // Allow empty string or partial year input
+      // Allow empty string or partial year input (1-4 digits)
       if (value === '' || /^\d{1,4}$/.test(value)) {
         handleInputChange(field, value)
       }
       return
     }
-    
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
+
+    // For month/day we store the raw string the user types so
+    // they can enter leading zeros (e.g. "01"). Validate allowed
+    // characters and clamp numeric values when they exceed limits.
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month') {
+          if (n > 12) value = '12'
+          // allow '0' as intermediate input (so don't coerce to empty)
+        } else if (type === 'day') {
+          if (n > 31) value = '31'
+        }
+      }
+      handleInputChange(field, value)
     }
-    
-    handleInputChange(field, numValue)
   }
 
   const formatSSN = (value) => {
@@ -187,24 +193,23 @@ export default function AboutYou() {
   }
 
   const handleSpouseDateChange = (spouseId, field, value, type) => {
-    // For year, allow partial input without immediate validation
+    // Year: allow partial input
     if (type === 'year') {
-      // Allow empty string or partial year input
       if (value === '' || /^\d{1,4}$/.test(value)) {
         handleSpouseChange(spouseId, field, value)
       }
       return
     }
-    
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
+
+    // Month/Day: accept typed string (allow leading zero) and clamp if out of range
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month' && n > 12) value = '12'
+        if (type === 'day' && n > 31) value = '31'
+      }
+      handleSpouseChange(spouseId, field, value)
     }
-    
-    handleSpouseChange(spouseId, field, numValue)
   }
 
   const addSpousePriorName = (spouseId) => {
@@ -266,16 +271,15 @@ export default function AboutYou() {
       }
       return
     }
-    
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
+
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month' && n > 12) value = '12'
+        if (type === 'day' && n > 31) value = '31'
+      }
+      handleSpousePriorNameChange(spouseId, nameId, field, value)
     }
-    
-    handleSpousePriorNameChange(spouseId, nameId, field, numValue)
   }
 
   const addChild = () => {
@@ -339,15 +343,15 @@ export default function AboutYou() {
       return
     }
     
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
+    // Month/Day: allow leading zeros by storing raw string, clamp if out of range
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month' && n > 12) value = '12'
+        if (type === 'day' && n > 31) value = '31'
+      }
+      handleChildChange(childId, field, value)
     }
-    
-    handleChildChange(childId, field, numValue)
   }
 
   const handleChildDeathDateChange = (childId, field, value, type) => {
@@ -360,15 +364,14 @@ export default function AboutYou() {
       return
     }
     
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month' && n > 12) value = '12'
+        if (type === 'day' && n > 31) value = '31'
+      }
+      handleChildChange(childId, field, value)
     }
-    
-    handleChildChange(childId, field, numValue)
   }
 
   const addPriorName = () => {
@@ -413,15 +416,14 @@ export default function AboutYou() {
       return
     }
     
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month' && n > 12) value = '12'
+        if (type === 'day' && n > 31) value = '31'
+      }
+      handlePriorNameChange(nameId, field, value)
     }
-    
-    handlePriorNameChange(nameId, field, numValue)
   }
 
   const addPreviousSpouse = () => {
@@ -478,18 +480,23 @@ export default function AboutYou() {
   }
 
   const handlePreviousSpouseDateChange = (spouseId, field, value, type) => {
-    let numValue = parseInt(value) || ''
-    
-    if (type === 'month') {
-      numValue = Math.min(Math.max(numValue, 1), 12)
-    } else if (type === 'day') {
-      numValue = Math.min(Math.max(numValue, 1), 31)
-    } else if (type === 'year') {
-      const currentYear = new Date().getFullYear()
-      numValue = Math.min(Math.max(numValue, 1900), currentYear)
+    // Year: allow partial input (1-4 digits)
+    if (type === 'year') {
+      if (value === '' || /^\d{1,4}$/.test(value)) {
+        handlePreviousSpouseChange(spouseId, field, value)
+      }
+      return
     }
-    
-    handlePreviousSpouseChange(spouseId, field, numValue)
+
+    // Month/Day: accept typed string (allow leading zero) and clamp if out of range
+    if (value === '' || /^\d{1,2}$/.test(value)) {
+      if (value !== '') {
+        const n = parseInt(value, 10)
+        if (type === 'month' && n > 12) value = '12'
+        if (type === 'day' && n > 31) value = '31'
+      }
+      handlePreviousSpouseChange(spouseId, field, value)
+    }
   }
 
   const handleSubmit = (e) => {
@@ -1163,7 +1170,7 @@ export default function AboutYou() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     City
@@ -1175,6 +1182,20 @@ export default function AboutYou() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.residenceState}
+                    onChange={(e) => handleInputChange('residenceState', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="State"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     ZIP Code
@@ -2137,6 +2158,18 @@ export default function AboutYou() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Middle Name / Initial
+                  </label>
+                  <input
+                    type="text"
+                    value={child.middleName}
+                    onChange={(e) => handleChildChange(child.id, 'middleName', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    placeholder="Middle name or initial"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                           Last Name
                   </label>
                   <input
@@ -2199,6 +2232,55 @@ export default function AboutYou() {
                           placeholder="child.email@example.com"
                 />
               </div>
+            </div>
+
+            {/* Child Address - allow adult children living elsewhere to have address */}
+            <div className="mt-4 grid grid-cols-1 gap-3">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Child's Address (if different)</label>
+              <input
+                type="text"
+                value={child.address?.line1}
+                onChange={(e) => handleChildChange(child.id, 'address.line1', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                placeholder="Address Line 1"
+              />
+              <input
+                type="text"
+                value={child.address?.line2}
+                onChange={(e) => handleChildChange(child.id, 'address.line2', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                placeholder="Address Line 2 (apt, suite, etc.)"
+              />
+              <div className="grid grid-cols-3 gap-3">
+                <input
+                  type="text"
+                  value={child.address?.city}
+                  onChange={(e) => handleChildChange(child.id, 'address.city', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="City"
+                />
+                <input
+                  type="text"
+                  value={child.address?.state}
+                  onChange={(e) => handleChildChange(child.id, 'address.state', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="State"
+                />
+                <input
+                  type="text"
+                  value={child.address?.zipCode}
+                  onChange={(e) => handleChildChange(child.id, 'address.zipCode', e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  placeholder="ZIP"
+                />
+              </div>
+              <input
+                type="text"
+                value={child.address?.country}
+                onChange={(e) => handleChildChange(child.id, 'address.country', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                placeholder="Country"
+              />
             </div>
 
                     {/* Special Needs Section */}

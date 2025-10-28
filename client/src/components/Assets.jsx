@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+//cdimport React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { usePeople } from '../contexts/PeopleContext'
