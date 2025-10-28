@@ -32,7 +32,6 @@ export default function Documents() {
       dateLastUpdated: '',
       location: '',
       attorneyId: null,
-      witnesses: [],
       isCurrent: true,
       notes: '',
       files: []
@@ -40,8 +39,7 @@ export default function Documents() {
   ])
 
   const [showNewPersonForm, setShowNewPersonForm] = useState({
-    attorney: null,
-    witness: null
+    attorney: null
   })
 
   const [newPersonData, setNewPersonData] = useState({
@@ -70,6 +68,7 @@ export default function Documents() {
   const documentTypes = [
     { value: 'birth_certificate', label: 'Birth Certificate' },
     { value: 'business_document', label: 'Business Document' },
+    { value: 'bank_statement', label: 'Bank/Account/Credit Card Statement' },
     { value: 'death_certificate', label: 'Death Certificate' },
     { value: 'divorce_decree', label: 'Divorce Decree' },
     { value: 'insurance_policy', label: 'Insurance Policy' },
@@ -243,38 +242,6 @@ export default function Documents() {
     })
   }
 
-  const addWitness = (documentId) => {
-    const document = documents.find(d => d.id === documentId)
-    if (document) {
-      const newWitness = {
-        id: Date.now(),
-        personId: null,
-        relationship: '',
-        notes: ''
-      }
-      handleDocumentChange(documentId, 'witnesses', [...document.witnesses, newWitness])
-    }
-  }
-
-  const removeWitness = (documentId, witnessId) => {
-    const document = documents.find(d => d.id === documentId)
-    if (document) {
-      handleDocumentChange(documentId, 'witnesses', document.witnesses.filter(w => w.id !== witnessId))
-    }
-  }
-
-  const handleWitnessChange = (documentId, witnessId, field, value) => {
-    const document = documents.find(d => d.id === documentId)
-    if (document) {
-      const updatedWitnesses = document.witnesses.map(w => 
-        w.id === witnessId 
-          ? { ...w, [field]: value }
-          : w
-      )
-      handleDocumentChange(documentId, 'witnesses', updatedWitnesses)
-    }
-  }
-
   const handleFileUpload = (documentId, files) => {
     const fileArray = Array.from(files).map(file => ({
       id: Date.now() + Math.random(),
@@ -303,7 +270,7 @@ export default function Documents() {
             Documents
           </h1>
           <p className="text-gray-600">
-            Document your existing estate planning documents, legal papers, and other important documents. This helps ensure your new plan coordinates with existing arrangements.
+            Documents of your estate plans and other imporant documents, including those uploaded in other sections
           </p>
         </div>
 
@@ -540,61 +507,6 @@ export default function Documents() {
                       </div>
                     )}
 
-                    {/* Witnesses Section */}
-                    <div className="mt-6">
-                      <div className="flex justify-between items-center mb-4">
-                        <h4 className="text-md font-semibold text-gray-800">Witnesses</h4>
-                        <button
-                          type="button"
-                          onClick={() => addWitness(document.id)}
-                          className="px-3 py-1 text-sm text-white rounded-lg transition-colors duration-200 font-medium"
-                          style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
-                        >
-                          + Add Witness
-                        </button>
-                      </div>
-                      
-                      {document.witnesses.length === 0 ? (
-                        <p className="text-sm text-gray-500">No witnesses added yet.</p>
-                      ) : (
-                        <div className="space-y-3">
-                          {document.witnesses.map((witness, witnessIndex) => (
-                            <div key={witness.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                              <div className="flex-1">
-                                <select
-                                  value={witness.personId || ''}
-                                  onChange={(e) => handleWitnessChange(document.id, witness.id, 'personId', parseInt(e.target.value) || null)}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
-                                >
-                                  <option value="">Select witness...</option>
-                                  {getPeopleOptions().map(option => (
-                                    <option key={option.value} value={option.value}>
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div className="flex-1">
-                                <input
-                                  type="text"
-                                  value={witness.relationship}
-                                  onChange={(e) => handleWitnessChange(document.id, witness.id, 'relationship', e.target.value)}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 text-sm"
-                                  placeholder="Relationship (e.g., Friend, Neighbor)"
-                                />
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => removeWitness(document.id, witness.id)}
-                                className="text-red-600 hover:text-red-800 text-sm font-medium"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
 
                     {/* Document Upload */}
                     <div className="mt-6">

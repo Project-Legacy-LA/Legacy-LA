@@ -1,4 +1,4 @@
-//cdimport React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { usePeople } from '../contexts/PeopleContext'
@@ -38,6 +38,30 @@ export default function Assets() {
       inheritanceType: '',
       percentage: 0,
       specificAssets: [],
+      notes: ''
+    }
+  ])
+
+  // Decision makers (executors, guardians, etc.)
+  const [decisionMakers, setDecisionMakers] = useState([
+    {
+      id: 1,
+      personId: null,
+      role: 'executor',
+      isCoRole: false,
+      coRolePersonId: null,
+      relationship: '',
+      importantInfo: '',
+      notes: ''
+    }
+  ])
+
+  // Advisors (financial, legal, etc.)
+  const [advisors, setAdvisors] = useState([
+    {
+      id: 1,
+      personId: null,
+      relationship: '',
       notes: ''
     }
   ])
@@ -281,6 +305,14 @@ export default function Assets() {
     ))
   }
 
+  const handleAdvisorChange = (advisorId, field, value) => {
+    setAdvisors(advisors.map(a => 
+      a.id === advisorId
+        ? { ...a, [field]: value }
+        : a
+    ))
+  }
+
 
   const handlePersonSelection = (type, id, value) => {
     if (value === 'other') {
@@ -328,6 +360,15 @@ export default function Assets() {
     }
     
     handleNewPersonChange(field, numValue)
+  }
+
+  const handleFileUpload = (assetId, files) => {
+    // Minimal file handling: store filename placeholders in asset.documentFiles
+    const fileArray = Array.from(files).map((f, i) => ({ id: Date.now() + i, name: f.name }))
+    const updatedAssets = assets.map(a => 
+      a.id === assetId ? { ...a, documentFiles: [...(a.documentFiles || []), ...fileArray] } : a
+    )
+    setAssetsData(updatedAssets)
   }
 
   const saveNewPerson = (type, id) => {
@@ -455,7 +496,7 @@ export default function Assets() {
                     {assets.length > 1 && (
                       <button
                         type="button"
-                        onClick={() => setAssets(assets.filter(a => a.id !== asset.id))}
+                        onClick={() => setAssetsData(assets.filter(a => a.id !== asset.id))}
                         className="text-gray-600 hover:text-gray-800 text-sm font-medium"
                       >
                         Remove Asset
@@ -1103,7 +1144,7 @@ export default function Assets() {
                           onChange={(e) => handleBeneficiaryChange(beneficiary.id, 'residualAssets', e.target.checked)}
                           className="mr-2 text-gray-600 focus:ring-gray-500"
                         />
-                        <span className="text-sm text-gray-700">Residual (if primary beneficiaries predecease)</span>
+                        <span className="text-sm text-gray-700">Residual — receives the remainder of the estate (everything not otherwise distributed)</span>
                       </label>
                       <label className="flex items-center">
                         <input

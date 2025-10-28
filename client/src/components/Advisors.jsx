@@ -251,7 +251,7 @@ export default function Advisors() {
             Other Professionals & Advisors
           </h1>
           <p className="text-gray-600">
-            Add your professional advisors who will help with your estate planning. You can select from people already in your About You section or add new ones.
+            Add your professionals who may help with your estate planning.
           </p>
         </div>
 
