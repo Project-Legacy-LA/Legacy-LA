@@ -75,7 +75,11 @@ async function createClientAccount({ tenantId, clientId, userId, role, isEnabled
 async function getClientById(clientId) {
   const { rows } = await pool.query(
     `
-      SELECT client_id, tenant_id::text, primary_attorney_user_id::text, editing_frozen
+      SELECT client_id,
+             tenant_id::text,
+             primary_attorney_user_id::text,
+             label,
+             editing_frozen
         FROM app.client
        WHERE client_id = $1
        LIMIT 1

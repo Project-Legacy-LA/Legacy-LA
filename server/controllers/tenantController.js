@@ -1,7 +1,9 @@
 const tenantModel = require('../models/tenantModel');
 const membershipModel = require('../models/membershipModel');
 const userService = require('../services/userService');
+const emailService = require('../services/emailService');
 const { createInviteToken } = require('../utils/tokens');
+const { buildAcceptInviteUrl, buildInviteEmail } = require('../utils/inviteEmail');
 const { success, error } = require('../utils/response');
 
 async function onboardTenant(req, res) {
@@ -29,6 +31,22 @@ async function onboardTenant(req, res) {
       user_id: user.user_id,
       tenant_id: tenant.tenant_id,
       role: 'attorney_owner',
+    });
+
+    const acceptUrl = buildAcceptInviteUrl(token);
+    const { subject, text, html } = buildInviteEmail({
+      inviteType: 'attorney_owner',
+      inviterEmail: req.user?.email,
+      acceptUrl,
+      context: { tenantName: display_name },
+    });
+
+    await emailService.sendMail({
+      to: email,
+      subject,
+      text,
+      html,
+      replyTo: req.user?.email,
     });
 
     return success(

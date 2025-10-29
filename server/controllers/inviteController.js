@@ -1,7 +1,9 @@
 const membershipModel = require('../models/membershipModel');
 const clientModel = require('../models/clientModel');
 const userService = require('../services/userService');
+const emailService = require('../services/emailService');
 const { createInviteToken } = require('../utils/tokens');
+const { buildAcceptInviteUrl, buildInviteEmail } = require('../utils/inviteEmail');
 const { success, error } = require('../utils/response');
 
 /**
@@ -33,6 +35,21 @@ async function inviteAttorney(req, res) {
       user_id: user.user_id,
       tenant_id: tenantId,
       role: 'attorney_owner',
+    });
+
+    const acceptUrl = buildAcceptInviteUrl(token);
+    const { subject, text, html } = buildInviteEmail({
+      inviteType: 'attorney_owner',
+      inviterEmail: req.user?.email,
+      acceptUrl,
+    });
+
+    await emailService.sendMail({
+      to: email,
+      subject,
+      text,
+      html,
+      replyTo: req.user?.email,
     });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Attorney invited');
@@ -73,6 +90,25 @@ async function inviteClient(req, res) {
       tenant_id: tenantId,
       client_id: clientId,
       role: 'client_owner',
+    });
+
+    const acceptUrl = buildAcceptInviteUrl(token);
+    const client = await clientModel.getClientById(clientId);
+    const { subject, text, html } = buildInviteEmail({
+      inviteType: 'client_owner',
+      inviterEmail: req.user?.email,
+      acceptUrl,
+      context: {
+        clientLabel: client?.label || 'a client workspace',
+      },
+    });
+
+    await emailService.sendMail({
+      to: email,
+      subject,
+      text,
+      html,
+      replyTo: req.user?.email,
     });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Client invited');
@@ -117,6 +153,26 @@ async function inviteDelegate(req, res) {
       tenant_id: tenantId,
       client_id: clientId,
       role,
+    });
+
+    const acceptUrl = buildAcceptInviteUrl(token);
+    const client = await clientModel.getClientById(clientId);
+    const { subject, text, html } = buildInviteEmail({
+      inviteType: role,
+      inviterEmail: req.user?.email,
+      acceptUrl,
+      context: {
+        clientLabel: client?.label || 'a client workspace',
+        roleLabel: role === 'spouse' ? 'spouse access' : 'delegate access',
+      },
+    });
+
+    await emailService.sendMail({
+      to: email,
+      subject,
+      text,
+      html,
+      replyTo: req.user?.email,
     });
 
     return success(res, { token, inviteLink: `/accept-invite?token=${token}` }, 'Delegate invited');

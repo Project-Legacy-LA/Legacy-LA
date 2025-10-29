@@ -2,7 +2,7 @@
 @adminSecret = mtumwema
 @superEmail = superuser@example.com
 @superPass = SuperPass123
-@attorneyEmail = attorney1@example.com
+@attorneyEmail = bitambukahoussein@gmail.com
 @attorneyPass = AttorneyPass123
 @tenantDisplayName = Attorney Smith PLLC
 @clientLabel = John Smith Estate
