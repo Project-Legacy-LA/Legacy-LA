@@ -17,6 +17,8 @@ import Breadcrumb from './components/Breadcrumb'
 import { PeopleProvider } from './contexts/PeopleContext'
 import { AssetsProvider } from './contexts/AssetsContext'
 import { AuthProvider } from './contexts/AuthContext'
+import AttorneyClientSelector from './components/AttorneyClientSelector'
+import AttorneyClientView from './components/AttorneyClientView'
 
 const App = () => {
   return (
@@ -39,6 +41,8 @@ const App = () => {
             <Route path="/attorney-login" element={<><Breadcrumb /><AttorneyLogin /></>} />
             <Route path="/client-signup" element={<><Breadcrumb /><ClientSignUp /></>} />
             <Route path="/attorney-signup" element={<><Breadcrumb /><AttorneySignUp /></>} />
+            <Route path="/attorney" element={<><Breadcrumb /><AttorneyClientSelector /></>} />
+            <Route path="/attorney/client/:id" element={<><Breadcrumb /><AttorneyClientView /></>} />
             </Routes>
             </div>
           </Router>

@@ -36,7 +36,8 @@ export default function AboutYou() {
     birthCity: '',
     
     // Client table fields
-    residenceCountry: '',
+  residenceCountry: 'US',
+  residenceCountryOption: 'US',
     residenceState: '',
     residenceParish: '',
     residenceCity: '',
@@ -60,7 +61,12 @@ export default function AboutYou() {
       firstName: '',
       lastName: '',
       dateOfDeath: '',
-      placeOfDeath: ''
+      // placeOfDeath: structured so we can capture US vs foreign details
+      placeOfDeath: {
+        passedInUS: null, // true | false | null
+        us: { city: '', state: '', zip: '' },
+        foreign: { country: '', city: '' }
+      }
     },
     
     // Contact Information
@@ -159,7 +165,8 @@ export default function AboutYou() {
         city: '',
         state: '',
         zipCode: '',
-        country: 'US'
+        country: 'US',
+        countryOption: 'same'
       },
       relationship: 'married', // married, divorced, widowed, separated
       marriageDate: { month: '', day: '', year: '' },
@@ -301,13 +308,20 @@ export default function AboutYou() {
         city: '',
         state: '',
         zipCode: '',
-        country: 'US'
+        country: 'US',
+        countryOption: 'same'
       },
       specialNeeds: false,
       specialNeedsDescription: '',
       parentRelationship: '', // 'your', 'both', 'spouse'
       isDeceased: false,
-      dateOfDeath: { month: '', day: '', year: '' }
+      dateOfDeath: { month: '', day: '', year: '' },
+      // placeOfDeath structure mirrors decedentInfo: passedInUS | us details | foreign details
+      placeOfDeath: {
+        passedInUS: null, // true | false | null
+        us: { city: '', state: '', zip: '' },
+        foreign: { country: '', city: '' }
+      }
     }
     setChildren([...children, newChild])
   }
@@ -964,13 +978,78 @@ export default function AboutYou() {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Place of Death
                         </label>
-                        <input
-                          type="text"
-                          value={formData.decedentInfo.placeOfDeath}
-                          onChange={(e) => handleInputChange('decedentInfo.placeOfDeath', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                          placeholder="City, State"
-                        />
+                        <div className="space-y-3">
+                          <div className="text-sm text-gray-700">Did he/she pass in the US?</div>
+                          <div className="flex items-center space-x-6">
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                name={`decedent_passed_us`}
+                                value="yes"
+                                checked={formData.decedentInfo.placeOfDeath.passedInUS === true}
+                                onChange={() => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, passedInUS: true } })}
+                                className="mr-2 text-gray-600 focus:ring-gray-500"
+                              />
+                              <span className="text-sm text-gray-700">Yes</span>
+                            </label>
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                name={`decedent_passed_us`}
+                                value="no"
+                                checked={formData.decedentInfo.placeOfDeath.passedInUS === false}
+                                onChange={() => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, passedInUS: false } })}
+                                className="mr-2 text-gray-600 focus:ring-gray-500"
+                              />
+                              <span className="text-sm text-gray-700">No</span>
+                            </label>
+                          </div>
+
+                          {formData.decedentInfo.placeOfDeath.passedInUS === true && (
+                            <div className="grid grid-cols-3 gap-2">
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.us.city}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, city: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="City"
+                              />
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.us.state}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, state: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="State"
+                              />
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.us.zip}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, zip: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="ZIP"
+                              />
+                            </div>
+                          )}
+
+                          {formData.decedentInfo.placeOfDeath.passedInUS === false && (
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.foreign.country}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, foreign: { ...formData.decedentInfo.placeOfDeath.foreign, country: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="Country"
+                              />
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.foreign.city}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, foreign: { ...formData.decedentInfo.placeOfDeath.foreign, city: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="City"
+                              />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1008,22 +1087,56 @@ export default function AboutYou() {
                 </div>
               </div>
 
-              {/* Country of Residence */}
+              {/* Country of Residence (USA or Other) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Country of Residence *
                 </label>
-                <select
-                  value={formData.residenceCountry}
-                  onChange={(e) => handleInputChange('residenceCountry', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                >
-                  <option value="">Select Country</option>
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
-                  <option value="MX">Mexico</option>
-                  <option value="Other">Other</option>
-                </select>
+                <div className="flex items-center space-x-6 mb-3">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="residenceCountryOption"
+                      value="US"
+                      checked={formData.residenceCountryOption === 'US'}
+                      onChange={() => { handleInputChange('residenceCountryOption', 'US'); handleInputChange('residenceCountry', 'US') }}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">United States</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="residenceCountryOption"
+                      value="Other"
+                      checked={formData.residenceCountryOption === 'Other'}
+                      onChange={() => { handleInputChange('residenceCountryOption', 'Other'); handleInputChange('residenceCountry', '') }}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Other</span>
+                  </label>
+                </div>
+
+                {formData.residenceCountryOption === 'Other' ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={formData.residenceCountry}
+                      onChange={(e) => handleInputChange('residenceCountry', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="Country"
+                    />
+                    <input
+                      type="text"
+                      value={formData.residenceState}
+                      onChange={(e) => handleInputChange('residenceState', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="State / Province"
+                    />
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-600">We’ll assume United States as your country of residence.</div>
+                )}
               </div>
 
               {/* Parish */}
@@ -1048,10 +1161,10 @@ export default function AboutYou() {
 
             {/* Right Column */}
             <div className="space-y-6">
-              {/* Middle Initial */}
+              {/* Middle Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Middle Initial(s)
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Middle Name
                 </label>
                 <input
                   type="text"
@@ -1170,45 +1283,47 @@ export default function AboutYou() {
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.residenceCity}
-                    onChange={(e) => handleInputChange('residenceCity', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  />
-                </div>
+              {formData.residenceCountryOption === 'US' && (
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.residenceCity}
+                      onChange={(e) => handleInputChange('residenceCity', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    State
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.residenceState}
-                    onChange={(e) => handleInputChange('residenceState', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="State"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      State
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.residenceState}
+                      onChange={(e) => handleInputChange('residenceState', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="State"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    ZIP Code
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.residenceZipCode}
-                    onChange={(e) => handleInputChange('residenceZipCode', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="70112"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      ZIP Code
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.residenceZipCode}
+                      onChange={(e) => handleInputChange('residenceZipCode', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="70112"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -1821,6 +1936,56 @@ export default function AboutYou() {
                   />
                 </div>
 
+                {/* Spouse Country of Residence - Same as client or Other */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Country of Residence</label>
+                  <div className="flex items-center space-x-6 mb-3">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name={`spouse_country_option_${spouse.id}`}
+                        value="same"
+                        checked={spouse.address?.countryOption === 'same' || (!spouse.address?.countryOption && spouse.address?.country === formData.residenceCountry)}
+                        onChange={() => handleSpouseChange(spouse.id, 'address', { ...spouse.address, country: formData.residenceCountry, countryOption: 'same' })}
+                        className="mr-2 text-gray-600 focus:ring-gray-500"
+                      />
+                      <span className="text-sm text-gray-700">Same as client</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name={`spouse_country_option_${spouse.id}`}
+                        value="other"
+                        checked={spouse.address?.countryOption === 'other'}
+                        onChange={() => handleSpouseChange(spouse.id, 'address', { ...spouse.address, country: '', countryOption: 'other' })}
+                        className="mr-2 text-gray-600 focus:ring-gray-500"
+                      />
+                      <span className="text-sm text-gray-700">Other</span>
+                    </label>
+                  </div>
+
+                  {spouse.address?.countryOption === 'other' ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        value={spouse.address?.country}
+                        onChange={(e) => handleSpouseChange(spouse.id, 'address.country', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="Country"
+                      />
+                      <input
+                        type="text"
+                        value={spouse.address?.state}
+                        onChange={(e) => handleSpouseChange(spouse.id, 'address.state', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="State / Province"
+                      />
+                    </div>
+                  ) : (
+                    <div className="text-sm text-gray-600">Using client's country: {formData.residenceCountry || 'United States'}</div>
+                  )}
+                </div>
+
                 {/* Document Upload for Spouse */}
                 <div className="mt-6">
                   <h4 className="text-md font-semibold text-gray-800 mb-4">Related Documents</h4>
@@ -2158,14 +2323,14 @@ export default function AboutYou() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Middle Name / Initial
+                    Middle Name
                   </label>
                   <input
                     type="text"
                     value={child.middleName}
                     onChange={(e) => handleChildChange(child.id, 'middleName', e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                    placeholder="Middle name or initial"
+                    placeholder="Middle name"
                   />
                 </div>
                 <div>
@@ -2274,13 +2439,54 @@ export default function AboutYou() {
                   placeholder="ZIP"
                 />
               </div>
-              <input
-                type="text"
-                value={child.address?.country}
-                onChange={(e) => handleChildChange(child.id, 'address.country', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                placeholder="Country"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Country of Residence</label>
+                <div className="flex items-center space-x-6 mb-3">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name={`child_country_option_${child.id}`}
+                      value="same"
+                      checked={child.address?.countryOption === 'same' || (!child.address?.countryOption && child.address?.country === formData.residenceCountry)}
+                      onChange={() => handleChildChange(child.id, 'address', { ...child.address, country: formData.residenceCountry, countryOption: 'same' })}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Same as client</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name={`child_country_option_${child.id}`}
+                      value="other"
+                      checked={child.address?.countryOption === 'other'}
+                      onChange={() => handleChildChange(child.id, 'address', { ...child.address, country: '', countryOption: 'other' })}
+                      className="mr-2 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm text-gray-700">Other</span>
+                  </label>
+                </div>
+
+                {child.address?.countryOption === 'other' ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      value={child.address?.country}
+                      onChange={(e) => handleChildChange(child.id, 'address.country', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="Country"
+                    />
+                    <input
+                      type="text"
+                      value={child.address?.state}
+                      onChange={(e) => handleChildChange(child.id, 'address.state', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="State / Province"
+                    />
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-600">Using client's country: {formData.residenceCountry || 'United States'}</div>
+                )}
+              </div>
             </div>
 
                     {/* Special Needs Section */}
@@ -2293,7 +2499,7 @@ export default function AboutYou() {
                           className="mr-2 text-gray-600 focus:ring-gray-500"
                         />
                         <span className="text-sm font-medium text-gray-700">
-                          Does this child have any special needs or has there been any sort of formal medical or mental condition that is suspected or diagnosed?
+                          Does this child have any special needs or known medical, developmental, or mental health conditions—either suspected or diagnosed—that we should be aware of to provide appropriate support?
                         </span>
                       </label>
                       
@@ -2396,6 +2602,80 @@ export default function AboutYou() {
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                               placeholder="YYYY"
                             />
+                          </div>
+
+                          {/* Place of Death for child: did they pass in US? then city/state/zip else country/city */}
+                          <div className="mt-4">
+                            <div className="text-sm text-gray-700 mb-2">Did he/she pass in the US?</div>
+                            <div className="flex items-center space-x-6 mb-3">
+                              <label className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`child_passed_us_${child.id}`}
+                                  value="yes"
+                                  checked={child.placeOfDeath?.passedInUS === true}
+                                  onChange={() => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, passedInUS: true })}
+                                  className="mr-2 text-gray-600 focus:ring-gray-500"
+                                />
+                                <span className="text-sm text-gray-700">Yes</span>
+                              </label>
+                              <label className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`child_passed_us_${child.id}`}
+                                  value="no"
+                                  checked={child.placeOfDeath?.passedInUS === false}
+                                  onChange={() => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, passedInUS: false })}
+                                  className="mr-2 text-gray-600 focus:ring-gray-500"
+                                />
+                                <span className="text-sm text-gray-700">No</span>
+                              </label>
+                            </div>
+
+                            {child.placeOfDeath?.passedInUS === true && (
+                              <div className="grid grid-cols-3 gap-2">
+                                <input
+                                  type="text"
+                                  value={child.placeOfDeath?.us?.city || ''}
+                                  onChange={(e) => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, us: { ...child.placeOfDeath?.us, city: e.target.value } })}
+                                  className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="City"
+                                />
+                                <input
+                                  type="text"
+                                  value={child.placeOfDeath?.us?.state || ''}
+                                  onChange={(e) => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, us: { ...child.placeOfDeath?.us, state: e.target.value } })}
+                                  className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="State"
+                                />
+                                <input
+                                  type="text"
+                                  value={child.placeOfDeath?.us?.zip || ''}
+                                  onChange={(e) => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, us: { ...child.placeOfDeath?.us, zip: e.target.value } })}
+                                  className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="ZIP"
+                                />
+                              </div>
+                            )}
+
+                            {child.placeOfDeath?.passedInUS === false && (
+                              <div className="grid grid-cols-2 gap-2">
+                                <input
+                                  type="text"
+                                  value={child.placeOfDeath?.foreign?.country || ''}
+                                  onChange={(e) => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, foreign: { ...child.placeOfDeath?.foreign, country: e.target.value } })}
+                                  className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="Country"
+                                />
+                                <input
+                                  type="text"
+                                  value={child.placeOfDeath?.foreign?.city || ''}
+                                  onChange={(e) => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, foreign: { ...child.placeOfDeath?.foreign, city: e.target.value } })}
+                                  className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                  placeholder="City"
+                                />
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
