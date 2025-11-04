@@ -12,6 +12,7 @@ import DecisionMakers from './components/DecisionMakers'
 import Advisors from './components/Advisors'
 import Documents from './components/Documents'
 import SpouseAccessManager from './components/SpouseAccessManager'
+import AcceptInvite from './components/AcceptInvite'
 import Navigation from './components/Navigation'
 import Breadcrumb from './components/Breadcrumb'
 import { PeopleProvider } from './contexts/PeopleContext'
@@ -39,6 +40,7 @@ const App = () => {
             <Route path="/attorney-login" element={<><Breadcrumb /><AttorneyLogin /></>} />
             <Route path="/client-signup" element={<><Breadcrumb /><ClientSignUp /></>} />
             <Route path="/attorney-signup" element={<><Breadcrumb /><AttorneySignUp /></>} />
+            <Route path="/accept-invite" element={<AcceptInvite />} />
             </Routes>
             </div>
           </Router>

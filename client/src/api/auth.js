@@ -32,6 +32,11 @@ export const AuthAPI = {
 
   logout: () => request('/logout', { method: 'POST' }),
   me: () => request('/me'),
+  acceptInvite: (token, password) =>
+    request('/accept-invite', {
+      method: 'POST',
+      body: JSON.stringify({ token, password }),
+    }),
   listSessions: () => request('/sessions'),
   logoutAll: () => request('/sessions', { method: 'DELETE' }),
   logoutSession: (sid) => request(`/sessions/${sid}`, { method: 'DELETE' }),
