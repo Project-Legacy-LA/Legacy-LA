@@ -28,7 +28,15 @@ async function login(email, password, { activeTenant = null } = {}) {
   // fetch explicit client grants (could be empty) — people granted by clients
   const clientGrants = await userModel.getClientGrants(user.user_id);
 
-  const { sid, session } = await sessionService.createSession(user, memberships, clientGrants, activeTenant);
+  const clientAccounts = await userModel.getClientAccounts(user.user_id);
+
+  const { sid, session } = await sessionService.createSession(
+    user,
+    memberships,
+    clientGrants,
+    clientAccounts,
+    activeTenant
+  );
 
   return { sid, user: session };
 }

@@ -36,6 +36,12 @@ export default function Navigation() {
     }
   }
 
+  const roles = user?.roles || []
+  const isSuperuser = !!user?.is_superuser
+  const isAttorneyOwner = roles.includes('attorney_owner')
+  const canSeeAttorneyView = !!user && (isSuperuser || isAttorneyOwner)
+  const homePath = isSuperuser ? '/superuser/invite-attorney' : isAttorneyOwner ? '/attorney' : '/'
+
   return (
     <div ref={navRef} className="shadow-lg border-b border-gray-200" style={{ backgroundColor: '#2A2829' }}>
       <div className="h-28 sm:h-32 md:h-36 lg:h-40 xl:h-44">
@@ -61,7 +67,7 @@ export default function Navigation() {
             {/* Navigation Buttons */}
             <div className="hidden md:flex items-center space-x-2.5 lg:space-x-5">
             <button 
-              onClick={() => navigate('/')}
+              onClick={() => navigate(homePath)}
               className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
             >
               <span className="relative">
@@ -69,15 +75,39 @@ export default function Navigation() {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
               </span>
             </button>
-              <button 
-                onClick={() => navigate('/attorney')}
-                className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
-              >
-                <span className="relative">
-                  Attorney View
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
-                </span>
-              </button>
+              {isSuperuser && (
+                <button 
+                  onClick={() => navigate('/superuser/invite-attorney')}
+                  className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+                >
+                  <span className="relative">
+                    Invite Attorney
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                  </span>
+                </button>
+              )}
+              {isAttorneyOwner && (
+                <button 
+                  onClick={() => navigate('/attorney/invite-client')}
+                  className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+                >
+                  <span className="relative">
+                    Invite Client
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                  </span>
+                </button>
+              )}
+              {canSeeAttorneyView && (
+                <button 
+                  onClick={() => navigate('/attorney')}
+                  className="px-3.5 py-2.5 text-sm lg:text-base font-medium text-white hover:text-gray-300 focus:outline-none relative group transition-all duration-300"
+                >
+                  <span className="relative">
+                    Attorney View
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out"></span>
+                  </span>
+                </button>
+              )}
               {user ? (
                 <div className="flex items-center space-x-3 text-white">
                   <span className="text-sm lg:text-base font-medium truncate max-w-[12rem]">

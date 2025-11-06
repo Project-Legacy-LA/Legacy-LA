@@ -137,6 +137,21 @@ async function getClientGrants(userId) {
   return rows;
 }
 
+async function getClientAccounts(userId) {
+  const { rows } = await pool.query(
+    `SELECT client_account_id,
+            tenant_id::text,
+            client_id::text,
+            role,
+            is_enabled
+       FROM app.client_account
+      WHERE user_id = $1`,
+    [userId]
+  );
+
+  return rows;
+}
+
 /**
  * Toggle the superuser flag for a user.
  */
@@ -165,6 +180,7 @@ module.exports = {
   deactivateUser,
   getMemberships,
   getClientGrants,
+  getClientAccounts,
   setSuperuser,
   attachPerson,
 };

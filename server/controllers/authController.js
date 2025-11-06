@@ -72,7 +72,7 @@ async function acceptInvite(req, res) {
       return error(res, 'Invite expired or invalid', 410);
     }
 
-    const { user_id, tenant_id, role } = payload;
+    const { user_id, tenant_id, role, client_id } = payload;
 
     // 2) Use a transaction so user + membership update is atomic
     await pool.query('BEGIN');
@@ -94,8 +94,17 @@ async function acceptInvite(req, res) {
       );
     }
 
-    // (optional) handle other invite roles here in future:
-    // else if (role === 'client_delegate') { ... }
+    if (client_id && ['client_owner', 'spouse'].includes(role)) {
+      await pool.query(
+        `
+          UPDATE app.client_account
+             SET is_enabled = true
+           WHERE user_id = $1
+             AND client_id = $2
+        `,
+        [user_id, client_id]
+      );
+    }
 
     await pool.query('COMMIT');
 

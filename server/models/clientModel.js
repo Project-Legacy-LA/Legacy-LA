@@ -61,7 +61,7 @@ async function createClientAccount({ tenantId, clientId, userId, role, isEnabled
     `
       INSERT INTO app.client_account (tenant_id, client_id, user_id, role, is_enabled)
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING client_account_id, tenant_id, client_id, user_id, role, is_enabled, created_at
+      RETURNING client_account_id, tenant_id, client_id, user_id, role, is_enabled
     `,
     [tenantId, clientId, userId, role, isEnabled]
   );
@@ -183,4 +183,6 @@ module.exports = {
   createClientAccount,
   getClientById,
   getClientAccount,
+  findPrimaryClientForUser,
+  updateClientResidence
 };
