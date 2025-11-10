@@ -55,20 +55,6 @@ export default function AboutYou() {
     // Marriage Status
     hasBeenMarried: false,
     
-    // Executor/Administrator Information
-    isExecutorOrAdmin: false,
-    decedentInfo: {
-      firstName: '',
-      lastName: '',
-      dateOfDeath: '',
-      // placeOfDeath: structured so we can capture US vs foreign details
-      placeOfDeath: {
-        passedInUS: null, // true | false | null
-        us: { city: '', state: '', zip: '' },
-        foreign: { country: '', city: '' }
-      }
-    },
-    
     // Contact Information
     phone: '',
     email: '',
@@ -316,7 +302,7 @@ export default function AboutYou() {
       parentRelationship: '', // 'your', 'both', 'spouse'
       isDeceased: false,
       dateOfDeath: { month: '', day: '', year: '' },
-      // placeOfDeath structure mirrors decedentInfo: passedInUS | us details | foreign details
+      // placeOfDeath structure: passedInUS | us details | foreign details
       placeOfDeath: {
         passedInUS: null, // true | false | null
         us: { city: '', state: '', zip: '' },
@@ -630,8 +616,7 @@ export default function AboutYou() {
             About You
           </h1>
           <p className="text-gray-600">
-            Please provide your personal information below. Fill in your information if you are conducting your estate planning, 
-            or if you are representing someone as an executor or administrator for another person that has passed away.
+            Please provide your personal information below.
           </p>
         </div>
 
@@ -919,138 +904,6 @@ export default function AboutYou() {
                           </div>
                         </div>
                       ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Executor/Administrator Section */}
-              <div className="col-span-2">
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <label className="flex items-center mb-4">
-                    <input
-                      type="checkbox"
-                      checked={formData.isExecutorOrAdmin}
-                      onChange={(e) => handleInputChange('isExecutorOrAdmin', e.target.checked)}
-                      className="mr-3 text-gray-600 focus:ring-gray-500"
-                    />
-                    <span className="text-sm font-medium text-gray-700">
-                      Are you filling this form out as an executor or administrator for someone who has passed away?
-                    </span>
-                  </label>
-                  
-                  {formData.isExecutorOrAdmin && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Decedent First Name
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.decedentInfo.firstName}
-                          onChange={(e) => handleInputChange('decedentInfo.firstName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Decedent Last Name
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.decedentInfo.lastName}
-                          onChange={(e) => handleInputChange('decedentInfo.lastName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Date of Death
-                        </label>
-                        <input
-                          type="date"
-                          value={formData.decedentInfo.dateOfDeath}
-                          onChange={(e) => handleInputChange('decedentInfo.dateOfDeath', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Place of Death
-                        </label>
-                        <div className="space-y-3">
-                          <div className="text-sm text-gray-700">Did he/she pass in the US?</div>
-                          <div className="flex items-center space-x-6">
-                            <label className="flex items-center">
-                              <input
-                                type="radio"
-                                name={`decedent_passed_us`}
-                                value="yes"
-                                checked={formData.decedentInfo.placeOfDeath.passedInUS === true}
-                                onChange={() => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, passedInUS: true } })}
-                                className="mr-2 text-gray-600 focus:ring-gray-500"
-                              />
-                              <span className="text-sm text-gray-700">Yes</span>
-                            </label>
-                            <label className="flex items-center">
-                              <input
-                                type="radio"
-                                name={`decedent_passed_us`}
-                                value="no"
-                                checked={formData.decedentInfo.placeOfDeath.passedInUS === false}
-                                onChange={() => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, passedInUS: false } })}
-                                className="mr-2 text-gray-600 focus:ring-gray-500"
-                              />
-                              <span className="text-sm text-gray-700">No</span>
-                            </label>
-                          </div>
-
-                          {formData.decedentInfo.placeOfDeath.passedInUS === true && (
-                            <div className="grid grid-cols-3 gap-2">
-                              <input
-                                type="text"
-                                value={formData.decedentInfo.placeOfDeath.us.city}
-                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, city: e.target.value } } })}
-                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="City"
-                              />
-                              <input
-                                type="text"
-                                value={formData.decedentInfo.placeOfDeath.us.state}
-                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, state: e.target.value } } })}
-                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="State"
-                              />
-                              <input
-                                type="text"
-                                value={formData.decedentInfo.placeOfDeath.us.zip}
-                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, zip: e.target.value } } })}
-                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="ZIP"
-                              />
-                            </div>
-                          )}
-
-                          {formData.decedentInfo.placeOfDeath.passedInUS === false && (
-                            <div className="grid grid-cols-2 gap-2">
-                              <input
-                                type="text"
-                                value={formData.decedentInfo.placeOfDeath.foreign.country}
-                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, foreign: { ...formData.decedentInfo.placeOfDeath.foreign, country: e.target.value } } })}
-                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="Country"
-                              />
-                              <input
-                                type="text"
-                                value={formData.decedentInfo.placeOfDeath.foreign.city}
-                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, foreign: { ...formData.decedentInfo.placeOfDeath.foreign, city: e.target.value } } })}
-                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="City"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>

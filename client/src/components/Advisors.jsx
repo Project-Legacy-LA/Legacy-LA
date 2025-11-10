@@ -30,7 +30,6 @@ export default function Advisors() {
       advisorType: 'attorney',
       firmName: '',
       specializations: [],
-      yearsOfExperience: '',
       notes: ''
     }
   ])
@@ -91,7 +90,6 @@ export default function Advisors() {
       advisorType: 'attorney',
       firmName: '',
       specializations: [],
-      yearsOfExperience: '',
       notes: ''
     }])
   }
@@ -321,22 +319,6 @@ export default function Advisors() {
                       onChange={(e) => handleAdvisorChange(advisor.id, 'firmName', e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       placeholder="Law firm, financial company, etc."
-                    />
-                  </div>
-                  
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Years of Experience
-                    </label>
-                    <input
-                      type="number"
-                      value={advisor.yearsOfExperience}
-                      onChange={(e) => handleAdvisorChange(advisor.id, 'yearsOfExperience', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="Years"
-                      min="0"
-                      max="50"
                     />
                   </div>
                 </div>

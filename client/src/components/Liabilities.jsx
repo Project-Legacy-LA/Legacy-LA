@@ -35,6 +35,9 @@ export default function Liabilities() {
       associatedAssetId: null,
       creditor: '',
       accountNumber: '',
+      debtHolder: 'your_name', // 'your_name', 'joint', 'spouse_name', 'other'
+      debtHolderOther: '', // For 'other' option
+      debtCharacter: 'community', // 'community', 'quasi_community', 'separate'
       notes: ''
     }
   ])
@@ -50,6 +53,9 @@ export default function Liabilities() {
       associatedAssetId: null,
       creditor: '',
       accountNumber: '',
+      debtHolder: 'your_name', // 'your_name', 'joint', 'spouse_name', 'other'
+      debtHolderOther: '', // For 'other' option
+      debtCharacter: 'community', // 'community', 'quasi_community', 'separate'
       notes: ''
     }])
   }
@@ -251,6 +257,57 @@ export default function Liabilities() {
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                           placeholder="Last 4 digits: ****1234"
                         />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Whose Name is the Debt In? *
+                        </label>
+                        <select
+                          value={liability.debtHolder}
+                          onChange={(e) => handleLiabilityChange(liability.id, 'debtHolder', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        >
+                          <option value="your_name">Your name only (Separate)</option>
+                          <option value="joint">Joint (Both names)</option>
+                          <option value="spouse_name">Spouse's name only</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+
+                      {liability.debtHolder === 'other' && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Please specify
+                          </label>
+                          <input
+                            type="text"
+                            value={liability.debtHolderOther}
+                            onChange={(e) => handleLiabilityChange(liability.id, 'debtHolderOther', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="e.g., Business name, Trust name, etc."
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Marital Character */}
+                    <div className="mt-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Marital Character *
+                          </label>
+                          <select
+                            value={liability.debtCharacter || 'community'}
+                            onChange={(e) => handleLiabilityChange(liability.id, 'debtCharacter', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                          >
+                            <option value="community">Community Debt</option>
+                            <option value="quasi_community">Quasi Community Debt</option>
+                            <option value="separate">Separate Debt</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
 
