@@ -88,11 +88,6 @@ export default function Breadcrumb() {
           { name: 'Attorney Clients', path: '/attorney', current: true }
         ]
       default:
-        if (path === '/dashboard') {
-          return [
-            { name: 'Home', path: '/', current: true }
-          ]
-        }
         if (path.startsWith('/attorney/client/')) {
           return [
             { name: 'Home', path: '/', current: false },
