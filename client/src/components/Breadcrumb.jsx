@@ -72,29 +72,7 @@ export default function Breadcrumb() {
           { name: 'Home', path: '/', current: false },
           { name: 'Attorney Registration', path: '/attorney-signup', current: true }
         ]
-      case '/superuser/invite-attorney':
-        return [
-          { name: 'Home', path: '/', current: false },
-          { name: 'Invite Attorney', path: '/superuser/invite-attorney', current: true }
-        ]
-      case '/attorney/invite-client':
-        return [
-          { name: 'Home', path: '/', current: false },
-          { name: 'Invite Client', path: '/attorney/invite-client', current: true }
-        ]
-      case '/attorney':
-        return [
-          { name: 'Home', path: '/', current: false },
-          { name: 'Attorney Clients', path: '/attorney', current: true }
-        ]
       default:
-        if (path.startsWith('/attorney/client/')) {
-          return [
-            { name: 'Home', path: '/', current: false },
-            { name: 'Attorney Clients', path: '/attorney', current: false },
-            { name: 'Client Details', path, current: true }
-          ];
-        }
         return [
           { name: 'Home', path: '/', current: true }
         ]
