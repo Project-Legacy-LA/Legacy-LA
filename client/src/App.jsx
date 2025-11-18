@@ -19,6 +19,7 @@ import { AssetsProvider } from './contexts/AssetsContext'
 import { AuthProvider } from './contexts/AuthContext'
 import AttorneyClientSelector from './components/AttorneyClientSelector'
 import AttorneyClientView from './components/AttorneyClientView'
+import Report from './components/Report'
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
             <Route path="/attorney-signup" element={<><Breadcrumb /><AttorneySignUp /></>} />
             <Route path="/attorney" element={<><Breadcrumb /><AttorneyClientSelector /></>} />
             <Route path="/attorney/client/:id" element={<><Breadcrumb /><AttorneyClientView /></>} />
+            <Route path="/report" element={<><Breadcrumb /><Report /></>} />
             </Routes>
             </div>
           </Router>

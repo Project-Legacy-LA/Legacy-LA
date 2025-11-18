@@ -139,15 +139,14 @@ export default function HomePage() {
             <div
               key={segment.id}
               ref={addToRefs}
-              onClick={() => handleSegmentClick(segment.id)}
-              className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-200 transform hover:-translate-y-2"
+              className={`relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-100 flex flex-col ${segment.id === 'spouse-access' ? 'lg:col-start-2' : ''}`}
               style={{ 
                 backdropFilter: 'blur(10px)',
                 animationDelay: `${index * 100}ms`
               }}
             >
               {/* Icon */}
-              <div className="flex items-center justify-center w-12 h-12 mx-auto mb-6 rounded-full text-white shadow-lg group-hover:scale-110 transition-transform duration-300" style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}>
+              <div className="flex items-center justify-center w-12 h-12 mx-auto mb-6 rounded-full text-white shadow-lg" style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}>
                 {segment.completed ? (
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -160,7 +159,7 @@ export default function HomePage() {
               </div>
 
               {/* Content */}
-              <div className="text-center">
+              <div className="text-center flex-grow flex flex-col">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'var(--ll-font)' }}>
                   {segment.title}
                 </h3>
@@ -198,10 +197,17 @@ export default function HomePage() {
                 </div>
 
                 {/* Action Button */}
-                <div className="mt-6">
-                  <div className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform group-hover:scale-105 shadow-lg" style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}>
+                <div className="mt-auto pt-6">
+                  <div 
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleSegmentClick(segment.id)
+                    }}
+                    className="group inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg cursor-pointer" 
+                    style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
+                  >
                     Get Started
-                    <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
