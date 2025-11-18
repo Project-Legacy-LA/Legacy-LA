@@ -55,6 +55,20 @@ export default function AboutYou() {
     // Marriage Status
     hasBeenMarried: false,
     
+    // Executor/Administrator Information
+    isExecutorOrAdmin: false,
+    decedentInfo: {
+      firstName: '',
+      lastName: '',
+      dateOfDeath: '',
+      // placeOfDeath: structured so we can capture US vs foreign details
+      placeOfDeath: {
+        passedInUS: null, // true | false | null
+        us: { city: '', state: '', zip: '' },
+        foreign: { country: '', city: '' }
+      }
+    },
+    
     // Contact Information
     phone: '',
     email: '',
@@ -2159,59 +2173,6 @@ export default function AboutYou() {
                             ))}
                           </div>
                         )}
-                      </div>
-                    </div>
-
-                    {/* Additional Spouse Documents */}
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Documents</h3>
-                      <div className="space-y-4">
-                        {/* Prenuptial Agreement */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Prenuptial Agreement
-                          </label>
-                          <div className="flex items-center space-x-4">
-                            <input
-                              type="file"
-                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                            />
-                            <span className="text-sm text-gray-500">Upload prenuptial agreement</span>
-                          </div>
-                        </div>
-
-                        {/* Divorce Decree (if not already shown) */}
-                        {spouse.relationship !== 'divorced' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Divorce Decree
-                            </label>
-                            <div className="flex items-center space-x-4">
-                              <input
-                                type="file"
-                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                              />
-                              <span className="text-sm text-gray-500">Upload divorce decree</span>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Other Documents */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Other Legal Documents
-                          </label>
-                          <div className="flex items-center space-x-4">
-                            <input
-                              type="file"
-                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                            />
-                            <span className="text-sm text-gray-500">Upload other legal documents</span>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>
