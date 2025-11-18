@@ -55,6 +55,20 @@ export default function AboutYou() {
     // Marriage Status
     hasBeenMarried: false,
     
+    // Executor/Administrator Information
+    isExecutorOrAdmin: false,
+    decedentInfo: {
+      firstName: '',
+      lastName: '',
+      dateOfDeath: '',
+      // placeOfDeath: structured so we can capture US vs foreign details
+      placeOfDeath: {
+        passedInUS: null, // true | false | null
+        us: { city: '', state: '', zip: '' },
+        foreign: { country: '', city: '' }
+      }
+    },
+    
     // Contact Information
     phone: '',
     email: '',
@@ -622,7 +636,7 @@ export default function AboutYou() {
 
         {/* Form */}
         <form ref={formRef} onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-6">
               {/* Legal First Name */}
@@ -708,31 +722,13 @@ export default function AboutYou() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Additional Citizenship Country *
                   </label>
-                  <select
+                  <input
+                    type="text"
                     value={formData.citizenship}
                     onChange={(e) => handleInputChange('citizenship', e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  >
-                    <option value="">Select Country</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {formData.citizenship === 'Other' && (
-                    <div className="mt-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Please specify country
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.otherCitizenship}
-                        onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Enter country name"
-                      />
-                    </div>
-                  )}
+                    placeholder="Enter country name"
+                  />
                 </div>
               )}
 
@@ -742,42 +738,24 @@ export default function AboutYou() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Country of Citizenship *
                   </label>
-                  <select
+                  <input
+                    type="text"
                     value={formData.citizenship}
                     onChange={(e) => handleInputChange('citizenship', e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  >
-                    <option value="">Select Country</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {formData.citizenship === 'Other' && (
-                    <div className="mt-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Please specify country
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.otherCitizenship}
-                        onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Enter country name"
-                      />
-                    </div>
-                  )}
+                    placeholder="Enter country name"
+                  />
                 </div>
               )}
 
               {/* Prior Names Section */}
-              <div className="col-span-2">
+              <div className="col-span-2 mt-6">
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Prior Names / Former Names</h3>
-                        <p className="text-sm text-gray-600 mt-1">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Prior Names / Former Names</h3>
+                        <p className="text-sm text-gray-600">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
                       </div>
                     </div>
                     <button
@@ -807,7 +785,7 @@ export default function AboutYou() {
                             </button>
                           </div>
                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">
                                 First Name
@@ -909,12 +887,144 @@ export default function AboutYou() {
                 </div>
               </div>
 
+              {/* Executor/Administrator Section */}
+              <div className="col-span-2 mt-6">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                  <label className="flex items-center mb-4">
+                    <input
+                      type="checkbox"
+                      checked={formData.isExecutorOrAdmin}
+                      onChange={(e) => handleInputChange('isExecutorOrAdmin', e.target.checked)}
+                      className="mr-3 text-gray-600 focus:ring-gray-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      Are you filling this form out as an executor or administrator for someone who has passed away?
+                    </span>
+                  </label>
+                  
+                  {formData.isExecutorOrAdmin && (
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Decedent First Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.decedentInfo.firstName}
+                          onChange={(e) => handleInputChange('decedentInfo.firstName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Decedent Last Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.decedentInfo.lastName}
+                          onChange={(e) => handleInputChange('decedentInfo.lastName', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Date of Death
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.decedentInfo.dateOfDeath}
+                          onChange={(e) => handleInputChange('decedentInfo.dateOfDeath', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Place of Death
+                        </label>
+                        <div className="space-y-3">
+                          <div className="text-sm text-gray-700">Did he/she pass in the US?</div>
+                          <div className="flex items-center space-x-6">
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                name={`decedent_passed_us`}
+                                value="yes"
+                                checked={formData.decedentInfo.placeOfDeath.passedInUS === true}
+                                onChange={() => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, passedInUS: true } })}
+                                className="mr-2 text-gray-600 focus:ring-gray-500"
+                              />
+                              <span className="text-sm text-gray-700">Yes</span>
+                            </label>
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                name={`decedent_passed_us`}
+                                value="no"
+                                checked={formData.decedentInfo.placeOfDeath.passedInUS === false}
+                                onChange={() => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, passedInUS: false } })}
+                                className="mr-2 text-gray-600 focus:ring-gray-500"
+                              />
+                              <span className="text-sm text-gray-700">No</span>
+                            </label>
+                          </div>
+
+                          {formData.decedentInfo.placeOfDeath.passedInUS === true && (
+                            <div className="grid grid-cols-3 gap-2">
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.us.city}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, city: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="City"
+                              />
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.us.state}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, state: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="State"
+                              />
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.us.zip}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, zip: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="ZIP"
+                              />
+                            </div>
+                          )}
+
+                          {formData.decedentInfo.placeOfDeath.passedInUS === false && (
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.foreign.country}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, foreign: { ...formData.decedentInfo.placeOfDeath.foreign, country: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="Country"
+                              />
+                              <input
+                                type="text"
+                                value={formData.decedentInfo.placeOfDeath.foreign.city}
+                                onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, foreign: { ...formData.decedentInfo.placeOfDeath.foreign, city: e.target.value } } })}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                placeholder="City"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Marriage Status */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Have you now or in the past been married? *
                 </label>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-6">
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -945,7 +1055,7 @@ export default function AboutYou() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Country of Residence *
                 </label>
-                <div className="flex items-center space-x-6 mb-3">
+                <div className="flex items-center space-x-6 mb-4">
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -1075,7 +1185,7 @@ export default function AboutYou() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Date of Birth *
                 </label>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Month</label>
                     <input
@@ -1137,7 +1247,7 @@ export default function AboutYou() {
               </div>
 
               {formData.residenceCountryOption === 'US' && (
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       City
@@ -1183,7 +1293,7 @@ export default function AboutYou() {
           {/* Marriage Details Section (if married) */}
           {formData.maritalStatus === 'Married' && (
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Marriage Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">Marriage Details</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1515,7 +1625,7 @@ export default function AboutYou() {
 
           {/* Contact Information Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Contact Information</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1547,7 +1657,7 @@ export default function AboutYou() {
           {/* Spouse Information Section */}
           {formData.hasBeenMarried && (
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Spouse Information</h3>
                 <button
                   type="button"
@@ -1567,7 +1677,7 @@ export default function AboutYou() {
                 <div className="space-y-6">
                   {spouses.map((spouse, index) => (
                     <div key={spouse.id} className="p-6 border border-gray-200 rounded-lg">
-                      <div className="flex justify-between items-center mb-4">
+                      <div className="flex justify-between items-center mb-6">
                         <h4 className="text-md font-semibold text-gray-900">
                           Spouse {index + 1}
                         </h4>
@@ -1580,7 +1690,7 @@ export default function AboutYou() {
                         </button>
                       </div>
 
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {/* Relationship Type */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -2065,59 +2175,6 @@ export default function AboutYou() {
                         )}
                       </div>
                     </div>
-
-                    {/* Additional Spouse Documents */}
-                    <div className="mt-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Documents</h3>
-                      <div className="space-y-4">
-                        {/* Prenuptial Agreement */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Prenuptial Agreement
-                          </label>
-                          <div className="flex items-center space-x-4">
-                            <input
-                              type="file"
-                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                            />
-                            <span className="text-sm text-gray-500">Upload prenuptial agreement</span>
-                          </div>
-                        </div>
-
-                        {/* Divorce Decree (if not already shown) */}
-                        {spouse.relationship !== 'divorced' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Divorce Decree
-                            </label>
-                            <div className="flex items-center space-x-4">
-                              <input
-                                type="file"
-                                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                              />
-                              <span className="text-sm text-gray-500">Upload divorce decree</span>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Other Documents */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Other Legal Documents
-                          </label>
-                          <div className="flex items-center space-x-4">
-                            <input
-                              type="file"
-                              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-                            />
-                            <span className="text-sm text-gray-500">Upload other legal documents</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -2130,7 +2187,7 @@ export default function AboutYou() {
 
           {/* Children Information Section */}
             <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Children Information</h3>
               <button
                 type="button"
@@ -2150,7 +2207,7 @@ export default function AboutYou() {
               <div className="space-y-6">
                 {children.map((child, index) => (
                   <div key={child.id} className="p-6 border border-gray-200 rounded-lg">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center mb-6">
                       <h4 className="text-lg font-semibold text-gray-900">Child {index + 1}</h4>
                       <button
                         type="button"
@@ -2161,7 +2218,7 @@ export default function AboutYou() {
                       </button>
                     </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                           First Name
