@@ -637,7 +637,7 @@ export default function AboutYou() {
 
         {/* Form */}
         <form ref={formRef} onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-6">
               {/* Legal First Name */}
@@ -723,31 +723,13 @@ export default function AboutYou() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Additional Citizenship Country *
                   </label>
-                  <select
+                  <input
+                    type="text"
                     value={formData.citizenship}
                     onChange={(e) => handleInputChange('citizenship', e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  >
-                    <option value="">Select Country</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {formData.citizenship === 'Other' && (
-                    <div className="mt-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Please specify country
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.otherCitizenship}
-                        onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Enter country name"
-                      />
-                    </div>
-                  )}
+                    placeholder="Enter country name"
+                  />
                 </div>
               )}
 
@@ -757,42 +739,24 @@ export default function AboutYou() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Country of Citizenship *
                   </label>
-                  <select
+                  <input
+                    type="text"
                     value={formData.citizenship}
                     onChange={(e) => handleInputChange('citizenship', e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  >
-                    <option value="">Select Country</option>
-                    <option value="Canada">Canada</option>
-                    <option value="Mexico">Mexico</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  {formData.citizenship === 'Other' && (
-                    <div className="mt-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Please specify country
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.otherCitizenship}
-                        onChange={(e) => handleInputChange('otherCitizenship', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="Enter country name"
-                      />
-                    </div>
-                  )}
+                    placeholder="Enter country name"
+                  />
                 </div>
               )}
 
               {/* Prior Names Section */}
-              <div className="col-span-2">
+              <div className="col-span-2 mt-6">
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                  <div className="mb-4">
+                  <div className="mb-6">
                     <div className="flex justify-between items-start">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Prior Names / Former Names</h3>
-                        <p className="text-sm text-gray-600 mt-1">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Prior Names / Former Names</h3>
+                        <p className="text-sm text-gray-600">Add any previous names you've been known by (maiden name, previous married name, legal name changes, etc.)</p>
                       </div>
                     </div>
                     <button
@@ -822,7 +786,7 @@ export default function AboutYou() {
                             </button>
                           </div>
                           
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                               <label className="block text-xs font-medium text-gray-700 mb-1">
                                 First Name
@@ -925,8 +889,8 @@ export default function AboutYou() {
               </div>
 
               {/* Executor/Administrator Section */}
-              <div className="col-span-2">
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div className="col-span-2 mt-6">
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
                   <label className="flex items-center mb-4">
                     <input
                       type="checkbox"
@@ -940,7 +904,7 @@ export default function AboutYou() {
                   </label>
                   
                   {formData.isExecutorOrAdmin && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Decedent First Name
@@ -1061,7 +1025,7 @@ export default function AboutYou() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Have you now or in the past been married? *
                 </label>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-6">
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -1092,7 +1056,7 @@ export default function AboutYou() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Country of Residence *
                 </label>
-                <div className="flex items-center space-x-6 mb-3">
+                <div className="flex items-center space-x-6 mb-4">
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -1222,7 +1186,7 @@ export default function AboutYou() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Date of Birth *
                 </label>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Month</label>
                     <input
@@ -1284,7 +1248,7 @@ export default function AboutYou() {
               </div>
 
               {formData.residenceCountryOption === 'US' && (
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       City
@@ -1330,7 +1294,7 @@ export default function AboutYou() {
           {/* Marriage Details Section (if married) */}
           {formData.maritalStatus === 'Married' && (
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Marriage Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">Marriage Details</h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1662,7 +1626,7 @@ export default function AboutYou() {
 
           {/* Contact Information Section */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Contact Information</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1694,7 +1658,7 @@ export default function AboutYou() {
           {/* Spouse Information Section */}
           {formData.hasBeenMarried && (
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Spouse Information</h3>
                 <button
                   type="button"
@@ -1714,7 +1678,7 @@ export default function AboutYou() {
                 <div className="space-y-6">
                   {spouses.map((spouse, index) => (
                     <div key={spouse.id} className="p-6 border border-gray-200 rounded-lg">
-                      <div className="flex justify-between items-center mb-4">
+                      <div className="flex justify-between items-center mb-6">
                         <h4 className="text-md font-semibold text-gray-900">
                           Spouse {index + 1}
                         </h4>
@@ -1727,7 +1691,7 @@ export default function AboutYou() {
                         </button>
                       </div>
 
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {/* Relationship Type */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -2277,7 +2241,7 @@ export default function AboutYou() {
 
           {/* Children Information Section */}
             <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Children Information</h3>
               <button
                 type="button"
@@ -2297,7 +2261,7 @@ export default function AboutYou() {
               <div className="space-y-6">
                 {children.map((child, index) => (
                   <div key={child.id} className="p-6 border border-gray-200 rounded-lg">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center mb-6">
                       <h4 className="text-lg font-semibold text-gray-900">Child {index + 1}</h4>
                       <button
                         type="button"
@@ -2308,7 +2272,7 @@ export default function AboutYou() {
                       </button>
                     </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                           First Name
