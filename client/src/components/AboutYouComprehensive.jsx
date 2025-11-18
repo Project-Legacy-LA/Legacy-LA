@@ -55,20 +55,6 @@ export default function AboutYou() {
     // Marriage Status
     hasBeenMarried: false,
     
-    // Executor/Administrator Information
-    isExecutorOrAdmin: false,
-    decedentInfo: {
-      firstName: '',
-      lastName: '',
-      dateOfDeath: '',
-      // placeOfDeath: structured so we can capture US vs foreign details
-      placeOfDeath: {
-        passedInUS: null, // true | false | null
-        us: { city: '', state: '', zip: '' },
-        foreign: { country: '', city: '' }
-      }
-    },
-    
     // Contact Information
     phone: '',
     email: '',
@@ -316,7 +302,7 @@ export default function AboutYou() {
       parentRelationship: '', // 'your', 'both', 'spouse'
       isDeceased: false,
       dateOfDeath: { month: '', day: '', year: '' },
-      // placeOfDeath structure mirrors decedentInfo: passedInUS | us details | foreign details
+      // placeOfDeath structure: passedInUS | us details | foreign details
       placeOfDeath: {
         passedInUS: null, // true | false | null
         us: { city: '', state: '', zip: '' },
@@ -630,8 +616,7 @@ export default function AboutYou() {
             About You
           </h1>
           <p className="text-gray-600">
-            Please provide your personal information below. Fill in your information if you are conducting your estate planning, 
-            or if you are representing someone as an executor or administrator for another person that has passed away.
+            Please provide your personal information below.
           </p>
         </div>
 

@@ -4,9 +4,11 @@ const router = express.Router();
 const clientController = require('../../controllers/clientController');
 const session = require('../../middleware/session');
 const requireClientPermission = require('../../middleware/requireClientPermission');
+const requireAuth = require('../../middleware/requireAuth');
+const requireTenantRole = require('../../middleware/requireTenantRole');
 
 // Create client (attorney-owner only in active tenant)
-router.post('/', session, clientController.createClient);
+router.post('/', session, requireAuth, requireTenantRole('attorney_owner'), clientController.createClient);
 
 //read client (requires read)
 

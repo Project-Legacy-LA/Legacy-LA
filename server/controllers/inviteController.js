@@ -6,6 +6,13 @@ const { createInviteToken } = require('../utils/tokens');
 const { buildAcceptInviteUrl, buildInviteEmail } = require('../utils/inviteEmail');
 const { success, error } = require('../utils/response');
 
+function isAttorneyOwner(req) {
+  const memberships = req.user?.memberships || [];
+  const activeTenant = req.user?.active_tenant;
+  if (!activeTenant) return false;
+  return memberships.some(m => m.tenant_id === activeTenant && m.role === 'attorney_owner');
+}
+
 /**
  * Invite an Attorney (Admin-only)
  */
@@ -17,8 +24,16 @@ async function inviteAttorney(req, res) {
     return error(res, 'Email is required', 400);
   }
 
+  if (!req.user) {
+    return error(res, 'Not authenticated', 401);
+  }
+
   if (!tenantId) {
     return error(res, 'Active tenant context required', 400);
+  }
+
+  if (!req.user.is_superuser && !isAttorneyOwner(req)) {
+    return error(res, 'Forbidden: attorney owners only', 403);
   }
 
   try {
@@ -72,6 +87,14 @@ async function inviteClient(req, res) {
 
   if (!tenantId) {
     return error(res, 'Active tenant context required', 400);
+  }
+
+  if (!req.user) {
+    return error(res, 'Not authenticated', 401);
+  }
+
+  if (!isAttorneyOwner(req)) {
+    return error(res, 'Forbidden: attorney owners only', 403);
   }
 
   try {
@@ -133,8 +156,19 @@ async function inviteDelegate(req, res) {
     return error(res, 'Active tenant context required', 400);
   }
 
-  if (!['spouse', 'delegate'].includes(role)) {
+  if (!req.user) {
+    return error(res, 'Not authenticated', 401);
+  }
+
+  if (role !== 'spouse') {
     return error(res, 'Invalid role for delegate', 400);
+  }
+
+  const accounts = req.user.client_accounts || [];
+  const ownsClient = accounts.some(account => account.client_id === String(clientId) && account.role === 'owner' && account.is_enabled);
+
+  if (!ownsClient) {
+    return error(res, 'Forbidden: only the client owner can invite a spouse', 403);
   }
 
   try {

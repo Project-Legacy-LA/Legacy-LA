@@ -14,8 +14,12 @@ async function sessionMiddleware(req, res, next) {
     req.user = {
       user_id: sess.user_id,
       email: sess.email,
+      status: sess.status,
       is_superuser: sess.is_superuser || false,
       tenant_ids: sess.tenant_ids || [],
+      memberships: sess.memberships || [],
+      roles: sess.roles || [],
+      client_accounts: sess.client_accounts || [],
       client_grants: sess.client_grants || [],
       active_tenant: sess.active_tenant || null,
       sid

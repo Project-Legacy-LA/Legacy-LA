@@ -92,6 +92,21 @@ async function updatePassword(userId, passwordDigest) {
   return rows[0] || null;
 }
 
+async function attachPerson(userId, personId) {
+  const { rows } = await pool.query(
+    `
+    UPDATE app.users
+       SET person_id = $2,
+           updated_at = now()
+     WHERE user_id = $1
+     RETURNING user_id, email, status, person_id, is_superuser, updated_at
+    `,
+    [userId, personId]
+  );
+
+  return rows[0] || null;
+}
+
 /**
  * Get active memberships for a user (roles + tenant_ids)
  */
@@ -119,6 +134,21 @@ async function getClientGrants(userId) {
        AND is_enabled = true`,
     [userId]
   );
+  return rows;
+}
+
+async function getClientAccounts(userId) {
+  const { rows } = await pool.query(
+    `SELECT client_account_id,
+            tenant_id::text,
+            client_id::text,
+            role,
+            is_enabled
+       FROM app.client_account
+      WHERE user_id = $1`,
+    [userId]
+  );
+
   return rows;
 }
 
@@ -150,5 +180,7 @@ module.exports = {
   deactivateUser,
   getMemberships,
   getClientGrants,
+  getClientAccounts,
   setSuperuser,
+  attachPerson,
 };
