@@ -12,6 +12,7 @@ import DecisionMakers from './components/DecisionMakers'
 import Advisors from './components/Advisors'
 import Documents from './components/Documents'
 import SpouseAccessManager from './components/SpouseAccessManager'
+import AcceptInvite from './components/AcceptInvite'
 import Navigation from './components/Navigation'
 import Breadcrumb from './components/Breadcrumb'
 import { PeopleProvider } from './contexts/PeopleContext'
@@ -20,6 +21,8 @@ import { AuthProvider } from './contexts/AuthContext'
 import AttorneyClientSelector from './components/AttorneyClientSelector'
 import AttorneyClientView from './components/AttorneyClientView'
 import Report from './components/Report'
+import SuperuserInviteAttorney from './components/SuperuserInviteAttorney'
+import AttorneyInviteClient from './components/AttorneyInviteClient'
 
 const App = () => {
   return (
@@ -38,10 +41,13 @@ const App = () => {
             <Route path="/advisors" element={<><Breadcrumb /><Advisors /></>} />
             <Route path="/documents" element={<><Breadcrumb /><Documents /></>} />
             <Route path="/spouse-access" element={<><Breadcrumb /><SpouseAccessManager /></>} />
+            <Route path="/accept-invite" element={<AcceptInvite />} />
             <Route path="/login" element={<><Breadcrumb /><Login /></>} />
             <Route path="/attorney-login" element={<><Breadcrumb /><AttorneyLogin /></>} />
             <Route path="/client-signup" element={<><Breadcrumb /><ClientSignUp /></>} />
             <Route path="/attorney-signup" element={<><Breadcrumb /><AttorneySignUp /></>} />
+            <Route path="/superuser/invite-attorney" element={<><Breadcrumb /><SuperuserInviteAttorney /></>} />
+            <Route path="/attorney/invite-client" element={<><Breadcrumb /><AttorneyInviteClient /></>} />
             <Route path="/attorney" element={<><Breadcrumb /><AttorneyClientSelector /></>} />
             <Route path="/attorney/client/:id" element={<><Breadcrumb /><AttorneyClientView /></>} />
             <Route path="/report" element={<><Breadcrumb /><Report /></>} />

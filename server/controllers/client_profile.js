@@ -13,10 +13,15 @@ function normalizePerson(person) {
     last_name: person.last_name,
     suffix: person.suffix,
     preferred_name: person.preferred_name,
+    ssn_enc:person.ssn_enc,
     date_of_birth: person.date_of_birth,
     birth_country: person.birth_country,
     birth_admin_area: person.birth_admin_area,
     birth_locality: person.birth_locality,
+    is_alive:person.is_alive,
+    date_of_death:person.date_of_death,
+    place_of_death:person.place_of_death
+
   };
 }
 
@@ -25,13 +30,17 @@ function normalizeClient(client) {
   return {
     client_id: client.client_id,
     tenant_id: client.tenant_id,
+    primary_attorney_user_id:client.primary_attorney_user_id,
     label: client.label,
+    status:client.status,
+    relationship_status:client.relationship_status,
     residence_country: client.residence_country,
     residence_admin_area: client.residence_admin_area,
     residence_locality: client.residence_locality,
     residence_postal_code: client.residence_postal_code,
     residence_line1: client.residence_line1,
     residence_line2: client.residence_line2,
+    editing_frozen:client.editing_frozen,
   };
 }
 
