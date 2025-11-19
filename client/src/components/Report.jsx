@@ -5,16 +5,16 @@ import { gsap } from 'gsap'
 const reportFiles = [
   {
     id: 1,
-    name: 'John and Jane 2024',
+    name: 'John and Jane Estate Plan Review',
     fileName: 'SAMPLE 2024 Annual Report.pdf',
-    date: '2024-01-15',
+    date: '11-18-2025',
     type: 'Annual Report'
   },
   {
     id: 2,
-    name: 'John and Jane 2025',
+    name: 'The A Family Estate Plan Review',
     fileName: 'Sample_ 2024 Annual Report (1) SAMPLE 2.pdf',
-    date: '2025-01-20',
+    date: '11-18-2025',
     type: 'Annual Report'
   }
 ]
@@ -39,10 +39,10 @@ export default function Report() {
 
   return (
     <div ref={pageRef} className="min-h-screen text-black bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
+        <div className="mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-1" style={{ fontFamily: 'var(--ll-font)' }}>
             Generate Report
           </h1>
           <p className="text-gray-600 text-lg">
@@ -83,17 +83,7 @@ export default function Report() {
 
           {/* Report View */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
-                  {selectedReport.name}
-                </h2>
-                <div className="flex items-center text-gray-600 space-x-4">
-                  <span className="text-sm">Type: {selectedReport.type}</span>
-                  <span className="text-sm">Date: {selectedReport.date}</span>
-                </div>
-              </div>
-
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               {/* Report Preview Area - Simple PDF Viewer */}
               <div className="mb-6 bg-gray-100 rounded-xl border border-gray-300 p-4 flex flex-col items-center overflow-auto relative" style={{ minHeight: '900px' }}>
                 <div className="w-full h-full" style={{ minHeight: '900px' }}>

@@ -607,6 +607,16 @@ export default function AboutYou() {
     }
   }
 
+  // US States
+  const usStates = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+    'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
+    'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina',
+    'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+  ]
+
   // Louisiana Parishes
   const louisianaParishes = [
     'Acadia', 'Allen', 'Ascension', 'Assumption', 'Avoyelles', 'Beauregard', 'Bienville', 'Bossier', 
@@ -977,13 +987,16 @@ export default function AboutYou() {
                                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                 placeholder="City"
                               />
-                              <input
-                                type="text"
+                              <select
                                 value={formData.decedentInfo.placeOfDeath.us.state}
                                 onChange={(e) => handleInputChange('decedentInfo', { ...formData.decedentInfo, placeOfDeath: { ...formData.decedentInfo.placeOfDeath, us: { ...formData.decedentInfo.placeOfDeath.us, state: e.target.value } } })}
                                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="State"
-                              />
+                              >
+                                <option value="">State</option>
+                                {usStates.map(state => (
+                                  <option key={state} value={state}>{state}</option>
+                                ))}
+                              </select>
                               <input
                                 type="text"
                                 value={formData.decedentInfo.placeOfDeath.us.zip}
@@ -1081,7 +1094,7 @@ export default function AboutYou() {
                 </div>
 
                 {formData.residenceCountryOption === 'Other' ? (
-                  <div className="grid grid-cols-2 gap-3">
+                  <div>
                     <input
                       type="text"
                       value={formData.residenceCountry}
@@ -1089,36 +1102,31 @@ export default function AboutYou() {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       placeholder="Country"
                     />
-                    <input
-                      type="text"
-                      value={formData.residenceState}
-                      onChange={(e) => handleInputChange('residenceState', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="State / Province"
-                    />
                   </div>
                 ) : (
-                  <div className="text-sm text-gray-600">We’ll assume United States as your country of residence.</div>
+                  <div className="text-sm text-gray-600">We'll assume United States as your country of residence.</div>
                 )}
               </div>
 
-              {/* Parish */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  What parish do you currently reside in? *
-                </label>
-                <select
-                  value={formData.residenceParish}
-                  onChange={(e) => handleInputChange('residenceParish', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                >
-                  <option value="">Choose...</option>
-                  {louisianaParishes.map(parish => (
-                    <option key={parish} value={parish}>{parish}</option>
-                  ))}
-                  <option value="Other">Other (Please specify)</option>
-                </select>
-              </div>
+              {/* Parish - Only show if Louisiana is selected */}
+              {formData.residenceCountryOption === 'US' && formData.residenceState === 'Louisiana' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    What parish do you currently reside in? *
+                  </label>
+                  <select
+                    value={formData.residenceParish}
+                    onChange={(e) => handleInputChange('residenceParish', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  >
+                    <option value="">Choose...</option>
+                    {louisianaParishes.map(parish => (
+                      <option key={parish} value={parish}>{parish}</option>
+                    ))}
+                    <option value="Other">Other (Please specify)</option>
+                  </select>
+                </div>
+              )}
 
             </div>
 
@@ -1264,13 +1272,24 @@ export default function AboutYou() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       State
                     </label>
-                    <input
-                      type="text"
-                      value={formData.residenceState}
-                      onChange={(e) => handleInputChange('residenceState', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="State"
-                    />
+                    <div className="relative">
+                      <select
+                        value={formData.residenceState}
+                        onChange={(e) => handleInputChange('residenceState', e.target.value)}
+                        className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200 appearance-none bg-white"
+                        style={{ minHeight: '48px' }}
+                      >
+                        <option value="">Select State</option>
+                        {usStates.map(state => (
+                          <option key={state} value={state}>{state}</option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
 
                   <div>
@@ -1936,13 +1955,16 @@ export default function AboutYou() {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                         placeholder="Country"
                       />
-                      <input
-                        type="text"
-                        value={spouse.address?.state}
+                      <select
+                        value={spouse.address?.state || ''}
                         onChange={(e) => handleSpouseChange(spouse.id, 'address.state', e.target.value)}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                        placeholder="State / Province"
-                      />
+                      >
+                        <option value="">Select State</option>
+                        {usStates.map(state => (
+                          <option key={state} value={state}>{state}</option>
+                        ))}
+                      </select>
                     </div>
                   ) : (
                     <div className="text-sm text-gray-600">Using client's country: {formData.residenceCountry || 'United States'}</div>
@@ -2334,13 +2356,16 @@ export default function AboutYou() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                   placeholder="City"
                 />
-                <input
-                  type="text"
-                  value={child.address?.state}
+                <select
+                  value={child.address?.state || ''}
                   onChange={(e) => handleChildChange(child.id, 'address.state', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                  placeholder="State"
-                />
+                >
+                  <option value="">Select State</option>
+                  {usStates.map(state => (
+                    <option key={state} value={state}>{state}</option>
+                  ))}
+                </select>
                 <input
                   type="text"
                   value={child.address?.zipCode}
@@ -2385,13 +2410,16 @@ export default function AboutYou() {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       placeholder="Country"
                     />
-                    <input
-                      type="text"
-                      value={child.address?.state}
+                    <select
+                      value={child.address?.state || ''}
                       onChange={(e) => handleChildChange(child.id, 'address.state', e.target.value)}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="State / Province"
-                    />
+                    >
+                      <option value="">Select State</option>
+                      {usStates.map(state => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
+                    </select>
                   </div>
                 ) : (
                   <div className="text-sm text-gray-600">Using client's country: {formData.residenceCountry || 'United States'}</div>
@@ -2551,13 +2579,16 @@ export default function AboutYou() {
                                   className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                                   placeholder="City"
                                 />
-                                <input
-                                  type="text"
+                                <select
                                   value={child.placeOfDeath?.us?.state || ''}
                                   onChange={(e) => handleChildChange(child.id, 'placeOfDeath', { ...child.placeOfDeath, us: { ...child.placeOfDeath?.us, state: e.target.value } })}
                                   className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                  placeholder="State"
-                                />
+                                >
+                                  <option value="">State</option>
+                                  {usStates.map(state => (
+                                    <option key={state} value={state}>{state}</option>
+                                  ))}
+                                </select>
                                 <input
                                   type="text"
                                   value={child.placeOfDeath?.us?.zip || ''}
