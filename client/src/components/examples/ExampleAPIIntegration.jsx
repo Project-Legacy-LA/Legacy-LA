@@ -2,8 +2,8 @@
 // Demonstrates proper API service usage patterns
 
 import React, { useState, useEffect } from 'react'
-import apiService from '../services/api'
-import { transformPersonData, transformAssetData } from '../utils/dataTransform'
+import apiService from '../../services/api'
+import { transformPersonData, transformAssetData } from '../../utils/dataTransform'
 
 // Example: AboutYouComprehensive with API integration
 export default function ExampleAboutYouWithAPI() {

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AuthAPI } from '../api/auth';
+import { AuthAPI } from '../../api/auth';
 
 export default function AcceptInvite() {
   const navigate = useNavigate();
