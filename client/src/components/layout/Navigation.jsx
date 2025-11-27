@@ -107,7 +107,7 @@ export default function Navigation() {
         style={{ backgroundColor: '#2A2829' }}
       >
         <nav ref={navRef} className="h-full">
-          <div className="h-full max-w-7xl mx-auto px-5 sm:px-7 lg:px-9">
+          <div className="h-full w-full px-4 sm:px-7 lg:max-w-7xl lg:mx-auto lg:px-9">
             <div className="flex justify-between items-center h-full">
 
               {/* Logo */}
