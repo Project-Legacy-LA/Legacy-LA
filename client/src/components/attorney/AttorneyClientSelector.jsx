@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { usePeople } from '../contexts/PeopleContext'
+import { usePeople } from '../../contexts/PeopleContext'
 
 export default function AttorneyClientSelector() {
   const navigate = useNavigate()

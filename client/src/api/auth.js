@@ -13,7 +13,7 @@ async function request(path, options = {}) {
 
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Request failed');
-  return data;
+  return data.data || data; // Return data field if present, otherwise return full response
 }
 
 
@@ -35,4 +35,9 @@ export const AuthAPI = {
   listSessions: () => request('/sessions'),
   logoutAll: () => request('/sessions', { method: 'DELETE' }),
   logoutSession: (sid) => request(`/sessions/${sid}`, { method: 'DELETE' }),
+  acceptInvite: (token, password) =>
+    request('/accept-invite', {
+      method: 'POST',
+      body: JSON.stringify({ token, password }),
+    }),
 };

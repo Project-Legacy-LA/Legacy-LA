@@ -30,7 +30,8 @@ async function createClient(req, res) {
     residence_locality,
     residence_postal_code,
     residence_line1,
-    residence_line2
+    residence_line2,
+    path_type // 'path1' for Estate Planning, 'path2' for Succession
   } = req.body;
 
   if (!email) {
@@ -57,6 +58,7 @@ async function createClient(req, res) {
       residencePostalCode: residence_postal_code || null,
       residenceLine1: residence_line1 || null,
       residenceLine2: residence_line2 || null,
+      pathType: path_type || 'path1', // Store path type (path1 = Estate Planning, path2 = Succession)
     });
 
     // 3) Associate the invited user with the client account (disabled until invite accepted)
@@ -68,12 +70,13 @@ async function createClient(req, res) {
       isEnabled: false,
     });
 
-    // 4) Issue invite token for the client owner
+    // 4) Issue invite token for the client owner (include path_type in token metadata)
     const token = await createInviteToken({
       user_id: user.user_id,
       tenant_id: tenantId,
       client_id: client.client_id,
       role: 'client_owner',
+      path_type: path_type || 'path1', // Include path_type in token so AcceptInvite can route correctly
     });
 
     // 5) Send the invite email

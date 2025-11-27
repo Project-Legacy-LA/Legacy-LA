@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
-import { usePeople } from '../contexts/PeopleContext'
+import { usePeople } from '../../contexts/PeopleContext'
 
 export default function Documents() {
   const navigate = useNavigate()
@@ -257,7 +257,7 @@ export default function Documents() {
     e.preventDefault()
     console.log('Documents submitted:', documents)
     // Submit data to backend service
-    navigate('/spouse-access')
+    navigate('/succession/co-executor-access')
   }
 
   return (
@@ -267,11 +267,20 @@ export default function Documents() {
         {/* Header */}
         <div ref={headerRef} className="mb-8">
           <h1 className="text-3xl font-bold text-black mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
-            Documents
+            Succession - Documents
           </h1>
-          <p className="text-gray-600">
-            Documents of your estate plans and other imporant documents, including those uploaded in other sections
-          </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <p className="text-gray-700 font-medium mb-2">
+              To help us prepare the succession paperwork accurately and efficiently, please upload copies of any documents listed below that you have available. If you've already provided certain documents, you do not need to upload them again.
+            </p>
+            <p className="text-sm text-gray-600 mb-2">
+              <strong>Most Important Documents:</strong>
+            </p>
+            <ul className="text-sm text-gray-600 list-disc list-inside mb-2">
+              <li>(1) Death certificate</li>
+              <li>(2) Last Will and Testament - if more than one version exists, please upload all versions or drafts, and indicate: You have the original, You have a copy only, or You are unsure whether an original exists</li>
+            </ul>
+          </div>
         </div>
 
         {/* Form */}
@@ -568,7 +577,7 @@ export default function Documents() {
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => navigate('/advisors')}
+              onClick={() => navigate('/succession/advisors')}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium"
             >
               Back to Advisors
@@ -578,7 +587,7 @@ export default function Documents() {
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
-              Continue to Spouse Access
+              Continue to Co-Executor Access
             </button>
           </div>
         </form>

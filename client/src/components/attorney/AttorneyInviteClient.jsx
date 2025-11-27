@@ -13,6 +13,7 @@ export default function AttorneyInviteClient() {
     residence_postal_code: '',
     residence_line1: '',
     residence_line2: '',
+    path_type: 'path1', // 'path1' for Estate Planning, 'path2' for Succession
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -62,6 +63,7 @@ export default function AttorneyInviteClient() {
         residence_postal_code: '',
         residence_line1: '',
         residence_line2: '',
+        path_type: 'path1',
       });
     } catch (err) {
       setError(err.message || 'Unable to invite client');
@@ -75,7 +77,7 @@ export default function AttorneyInviteClient() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Invite a Client</h1>
         <p className="text-gray-600 mt-2">
-          Provide a client's email and basic profile. If you lack permission the server will respond with an error.
+          Provide a client's email and basic profile. Select the questionnaire path - Path 1 for Estate Planning or Path 2 for Succession.
         </p>
       </div>
 
@@ -97,6 +99,51 @@ export default function AttorneyInviteClient() {
               )}
             </div>
           )}
+
+          {/* Path Selection - Most Important */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <label className="block text-sm font-bold text-gray-900 mb-3">
+              Questionnaire Path * <span className="text-xs font-normal text-gray-600">(Required - determines which questionnaire the client will complete)</span>
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                form.path_type === 'path1' 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  name="path_type"
+                  value="path1"
+                  checked={form.path_type === 'path1'}
+                  onChange={handleChange('path_type')}
+                  className="mr-3 h-5 w-5 text-blue-600"
+                />
+                <div>
+                  <div className="font-semibold text-gray-900">Path 1: Estate Planning</div>
+                  <div className="text-xs text-gray-600 mt-1">For living individuals planning their estate</div>
+                </div>
+              </label>
+              <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                form.path_type === 'path2' 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  name="path_type"
+                  value="path2"
+                  checked={form.path_type === 'path2'}
+                  onChange={handleChange('path_type')}
+                  className="mr-3 h-5 w-5 text-blue-600"
+                />
+                <div>
+                  <div className="font-semibold text-gray-900">Path 2: Succession</div>
+                  <div className="text-xs text-gray-600 mt-1">For succession after someone has passed away</div>
+                </div>
+              </label>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

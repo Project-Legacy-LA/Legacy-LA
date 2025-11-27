@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { usePeople } from '../contexts/PeopleContext'
-import { useAssets } from '../contexts/AssetsContext'
+import { usePeople } from '../../contexts/PeopleContext'
+import { useAssets } from '../../contexts/AssetsContext'
 import { gsap } from 'gsap'
 
 export default function Liabilities() {
@@ -76,7 +76,7 @@ export default function Liabilities() {
     e.preventDefault()
     console.log('Liabilities submitted:', liabilities)
     // Submit data to backend service
-    navigate('/decision-makers')
+    navigate('/succession/roles')
   }
 
   // Define which liability types can be associated with assets
@@ -113,6 +113,7 @@ export default function Liabilities() {
     { value: 'business_loan', label: 'Business Loan' },
     { value: 'construction_loan', label: 'Construction Loan' },
     { value: 'credit_card', label: 'Credit Card Debt' },
+    { value: 'funeral_burial', label: 'Funeral/Burial Expenses' },
     { value: 'home_equity', label: 'Home Equity Loan' },
     { value: 'medical_debt', label: 'Medical Debt' },
     { value: 'mortgage', label: 'Mortgage' },
@@ -129,11 +130,22 @@ export default function Liabilities() {
         {/* Header */}
         <div ref={headerRef} className="mb-8">
           <h1 className="text-3xl font-bold text-black mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
-            Liabilities & Debts
+            Succession - Liabilities & Debts
           </h1>
-          <p className="text-gray-600">
-            Please list all of your debts and liabilities. Some debts can be linked to specific assets entered in the previous section.
-          </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <p className="text-gray-700 font-medium mb-2">
+              Please list all known debts, loans, or other obligations of the decedent that were outstanding at the time of death.
+            </p>
+            <p className="text-sm text-gray-600 mb-2">
+              Include both secured debts (such as a mortgage or vehicle loan) and unsecured debts (such as credit cards or medical bills). If exact balances are not known, provide your best estimate as of the date of death, or note "unknown."
+            </p>
+            <p className="text-sm text-gray-600 mb-2">
+              Be sure to include: Mortgages or home equity loans on any real estate; auto loans, boat loans, or other installment debts; credit card balances or personal loans; medical bills or nursing home expenses (including unpaid invoices received after death); funeral or burial expenses (if not yet paid in full); taxes owed, including income taxes, property taxes, or business-related taxes, and other obligations, such as court judgments, child/spousal support arrears, or unpaid business debts.
+            </p>
+            <p className="text-sm text-gray-600">
+              If you are unsure whether a liability should be listed, please include it - we can determine later whether it needs to be addressed in the succession. Attach copies of recent statements or invoices if available, as these help us verify balances and creditors.
+            </p>
+          </div>
         </div>
 
         {/* Form */}
@@ -358,7 +370,7 @@ export default function Liabilities() {
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => navigate('/assets')}
+              onClick={() => navigate('/succession/assets')}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium"
             >
               Back to Assets
@@ -368,7 +380,7 @@ export default function Liabilities() {
               className="px-8 py-3 text-white rounded-lg transition-colors duration-200 font-medium"
               style={{ background: 'linear-gradient(90deg, var(--ll-bg-2), var(--ll-bg-1))' }}
             >
-              Continue to Decision Makers
+              Continue to Estate Representative
             </button>
           </div>
         </form>

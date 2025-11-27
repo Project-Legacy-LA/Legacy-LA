@@ -38,7 +38,38 @@ export default function Breadcrumb() {
       { name: 'Spouse Access', path: '/spouse-access' }
     ]
     
-    // Find the current step in the flow
+    // Define the succession flow order
+    const successionFlow = [
+      { name: 'Succession Home', path: '/succession' },
+      { name: 'About You', path: '/succession/about-you' },
+      { name: 'Assets', path: '/succession/assets' },
+      { name: 'Liabilities & Debts', path: '/succession/liabilities' },
+      { name: 'Estate Representative', path: '/succession/roles' },
+      { name: 'Professional Advisors', path: '/succession/advisors' },
+      { name: 'Documents', path: '/succession/documents' },
+      { name: 'Co-Executor Access', path: '/succession/co-executor-access' },
+      { name: 'Concerns', path: '/succession/concerns' }
+    ]
+    
+    // Check if we're in the succession path (including /succession itself)
+    if (path === '/succession' || path.startsWith('/succession/')) {
+      const currentStepIndex = successionFlow.findIndex(step => step.path === path)
+      if (currentStepIndex !== -1) {
+        return successionFlow.slice(0, currentStepIndex + 1).map((step, index) => ({
+          name: step.name,
+          path: step.path,
+          current: index === currentStepIndex
+        }))
+      }
+      // If path is /succession but not found, just show the home
+      if (path === '/succession') {
+        return [
+          { name: 'Succession Home', path: '/succession', current: true }
+        ]
+      }
+    }
+    
+    // Find the current step in the estate planning flow
     const currentStepIndex = estatePlanningFlow.findIndex(step => step.path === path)
     
     if (currentStepIndex !== -1) {

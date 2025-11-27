@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthContext'
 
 export default function Login() {
   const navigate = useNavigate()

@@ -90,3 +90,12 @@ html,
 body {
   font-family: var(--ll-font);
 }
+
+/* Simple navbar styles - wrapper maintains background */
+button:focus {
+  outline: none;
+}
+
+button:active {
+  outline: none;
+}

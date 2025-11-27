@@ -32,11 +32,19 @@ export default function AcceptInvite() {
     setMessage('');
 
     try {
-      await AuthAPI.acceptInvite(token, password);
-      setMessage('Invite accepted. Redirecting you to log in…');
+      const response = await AuthAPI.acceptInvite(token, password);
+      setMessage('Invite accepted. Redirecting you…');
       setPassword('');
       setConfirmPassword('');
-      setTimeout(() => navigate('/login', { replace: true }), 1500);
+      
+      // Route based on path_type if provided (for client invites)
+      // path_type comes from response.data.path_type
+      const pathType = response?.data?.path_type || 'path1';
+      const redirectPath = pathType === 'path2' 
+        ? '/succession' 
+        : '/';
+      
+      setTimeout(() => navigate(redirectPath, { replace: true }), 1500);
     } catch (err) {
       setError(err.message || 'Failed to accept invite');
     } finally {

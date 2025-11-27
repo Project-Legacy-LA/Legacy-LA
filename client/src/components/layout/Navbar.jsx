@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import LL_Logo from '../assets/images/LL_Logo.webp'
+import LL_Logo from '../../assets/images/LL_Logo.webp'
 
 export default function Navbar({ userEmail = "aryashrestha005@gmail.com" }) {
   const navigate = useNavigate()
@@ -19,7 +19,7 @@ export default function Navbar({ userEmail = "aryashrestha005@gmail.com" }) {
               <div className="flex-shrink-0">
                 <button 
                   onClick={handleLogoClick}
-                  className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg p-1 transition-all duration-200 hover:opacity-80"
+                  className="focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-lg p-1 transition-all duration-200 hover:opacity-80 focus:bg-transparent active:bg-transparent"
                 >
                   <img 
                     src={LL_Logo} 

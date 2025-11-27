@@ -55,7 +55,11 @@ async function createClient({
   residencePostalCode = null,
   residenceLine1 = null,
   residenceLine2 = null,
+  pathType = 'path1', // Default to path1 (Estate Planning)
 }, db = pool) {
+  // NOTE: pathType is stored in invite token for now. 
+  // Backend developer: Add path_type column to client table and include it in INSERT below.
+  // For now, pathType is passed to token creation in clientController.
   const { rows } = await db.query(
     `
       INSERT INTO app.client (
@@ -70,10 +74,14 @@ async function createClient({
         residence_postal_code,
         residence_line1,
         residence_line2
+        -- TODO: Add path_type column to table and include here:
+        -- path_type
       )
       VALUES (
         $1, $2, $3,
         'active', $4, $5, $6, $7, $8, $9, $10
+        -- TODO: Add pathType to values array when column exists:
+        -- , $11
       )
       RETURNING client_id, tenant_id, primary_attorney_user_id, label, status, relationship_status, created_at
     `,
@@ -88,6 +96,8 @@ async function createClient({
       residencePostalCode,
       residenceLine1,
       residenceLine2,
+      // TODO: Add pathType to array when column exists:
+      // pathType || 'path1',
     ]
   );
   return rows[0];

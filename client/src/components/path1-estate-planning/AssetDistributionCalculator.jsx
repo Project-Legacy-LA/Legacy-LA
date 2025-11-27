@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
-import { usePeople } from '../contexts/PeopleContext'
+import { usePeople } from '../../contexts/PeopleContext'
 
 export default function AssetDistributionCalculator({ assets, beneficiaries, onDistributionChange }) {
   const { people } = usePeople()

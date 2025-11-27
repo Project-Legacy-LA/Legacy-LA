@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
-import { usePeople } from '../contexts/PeopleContext'
-import { useAssets } from '../contexts/AssetsContext'
-import AssetDistributionCalculator from './AssetDistributionCalculator'
+import { usePeople } from '../../contexts/PeopleContext'
+import { useAssets } from '../../contexts/AssetsContext'
+// AssetDistributionCalculator not used in Path 2 (Succession) - inheritor/beneficiary handled by attorney view only
 
 export default function Assets() {
   const navigate = useNavigate()
@@ -216,6 +216,11 @@ export default function Assets() {
       institution: '',
       accountNumber: '',
       valuation: { amount: '', currency: 'USD', valuationDate: '' },
+      valuationAtDateOfDeath: { amount: '', valuationDate: '' },
+      currentValuation: { amount: '', valuationDate: new Date().toISOString().split('T')[0] },
+      dateOfDeathValuationDate: '',
+      currentValue: '',
+      currentValuationDate: new Date().toISOString().split('T')[0],
       ownershipPercentage: 100,
       isLouisianaProperty: true,
       propertyLocation: 'LA',
@@ -458,12 +463,10 @@ export default function Assets() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Assets submitted:', {
-      assets,
-      beneficiaries,
-      distributions
+    console.log('Succession Assets submitted:', {
+      assets
     })
-    navigate('/liabilities')
+    navigate('/succession/liabilities')
   }
 
   return (
@@ -473,11 +476,22 @@ export default function Assets() {
         {/* Header */}
         <div ref={headerRef} className="mb-8">
           <h1 className="text-3xl font-bold text-black mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
-            Assets & Distribution
+            Succession - Assets
           </h1>
-          <p className="text-gray-600">
-            Please enter your personal asset details. In this section you will be able to assign beneficiaries for your assets.
-          </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <p className="text-gray-700 font-medium mb-2">
+              Please list all property the decedent owned or had an interest in at the time of death.
+            </p>
+            <p className="text-sm text-gray-600 mb-2">
+              For each asset, please provide an approximate fair market value as of the date of death - not today's value. If you do not know the exact value, please give your best good-faith estimate, or note that it is "unknown." If you have supporting documentation (such as an appraisal, account statement, or online valuation), please attach a copy or upload it with your questionnaire.
+            </p>
+            <p className="text-sm text-gray-600 mb-2">
+              Be sure to include all real estate (whether located in LA or elsewhere), bank accounts, investment accounts, retirement accounts (including beneficiary designations if known), vehicles, boats, or recreational vehicles, business interests, LLCs, or partnerships, Trust interests (if the decedent was a beneficiary or if the decedent created a trust) and personal property of significant value (such as jewelry, firearms, collectibles, or equipment).
+            </p>
+            <p className="text-sm text-gray-600">
+              <strong>Important:</strong> This section collects both the asset value at the time of death AND the current asset value. Both pieces of data are required.
+            </p>
+          </div>
         </div>
 
         {/* Form */}
@@ -571,7 +585,7 @@ export default function Assets() {
                       </div>
                       <div>
                         <label className="block text-lg font-bold text-gray-800 mb-3">
-                          Current Value *
+                          Value at Date of Death * <span className="text-sm font-normal text-gray-600">(Not today's value)</span>
                         </label>
                         <div className="flex space-x-2">
                           <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
@@ -579,21 +593,80 @@ export default function Assets() {
                           </span>
                           <input
                             type="number"
-                            value={asset.valuation.amount}
-                            onChange={(e) => handleAssetChange(asset.id, 'valuation.amount', e.target.value)}
+                            value={asset.valuation?.amount || asset.valuationAtDateOfDeath?.amount || ''}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              if (asset.valuationAtDateOfDeath) {
+                                handleAssetChange(asset.id, 'valuationAtDateOfDeath.amount', val)
+                              } else {
+                                handleAssetChange(asset.id, 'valuation.amount', val)
+                              }
+                            }}
                             className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                             placeholder="0.00"
                           />
                         </div>
+                        <p className="text-xs text-gray-500 mt-1">Fair market value as of the date of death</p>
                       </div>
                       <div>
                         <label className="block text-lg font-bold text-gray-800 mb-3">
-                          Valuation Date *
+                          Date of Death Valuation Date *
                         </label>
                         <input
                           type="date"
-                          value={asset.valuation.valuationDate || ''}
-                          onChange={(e) => handleAssetChange(asset.id, 'valuation.valuationDate', e.target.value)}
+                          value={asset.valuation?.valuationDate || asset.valuationAtDateOfDeath?.valuationDate || asset.dateOfDeathValuationDate || ''}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            if (asset.valuationAtDateOfDeath) {
+                              handleAssetChange(asset.id, 'valuationAtDateOfDeath.valuationDate', val)
+                            } else {
+                              handleAssetChange(asset.id, 'valuation.valuationDate', val)
+                              handleAssetChange(asset.id, 'dateOfDeathValuationDate', val)
+                            }
+                          }}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Current Value * <span className="text-sm font-normal text-gray-600">(Today's value)</span>
+                        </label>
+                        <div className="flex space-x-2">
+                          <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={asset.currentValuation?.amount || asset.currentValue || ''}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              if (asset.currentValuation) {
+                                handleAssetChange(asset.id, 'currentValuation.amount', val)
+                              } else {
+                                handleAssetChange(asset.id, 'currentValue', val)
+                              }
+                            }}
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="0.00"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Current fair market value</p>
+                      </div>
+                      <div>
+                        <label className="block text-lg font-bold text-gray-800 mb-3">
+                          Current Valuation Date *
+                        </label>
+                        <input
+                          type="date"
+                          value={asset.currentValuation?.valuationDate || asset.currentValuationDate || new Date().toISOString().split('T')[0]}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            if (asset.currentValuation) {
+                              handleAssetChange(asset.id, 'currentValuation.valuationDate', val)
+                            } else {
+                              handleAssetChange(asset.id, 'currentValuationDate', val)
+                            }
+                          }}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                         />
                       </div>
@@ -816,17 +889,84 @@ export default function Assets() {
                       </div>
                     )}
 
-                    {/* Direct Beneficiary Asset Checkbox */}
+                    {/* Direct Beneficiary Asset Checkbox and Beneficiaries Section */}
                     <div className="mt-6">
-                      <label className="flex items-center">
+                      <label className="flex items-center mb-4">
                         <input
                           type="checkbox"
                           checked={asset.beneficiaryDesignationRequired}
                           onChange={(e) => handleAssetChange(asset.id, 'beneficiaryDesignationRequired', e.target.checked)}
                           className="mr-2 text-gray-600 focus:ring-gray-500"
                         />
-                        <span className="text-sm text-gray-700">Direct Beneficiary Asset</span>
+                        <span className="text-sm text-gray-700 font-medium">Direct Beneficiary Asset</span>
                       </label>
+                      
+                      {/* Beneficiaries Section - Only show if Direct Beneficiary Asset is checked */}
+                      {asset.beneficiaryDesignationRequired && (
+                        <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                          <h4 className="text-md font-semibold text-gray-800 mb-4">Beneficiaries for this Asset</h4>
+                          <div className="space-y-4">
+                            {(asset.beneficiaries || []).map((beneficiary, idx) => (
+                              <div key={idx} className="p-3 bg-white rounded border border-gray-200">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                      Beneficiary Name
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={beneficiary.name || ''}
+                                      onChange={(e) => {
+                                        const updatedBeneficiaries = [...(asset.beneficiaries || [])]
+                                        updatedBeneficiaries[idx] = { ...updatedBeneficiaries[idx], name: e.target.value }
+                                        handleAssetChange(asset.id, 'beneficiaries', updatedBeneficiaries)
+                                      }}
+                                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                      placeholder="Beneficiary name"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                      Relationship
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={beneficiary.relationship || ''}
+                                      onChange={(e) => {
+                                        const updatedBeneficiaries = [...(asset.beneficiaries || [])]
+                                        updatedBeneficiaries[idx] = { ...updatedBeneficiaries[idx], relationship: e.target.value }
+                                        handleAssetChange(asset.id, 'beneficiaries', updatedBeneficiaries)
+                                      }}
+                                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                      placeholder="e.g., Spouse, Child, etc."
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updatedBeneficiaries = (asset.beneficiaries || []).filter((_, i) => i !== idx)
+                                    handleAssetChange(asset.id, 'beneficiaries', updatedBeneficiaries)
+                                  }}
+                                  className="mt-2 text-sm text-red-600 hover:text-red-800"
+                                >
+                                  Remove Beneficiary
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updatedBeneficiaries = [...(asset.beneficiaries || []), { name: '', relationship: '' }]
+                                handleAssetChange(asset.id, 'beneficiaries', updatedBeneficiaries)
+                              }}
+                              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                              + Add Beneficiary
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                   {/* Asset Owners - Link to people */}
@@ -966,8 +1106,8 @@ export default function Assets() {
             </div>
           </div>
 
-          {/* Inheritor & Beneficiary Page Section */}
-          <div className="mb-8">
+          {/* Note: Inheritor & Beneficiary Page removed for Succession path - this is handled in attorney view only */}
+          {false && <div className="mb-8 hidden">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Inheritor & Beneficiary Page</h2>
             <div className="space-y-6">
               {beneficiaries.map((beneficiary, index) => (
@@ -1195,42 +1335,18 @@ export default function Assets() {
                 + Add Another Beneficiary
               </button>
             </div>
-          </div>
+          </div>}
 
 
-          {/* Asset Distribution Calculator Section */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Asset Distribution Calculator</h2>
-            
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-start">
-                <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <h3 className="text-sm font-medium text-blue-800">Structured Distribution Planning</h3>
-                  <p className="text-sm text-blue-700 mt-1">
-                    This calculator helps you plan exact asset distributions using percentages or fixed dollar amounts. 
-                    This eliminates the need for complex text-based distribution instructions that cannot be automatically calculated.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <AssetDistributionCalculator
-              assets={assets}
-              beneficiaries={beneficiaries}
-              onDistributionChange={handleDistributionChange}
-            />
-          </div>
-
+          {/* Asset Distribution Calculator Section - Removed for Succession */}
+          {/* Note: Distribution planning is handled in attorney view only for succession path */}
 
 
           {/* Action Buttons */}
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => navigate('/about-you')}
+              onClick={() => navigate('/succession/about-you-1b')}
               className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium"
             >
               Back to About You

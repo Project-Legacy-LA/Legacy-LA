@@ -72,7 +72,7 @@ async function acceptInvite(req, res) {
       return error(res, 'Invite expired or invalid', 410);
     }
 
-    const { user_id, tenant_id, role, client_id } = payload;
+    const { user_id, tenant_id, role, client_id, path_type } = payload;
 
     // 2) Use a transaction so user + membership update is atomic
     await pool.query('BEGIN');
@@ -111,8 +111,12 @@ async function acceptInvite(req, res) {
     // 3) Delete the invite token so it can't be reused
     await deleteInviteToken(token);
 
-    // 4) Respond (no auto-login)
-    return success(res, { user_id: user.user_id, email: user.email }, 'Invite accepted, account activated');
+    // 4) Respond (include path_type for frontend routing)
+    return success(res, { 
+      user_id: user.user_id, 
+      email: user.email,
+      path_type: path_type || 'path1' // Return path_type so frontend can route to correct questionnaire
+    }, 'Invite accepted, account activated');
   } catch (err) {
     await pool.query('ROLLBACK').catch(() => {});
     console.error('Accept invite error:', err);
