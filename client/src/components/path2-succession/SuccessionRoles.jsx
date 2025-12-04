@@ -159,7 +159,8 @@ export default function SuccessionRoles() {
                     <button
                       type="button"
                       onClick={() => removeEstateRepresentative(rep.id)}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                      style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                     >
                       Remove Representative
                     </button>
@@ -367,9 +368,10 @@ export default function SuccessionRoles() {
                 {/* (5) Alternate or Backup */}
                 <div className="mb-6 pb-6 border-b border-gray-200">
                   <h4 className="text-lg font-bold text-gray-800 mb-4">(5) Alternate or Backup</h4>
+                  <p className="text-sm text-gray-600 mb-4">If the person named above is unable or unwilling to serve, who would you suggest as an alternate?</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">If the person named above is unable or unwilling to serve, who would you suggest as an alternate?</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                       <input type="text" value={rep.alternateName} onChange={(e) => handleChange(rep.id, 'alternateName', e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Name" />
                     </div>
                     <div>

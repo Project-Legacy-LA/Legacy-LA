@@ -267,7 +267,8 @@ export default function Advisors() {
                     <button
                       type="button"
                       onClick={() => setAdvisors(advisors.filter(a => a.id !== advisor.id))}
-                      className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                      className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                      style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                     >
                       Remove Advisor
                     </button>

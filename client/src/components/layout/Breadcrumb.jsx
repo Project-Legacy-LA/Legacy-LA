@@ -41,7 +41,7 @@ export default function Breadcrumb() {
     // Define the succession flow order
     const successionFlow = [
       { name: 'Succession Home', path: '/succession' },
-      { name: 'About You', path: '/succession/about-you' },
+      { name: 'About You and Decedent', path: '/succession/about-you' },
       { name: 'Assets', path: '/succession/assets' },
       { name: 'Liabilities & Debts', path: '/succession/liabilities' },
       { name: 'Estate Representative', path: '/succession/roles' },

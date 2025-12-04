@@ -75,8 +75,6 @@ export default function Documents() {
     { value: 'living_will', label: 'Living Will' },
     { value: 'marriage_certificate', label: 'Marriage Certificate' },
     { value: 'military_records', label: 'Military Records' },
-    { value: 'power_of_attorney_financial', label: 'Power of Attorney - Financial' },
-    { value: 'power_of_attorney_healthcare', label: 'Power of Attorney - Healthcare' },
     { value: 'prenuptial_agreement', label: 'Prenuptial Agreement' },
     { value: 'property_deed', label: 'Property Deed' },
     { value: 'retirement_account', label: 'Retirement Account Document' },
@@ -349,7 +347,8 @@ export default function Documents() {
                         <button
                           type="button"
                           onClick={() => removeDocument(document.id)}
-                          className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                          className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                          style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                         >
                           Remove Document
                         </button>

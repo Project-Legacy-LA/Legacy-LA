@@ -789,7 +789,8 @@ export default function AboutYou() {
                             <button
                               type="button"
                               onClick={() => removePriorName(name.id)}
-                              className="text-red-600 hover:text-red-800 text-sm font-medium"
+                              className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                              style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                             >
                               Remove
                             </button>
@@ -1196,33 +1197,45 @@ export default function AboutYou() {
                 <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Month</label>
-                    <input
-                      type="text"
+                    <select
                       value={formData.dateOfBirth.month}
                       onChange={(e) => handleDateChange('dateOfBirth.month', e.target.value, 'month')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="MM"
-                    />
+                    >
+                      <option value="">Month</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Day</label>
-                    <input
-                      type="text"
+                    <select
                       value={formData.dateOfBirth.day}
                       onChange={(e) => handleDateChange('dateOfBirth.day', e.target.value, 'day')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="DD"
-                    />
+                    >
+                      <option value="">Day</option>
+                      {Array.from({ length: 31 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>{i + 1}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs text-gray-500 mb-1">Year</label>
-                    <input
-                      type="text"
+                    <select
                       value={formData.dateOfBirth.year}
                       onChange={(e) => handleDateChange('dateOfBirth.year', e.target.value, 'year')}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                      placeholder="YYYY"
-                    />
+                    >
+                      <option value="">Year</option>
+                      {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+                        const year = new Date().getFullYear() - i
+                        return <option key={year} value={year}>{year}</option>
+                      })}
+                    </select>
                   </div>
                 </div>
               </div>
@@ -1426,7 +1439,8 @@ export default function AboutYou() {
                             <button
                               type="button"
                               onClick={() => removePreviousSpouse(spouse.id)}
-                              className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                              className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                              style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                             >
                               Remove Spouse
                             </button>
@@ -1468,33 +1482,39 @@ export default function AboutYou() {
                                   Date of Birth
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
-                            <input
-                              type="number"
+                            <select
                               value={spouse.dateOfBirth.month}
                               onChange={(e) => handlePreviousSpouseDateChange(spouse.id, 'dateOfBirth.month', e.target.value, 'month')}
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="MM"
-                              min="1"
-                              max="12"
-                            />
-                            <input
-                              type="number"
+                            >
+                              <option value="">Month</option>
+                              {Array.from({ length: 12 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>
+                                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                                </option>
+                              ))}
+                            </select>
+                            <select
                               value={spouse.dateOfBirth.day}
                               onChange={(e) => handlePreviousSpouseDateChange(spouse.id, 'dateOfBirth.day', e.target.value, 'day')}
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="DD"
-                              min="1"
-                              max="31"
-                            />
-                            <input
-                              type="number"
+                            >
+                              <option value="">Day</option>
+                              {Array.from({ length: 31 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                              ))}
+                            </select>
+                            <select
                               value={spouse.dateOfBirth.year}
                               onChange={(e) => handlePreviousSpouseDateChange(spouse.id, 'dateOfBirth.year', e.target.value, 'year')}
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="YYYY"
-                              min="1900"
-                              max={new Date().getFullYear()}
-                            />
+                            >
+                              <option value="">Year</option>
+                              {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+                                const year = new Date().getFullYear() - i
+                                return <option key={year} value={year}>{year}</option>
+                              })}
+                            </select>
                                 </div>
                               </div>
                             </div>
@@ -1703,7 +1723,8 @@ export default function AboutYou() {
                         <button
                           type="button"
                           onClick={() => removeSpouse(spouse.id)}
-                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                          className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                          style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                         >
                           Remove Spouse
                         </button>
@@ -1788,8 +1809,8 @@ export default function AboutYou() {
                   </label>
                   <div className="grid grid-cols-3 gap-2">
                     <select
-                                value={spouse.marriageDate.month}
-                                onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.month', e.target.value, 'month')}
+                      value={spouse.marriageDate.month}
+                      onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.month', e.target.value, 'month')}
                       className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                     >
                       <option value="">Month</option>
@@ -1799,20 +1820,27 @@ export default function AboutYou() {
                         </option>
                       ))}
                     </select>
-                    <input
-                                type="text"
-                                value={spouse.marriageDate.day}
-                                onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.day', e.target.value, 'day')}
+                    <select
+                      value={spouse.marriageDate.day}
+                      onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.day', e.target.value, 'day')}
                       className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="DD"
-                    />
-                    <input
-                                type="text"
-                                value={spouse.marriageDate.year}
-                                onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.year', e.target.value, 'year')}
+                    >
+                      <option value="">Day</option>
+                      {Array.from({ length: 31 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>{i + 1}</option>
+                      ))}
+                    </select>
+                    <select
+                      value={spouse.marriageDate.year}
+                      onChange={(e) => handleSpouseDateChange(spouse.id, 'marriageDate.year', e.target.value, 'year')}
                       className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="YYYY"
-                    />
+                    >
+                      <option value="">Year</option>
+                      {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+                        const year = new Date().getFullYear() - i
+                        return <option key={year} value={year}>{year}</option>
+                      })}
+                    </select>
                   </div>
                 </div>
                         )}
@@ -1873,20 +1901,27 @@ export default function AboutYou() {
                                   </option>
                                 ))}
                               </select>
-                              <input
-                                type="text"
+                              <select
                                 value={spouse.deathDate.day}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'deathDate.day', e.target.value, 'day')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="DD"
-                              />
-                              <input
-                                type="text"
+                              >
+                                <option value="">Day</option>
+                                {Array.from({ length: 31 }, (_, i) => (
+                                  <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                              </select>
+                              <select
                                 value={spouse.deathDate.year}
                                 onChange={(e) => handleSpouseDateChange(spouse.id, 'deathDate.year', e.target.value, 'year')}
                                 className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                                placeholder="YYYY"
-                              />
+                              >
+                                <option value="">Year</option>
+                                {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+                                  const year = new Date().getFullYear() - i
+                                  return <option key={year} value={year}>{year}</option>
+                                })}
+                              </select>
                 </div>
                           </div>
                         )}
@@ -2069,7 +2104,8 @@ export default function AboutYou() {
                                   <button
                                     type="button"
                                     onClick={() => removeSpousePriorName(spouse.id, priorName.id)}
-                                    className="text-red-600 hover:text-red-800 text-sm font-medium"
+                                    className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                                    style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                                   >
                                     Remove
                                   </button>
@@ -2234,7 +2270,8 @@ export default function AboutYou() {
                       <button
                         type="button"
                         onClick={() => removeChild(child.id)}
-                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                        className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                        style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                       >
                         Remove Child
                       </button>
@@ -2282,27 +2319,39 @@ export default function AboutYou() {
                           Date of Birth
                   </label>
                         <div className="grid grid-cols-3 gap-2">
-                          <input
-                            type="text"
+                          <select
                             value={child.dateOfBirth.month}
                             onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.month', e.target.value, 'month')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="MM"
-                          />
-                          <input
-                            type="text"
+                          >
+                            <option value="">Month</option>
+                            {Array.from({ length: 12 }, (_, i) => (
+                              <option key={i + 1} value={i + 1}>
+                                {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                              </option>
+                            ))}
+                          </select>
+                          <select
                             value={child.dateOfBirth.day}
                             onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.day', e.target.value, 'day')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="DD"
-                          />
-                          <input
-                            type="text"
+                          >
+                            <option value="">Day</option>
+                            {Array.from({ length: 31 }, (_, i) => (
+                              <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            ))}
+                          </select>
+                          <select
                             value={child.dateOfBirth.year}
                             onChange={(e) => handleChildDateChange(child.id, 'dateOfBirth.year', e.target.value, 'year')}
                             className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                            placeholder="YYYY"
-                          />
+                          >
+                            <option value="">Year</option>
+                            {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+                              const year = new Date().getFullYear() - i
+                              return <option key={year} value={year}>{year}</option>
+                            })}
+                          </select>
             </div>
               </div>
               <div>
@@ -2519,27 +2568,39 @@ export default function AboutYou() {
                             Date of Death
                           </label>
                           <div className="grid grid-cols-3 gap-2">
-                            <input
-                              type="text"
+                            <select
                               value={child.dateOfDeath.month}
                               onChange={(e) => handleChildDeathDateChange(child.id, 'dateOfDeath.month', e.target.value, 'month')}
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="MM"
-                            />
-                            <input
-                              type="text"
+                            >
+                              <option value="">Month</option>
+                              {Array.from({ length: 12 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>
+                                  {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                                </option>
+                              ))}
+                            </select>
+                            <select
                               value={child.dateOfDeath.day}
                               onChange={(e) => handleChildDeathDateChange(child.id, 'dateOfDeath.day', e.target.value, 'day')}
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="DD"
-                            />
-                            <input
-                              type="text"
+                            >
+                              <option value="">Day</option>
+                              {Array.from({ length: 31 }, (_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                              ))}
+                            </select>
+                            <select
                               value={child.dateOfDeath.year}
                               onChange={(e) => handleChildDeathDateChange(child.id, 'dateOfDeath.year', e.target.value, 'year')}
                               className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              placeholder="YYYY"
-                            />
+                            >
+                              <option value="">Year</option>
+                              {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+                                const year = new Date().getFullYear() - i
+                                return <option key={year} value={year}>{year}</option>
+                              })}
+                            </select>
                           </div>
 
                           {/* Place of Death for child: did they pass in US? then city/state/zip else country/city */}

@@ -28,7 +28,7 @@ export default function SuccessionHomePage() {
   const menuSegments = [
     { 
       id: 'succession-about-you', 
-      title: 'About You', 
+      title: 'About You and Decedent', 
       time: '20 min', 
       completed: false,
       totalItems: 25,
@@ -58,7 +58,7 @@ export default function SuccessionHomePage() {
     },
     { 
       id: 'succession-roles', 
-      title: 'Estate Representative', 
+      title: 'Succession Estate Representative', 
       time: '15 min', 
       completed: false,
       totalItems: 10,

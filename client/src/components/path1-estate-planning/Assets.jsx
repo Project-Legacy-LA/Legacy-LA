@@ -497,7 +497,8 @@ export default function Assets() {
                       <button
                         type="button"
                         onClick={() => setAssetsData(assets.filter(a => a.id !== asset.id))}
-                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                        className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                        style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                       >
                         Remove Asset
                       </button>
@@ -693,76 +694,79 @@ export default function Assets() {
                         </>
                       )}
 
-                      <div>
-                        <label className="block text-lg font-bold text-gray-800 mb-3">
-                          Property Location
-                        </label>
-                        <div className="space-y-3">
-                          <div className="flex space-x-4">
-                            <label className="flex items-center">
-                              <input
-                                type="radio"
-                                name={`property-location-${asset.id}`}
-                                checked={asset.isLouisianaProperty}
-                                onChange={(e) => {
-                                  const updatedAssets = assets.map(a => 
-                                    a.id === asset.id 
-                                      ? { 
-                                          ...a, 
-                                          isLouisianaProperty: true,
-                                          propertyLocation: 'LA',
-                                          probateClass: 'probate'
-                                        }
-                                      : a
-                                  )
-                                  setAssetsData(updatedAssets)
-                                }}
-                                className="mr-2 text-gray-600 focus:ring-gray-500"
-                              />
-                              <span className="text-sm text-gray-700">Louisiana Property</span>
-                            </label>
-                            <label className="flex items-center">
-                              <input
-                                type="radio"
-                                name={`property-location-${asset.id}`}
-                                checked={!asset.isLouisianaProperty}
-                                onChange={(e) => {
-                                  const updatedAssets = assets.map(a => 
-                                    a.id === asset.id 
-                                      ? { 
-                                          ...a, 
-                                          isLouisianaProperty: false,
-                                          probateClass: 'ancillary_probate'
-                                        }
-                                      : a
-                                  )
-                                  setAssetsData(updatedAssets)
-                                }}
-                                className="mr-2 text-gray-600 focus:ring-gray-500"
-                              />
-                              <span className="text-sm text-gray-700">Out of State Property</span>
-                            </label>
-                          </div>
-                          
-                          {!asset.isLouisianaProperty && (
-                            <div className="mt-2">
-                              <label className="block text-lg font-bold text-gray-800 mb-3">
-                                State Location *
+                      {/* Property Location - Only show for real estate */}
+                      {asset.category === 'real_estate' && (
+                        <div>
+                          <label className="block text-lg font-bold text-gray-800 mb-3">
+                            Property Location
+                          </label>
+                          <div className="space-y-3">
+                            <div className="flex space-x-4">
+                              <label className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`property-location-${asset.id}`}
+                                  checked={asset.isLouisianaProperty}
+                                  onChange={(e) => {
+                                    const updatedAssets = assets.map(a => 
+                                      a.id === asset.id 
+                                        ? { 
+                                            ...a, 
+                                            isLouisianaProperty: true,
+                                            propertyLocation: 'LA',
+                                            probateClass: 'probate'
+                                          }
+                                        : a
+                                    )
+                                    setAssetsData(updatedAssets)
+                                  }}
+                                  className="mr-2 text-gray-600 focus:ring-gray-500"
+                                />
+                                <span className="text-sm text-gray-700">Louisiana Property</span>
                               </label>
-                              <select
-                                value={asset.propertyLocation || ''}
-                                onChange={(e) => handleAssetChange(asset.id, 'propertyLocation', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                              >
-                                <option value="">Select State</option>
-                                {states.map(state => (
-                                  <option key={state.value} value={state.value}>{state.label}</option>
-                                ))}
-                              </select>
+                              <label className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`property-location-${asset.id}`}
+                                  checked={!asset.isLouisianaProperty}
+                                  onChange={(e) => {
+                                    const updatedAssets = assets.map(a => 
+                                      a.id === asset.id 
+                                        ? { 
+                                            ...a, 
+                                            isLouisianaProperty: false,
+                                            probateClass: 'ancillary_probate'
+                                          }
+                                        : a
+                                    )
+                                    setAssetsData(updatedAssets)
+                                  }}
+                                  className="mr-2 text-gray-600 focus:ring-gray-500"
+                                />
+                                <span className="text-sm text-gray-700">Out of State Property</span>
+                              </label>
                             </div>
-                          )}
+                            
+                            {!asset.isLouisianaProperty && (
+                              <div className="mt-2">
+                                <label className="block text-lg font-bold text-gray-800 mb-3">
+                                  State Location *
+                                </label>
+                                <select
+                                  value={asset.propertyLocation || ''}
+                                  onChange={(e) => handleAssetChange(asset.id, 'propertyLocation', e.target.value)}
+                                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                                >
+                                  <option value="">Select State</option>
+                                  {states.map(state => (
+                                    <option key={state.value} value={state.value}>{state.label}</option>
+                                  ))}
+                                </select>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       <div>
                         <label className="flex items-center">
@@ -980,7 +984,8 @@ export default function Assets() {
                       <button
                         type="button"
                         onClick={() => setBeneficiaries(beneficiaries.filter(b => b.id !== beneficiary.id))}
-                        className="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                        className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                        style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                       >
                         Remove Beneficiary
                       </button>

@@ -37,9 +37,9 @@ export default function SuccessionAboutYou() {
     roleInSuccessionOther: '',
     attorneyReferral: '',
     hasBeenAppointedExecutor: false,
-    executorCourtOrderAttached: false,
+    executorCourtOrderFiles: [],
     holdsPowerOfAttorney: false,
-    powerOfAttorneyAttached: false,
+    powerOfAttorneyFiles: [],
     acknowledgmentChecked: false
   })
 
@@ -100,6 +100,27 @@ export default function SuccessionAboutYou() {
     } else {
       setAboutYouData(prev => ({ ...prev, [field]: value }))
     }
+  }
+
+  const handleFileUpload = (field, files) => {
+    const fileArray = Array.from(files).map(file => ({
+      id: Date.now() + Math.random(),
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      file: file
+    }))
+    setAboutYouData(prev => ({ 
+      ...prev, 
+      [field]: [...(prev[field] || []), ...fileArray] 
+    }))
+  }
+
+  const removeFile = (field, fileId) => {
+    setAboutYouData(prev => ({
+      ...prev,
+      [field]: prev[field].filter(f => f.id !== fileId)
+    }))
   }
 
   const handleDecedentChange = (decedentId, field, value) => {
@@ -331,7 +352,7 @@ export default function SuccessionAboutYou() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <div ref={headerRef} className="mb-8">
           <h1 className="text-3xl font-bold text-black mb-2" style={{ fontFamily: 'var(--ll-font)' }}>
-            Succession - About You
+            Succession - About You and Decedent
           </h1>
         </div>
 
@@ -527,15 +548,40 @@ export default function SuccessionAboutYou() {
                   <span className="text-gray-700">Have you been appointed as executor or administrator by the court? (If yes, attach court order)</span>
                 </label>
                 {aboutYouData.hasBeenAppointedExecutor && (
-                  <label className="flex items-center ml-7">
-                    <input
-                      type="checkbox"
-                      checked={aboutYouData.executorCourtOrderAttached}
-                      onChange={(e) => handleAboutYouChange('executorCourtOrderAttached', e.target.checked)}
-                      className="mr-2 h-5 w-5"
-                    />
-                    <span className="text-gray-700">Court order attached</span>
-                  </label>
+                  <div className="ml-7 space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Upload Court Order *
+                      </label>
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                        multiple
+                        onChange={(e) => handleFileUpload('executorCourtOrderFiles', e.target.files)}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                      />
+                    </div>
+                    {aboutYouData.executorCourtOrderFiles.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600 mb-1">Uploaded files:</p>
+                        <ul className="text-sm text-gray-500 space-y-1">
+                          {aboutYouData.executorCourtOrderFiles.map(file => (
+                            <li key={file.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                              <span>• {file.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => removeFile('executorCourtOrderFiles', file.id)}
+                                className="px-2 py-1 text-white rounded-lg transition-all duration-200 font-medium text-xs ml-2 shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                                style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 )}
                 <label className="flex items-center">
                   <input
@@ -547,15 +593,40 @@ export default function SuccessionAboutYou() {
                   <span className="text-gray-700">Do you hold a Power of Attorney for the decedent? (If yes, attach copy of POA)</span>
                 </label>
                 {aboutYouData.holdsPowerOfAttorney && (
-                  <label className="flex items-center ml-7">
-                    <input
-                      type="checkbox"
-                      checked={aboutYouData.powerOfAttorneyAttached}
-                      onChange={(e) => handleAboutYouChange('powerOfAttorneyAttached', e.target.checked)}
-                      className="mr-2 h-5 w-5"
-                    />
-                    <span className="text-gray-700">Power of Attorney document attached</span>
-                  </label>
+                  <div className="ml-7 space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Upload Power of Attorney Document *
+                      </label>
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                        multiple
+                        onChange={(e) => handleFileUpload('powerOfAttorneyFiles', e.target.files)}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
+                      />
+                    </div>
+                    {aboutYouData.powerOfAttorneyFiles.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-600 mb-1">Uploaded files:</p>
+                        <ul className="text-sm text-gray-500 space-y-1">
+                          {aboutYouData.powerOfAttorneyFiles.map(file => (
+                            <li key={file.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                              <span>• {file.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => removeFile('powerOfAttorneyFiles', file.id)}
+                                className="px-2 py-1 text-white rounded-lg transition-all duration-200 font-medium text-xs ml-2 shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                                style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 )}
                 <label className="flex items-center">
                   <input
@@ -605,7 +676,8 @@ export default function SuccessionAboutYou() {
                     <button
                       type="button"
                       onClick={() => removeDecedent(decedent.id)}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                      style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                     >
                       Remove Decedent
                     </button>
@@ -655,7 +727,8 @@ export default function SuccessionAboutYou() {
                           <button
                             type="button"
                             onClick={() => removeOtherName(decedent.id, name.id)}
-                            className="text-red-600 hover:text-red-800"
+                            className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                            style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                           >
                             Remove
                           </button>
@@ -729,36 +802,41 @@ export default function SuccessionAboutYou() {
                       />
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Place of Death - City *</label>
-                    <input
-                      type="text"
-                      value={decedent.placeOfDeath.city}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'placeOfDeath.city', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Place of Death - Parish</label>
-                    <select
-                      value={decedent.placeOfDeath.parish}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'placeOfDeath.parish', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    >
-                      <option value="">Select parish...</option>
-                      {louisianaParishes.map(parish => (
-                        <option key={parish} value={parish}>{parish}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Place of Death - State *</label>
-                    <input
-                      type="text"
-                      value={decedent.placeOfDeath.state}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'placeOfDeath.state', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
+                  <div className="lg:col-span-2">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Place of Death</h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                        <input
+                          type="text"
+                          value={decedent.placeOfDeath.city}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'placeOfDeath.city', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Parish</label>
+                        <select
+                          value={decedent.placeOfDeath.parish}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'placeOfDeath.parish', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        >
+                          <option value="">Select parish...</option>
+                          {louisianaParishes.map(parish => (
+                            <option key={parish} value={parish}>{parish}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                        <input
+                          type="text"
+                          value={decedent.placeOfDeath.state}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'placeOfDeath.state', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-lg font-bold text-gray-800 mb-3">Was the decedent a resident of Louisiana at the time of death? *</label>
@@ -796,41 +874,46 @@ export default function SuccessionAboutYou() {
                       />
                     </div>
                   )}
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Decedent's Last Physical Address - Street *</label>
-                    <input
-                      type="text"
-                      value={decedent.lastPhysicalAddress.line1}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.line1', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Decedent's Last Physical Address - City *</label>
-                    <input
-                      type="text"
-                      value={decedent.lastPhysicalAddress.city}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.city', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Decedent's Last Physical Address - State *</label>
-                    <input
-                      type="text"
-                      value={decedent.lastPhysicalAddress.state}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.state', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-lg font-bold text-gray-800 mb-3">Decedent's Last Physical Address - Zip Code *</label>
-                    <input
-                      type="text"
-                      value={decedent.lastPhysicalAddress.zipCode}
-                      onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.zipCode', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
+                  <div className="lg:col-span-2">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Decedent's Last Physical Address</h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="lg:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Street *</label>
+                        <input
+                          type="text"
+                          value={decedent.lastPhysicalAddress.line1}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.line1', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                        <input
+                          type="text"
+                          value={decedent.lastPhysicalAddress.city}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.city', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">State *</label>
+                        <input
+                          type="text"
+                          value={decedent.lastPhysicalAddress.state}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.state', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Zip Code *</label>
+                        <input
+                          type="text"
+                          value={decedent.lastPhysicalAddress.zipCode}
+                          onChange={(e) => handleDecedentChange(decedent.id, 'lastPhysicalAddress.zipCode', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div className="lg:col-span-2">
                     <label className="flex items-center mb-3">
@@ -843,42 +926,45 @@ export default function SuccessionAboutYou() {
                       <span className="text-gray-700">Mailing address is different from physical address</span>
                     </label>
                     {decedent.mailingAddress.isDifferent && (
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ml-7">
-                        <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">Mailing Address - Street</label>
-                          <input
-                            type="text"
-                            value={decedent.mailingAddress.line1}
-                            onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.line1', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">Mailing Address - City</label>
-                          <input
-                            type="text"
-                            value={decedent.mailingAddress.city}
-                            onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.city', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">Mailing Address - State</label>
-                          <input
-                            type="text"
-                            value={decedent.mailingAddress.state}
-                            onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.state', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">Mailing Address - Zip Code</label>
-                          <input
-                            type="text"
-                            value={decedent.mailingAddress.zipCode}
-                            onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.zipCode', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          />
+                      <div className="ml-7 mt-4">
+                        <h3 className="text-xl font-bold text-gray-900 mb-4">Mailing Address</h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          <div className="lg:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Street</label>
+                            <input
+                              type="text"
+                              value={decedent.mailingAddress.line1}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.line1', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                            <input
+                              type="text"
+                              value={decedent.mailingAddress.city}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.city', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                            <input
+                              type="text"
+                              value={decedent.mailingAddress.state}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.state', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Zip Code</label>
+                            <input
+                              type="text"
+                              value={decedent.mailingAddress.zipCode}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'mailingAddress.zipCode', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
                         </div>
                       </div>
                     )}
@@ -899,32 +985,37 @@ export default function SuccessionAboutYou() {
                   </div>
                   {decedent.maritalStatusAtDeath === 'married' && (
                     <>
-                      <div>
-                        <label className="block text-lg font-bold text-gray-800 mb-3">Name of Surviving Spouse - First Name *</label>
-                        <input
-                          type="text"
-                          value={decedent.survivingSpouseName.firstName}
-                          onChange={(e) => handleDecedentChange(decedent.id, 'survivingSpouseName.firstName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-lg font-bold text-gray-800 mb-3">Name of Surviving Spouse - Middle Name</label>
-                        <input
-                          type="text"
-                          value={decedent.survivingSpouseName.middleName}
-                          onChange={(e) => handleDecedentChange(decedent.id, 'survivingSpouseName.middleName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-lg font-bold text-gray-800 mb-3">Name of Surviving Spouse - Last Name *</label>
-                        <input
-                          type="text"
-                          value={decedent.survivingSpouseName.lastName}
-                          onChange={(e) => handleDecedentChange(decedent.id, 'survivingSpouseName.lastName', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                        />
+                      <div className="lg:col-span-2">
+                        <h3 className="text-xl font-bold text-gray-900 mb-4">Name of Surviving Spouse</h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                            <input
+                              type="text"
+                              value={decedent.survivingSpouseName.firstName}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'survivingSpouseName.firstName', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Middle Name</label>
+                            <input
+                              type="text"
+                              value={decedent.survivingSpouseName.middleName}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'survivingSpouseName.middleName', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                            <input
+                              type="text"
+                              value={decedent.survivingSpouseName.lastName}
+                              onChange={(e) => handleDecedentChange(decedent.id, 'survivingSpouseName.lastName', e.target.value)}
+                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            />
+                          </div>
+                        </div>
                       </div>
                       <div>
                         <label className="block text-lg font-bold text-gray-800 mb-3">Date and Place of Marriage</label>
@@ -1012,7 +1103,8 @@ export default function SuccessionAboutYou() {
                                 <button
                                   type="button"
                                   onClick={() => removePriorSpouse(decedent.id, spouse.id)}
-                                  className="text-red-600 hover:text-red-800"
+                                  className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                                  style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                                 >
                                   Remove
                                 </button>
@@ -1098,7 +1190,8 @@ export default function SuccessionAboutYou() {
                             <button
                               type="button"
                               onClick={() => removeChild(decedent.id, child.id)}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                              style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                             >
                               Remove Child
                             </button>
@@ -1138,7 +1231,8 @@ export default function SuccessionAboutYou() {
                             <button
                               type="button"
                               onClick={() => removeRelative(decedent.id, relative.id)}
-                              className="text-red-600 hover:text-red-800"
+                              className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                              style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                             >
                               Remove
                             </button>

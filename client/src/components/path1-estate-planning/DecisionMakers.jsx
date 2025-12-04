@@ -290,7 +290,8 @@ export default function DecisionMakers() {
                     <button
                       type="button"
                       onClick={() => removeDecisionMaker(decisionMaker.id)}
-                      className="px-4 py-2 text-red-600 hover:text-red-800 transition-colors duration-200 font-medium text-sm"
+                      className="px-4 py-2 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                      style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                     >
                       Remove Decision Maker
                     </button>
@@ -437,7 +438,8 @@ export default function DecisionMakers() {
                           <button
                             type="button"
                             onClick={() => removeRoleFromDecisionMaker(decisionMaker.id, role.id)}
-                            className="px-3 py-1 text-red-600 hover:text-red-800 transition-colors duration-200 font-medium text-sm"
+                            className="px-3 py-1.5 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl hover:brightness-110 active:scale-95"
+                            style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626, #b91c1c)' }}
                           >
                             Remove Role
                           </button>
