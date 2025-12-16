@@ -202,6 +202,7 @@ export default function Assets() {
     { value: 'tenancy_in_common', label: 'Tenancy in Common' },
     { value: 'trust_titled', label: 'Trust Titled' },
     { value: 'usufruct', label: 'Usufruct' },
+    { value: 'community_property', label: 'Community Property' },
     { value: 'other', label: 'Other' }
   ]
 
@@ -696,7 +697,7 @@ export default function Assets() {
                     <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-lg font-bold text-gray-800 mb-3">
-                          Marital Character *
+                          Marital Character
                         </label>
                         <select
                           value={asset.propertyType || 'community'}
@@ -710,7 +711,7 @@ export default function Assets() {
                       </div>
                       <div>
                         <label className="block text-lg font-bold text-gray-800 mb-3">
-                          Probate Class *
+                          Probate Class
                         </label>
                         <select
                           value={asset.probateClass}
@@ -902,7 +903,7 @@ export default function Assets() {
                           onChange={(e) => handleAssetChange(asset.id, 'beneficiaryDesignationRequired', e.target.checked)}
                           className="mr-2 text-gray-600 focus:ring-gray-500"
                         />
-                        <span className="text-sm text-gray-700 font-medium">Direct Beneficiary Asset</span>
+                        <span className="text-sm text-gray-700 font-medium">Direct Beneficiary Asset (Includes Payable on Death and Transfer on Death)</span>
                       </label>
                       
                       {/* Beneficiaries Section - Only show if Direct Beneficiary Asset is checked */}

@@ -650,9 +650,6 @@ export default function SuccessionAboutYou() {
                 In this section, you will provide detailed information about the decedent. You may add information for up to two decedents if applicable.
               </p>
             </div>
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-sm text-gray-600">You may add information for up to two decedents if applicable.</p>
-            </div>
             <div className="mb-4">
               {decedents.length < 2 && (
                 <button
