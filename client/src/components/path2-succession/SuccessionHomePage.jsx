@@ -28,7 +28,7 @@ export default function SuccessionHomePage() {
   const menuSegments = [
     { 
       id: 'succession-about-you', 
-      title: 'About You and Decedent', 
+      title: 'About You & Decedent', 
       time: '20 min', 
       completed: false,
       totalItems: 25,
