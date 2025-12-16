@@ -276,7 +276,7 @@ export default function Documents() {
             </p>
             <ul className="text-sm text-gray-600 list-disc list-inside mb-2">
               <li>(1) Death certificate</li>
-              <li>(2) Last Will and Testament - if more than one version exists, please upload all versions or drafts, and indicate: You have the original, You have a copy only, or You are unsure whether an original exists</li>
+              <li>(2) Last Will and Testament - if more than one version exists, please upload all versions or drafts, and indicate: You have the original, You have a copy only, or You are unsure where the original is located.</li>
             </ul>
           </div>
         </div>
