@@ -281,7 +281,7 @@ export default function Liabilities() {
                           onChange={(e) => handleLiabilityChange(liability.id, 'debtHolder', e.target.value)}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                         >
-                          <option value="your_name">Your name only (Separate)</option>
+                          <option value="your_name">Decedent's name only (Can still be a community debt even if just in the decedent's name)</option>
                           <option value="joint">Joint (Both names)</option>
                           <option value="spouse_name">Spouse's name only</option>
                           <option value="other">Other</option>
