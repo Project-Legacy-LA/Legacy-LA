@@ -295,7 +295,7 @@ export default function Advisors() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Person (from About You)
+                      Person (from About Decedent)
                     </label>
                     <select
                       value={advisor.personId || ''}

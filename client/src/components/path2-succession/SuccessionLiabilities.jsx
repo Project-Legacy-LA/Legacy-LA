@@ -140,7 +140,7 @@ export default function Liabilities() {
               Include both secured debts (such as a mortgage or vehicle loan) and unsecured debts (such as credit cards or medical bills). If exact balances are not known, provide your best estimate as of the date of death, or note "unknown."
             </p>
             <p className="text-sm text-gray-600 mb-2">
-              Be sure to include: Mortgages or home equity loans on any real estate; auto loans, boat loans, or other installment debts; credit card balances or personal loans; medical bills or nursing home expenses (including unpaid invoices received after death); funeral or burial expenses (if not yet paid in full); taxes owed, including income taxes, property taxes, or business-related taxes, and other obligations, such as court judgments, child/spousal support arrears, or unpaid business debts.
+              Be sure to include: Mortgages or home equity loans on any real estate; auto loans, boat loans, or other installment debts; credit card balances or personal loans; medical bills or nursing home expenses (including unpaid invoices received after death); funeral or burial expenses, taxes owed, including income taxes, property taxes, or business-related taxes, and other obligations, such as court judgments, child/spousal support arrears, or unpaid business debts.
             </p>
             <p className="text-sm text-gray-600">
               If you are unsure whether a liability should be listed, please include it - we can determine later whether it needs to be addressed in the succession. Attach copies of recent statements or invoices if available, as these help us verify balances and creditors.
@@ -154,7 +154,7 @@ export default function Liabilities() {
           {/* Liabilities Section */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Your Liabilities</h2>
+              <h2 className="text-xl font-semibold text-gray-900">Decedent's Liabilities</h2>
               <button
                 type="button"
                 onClick={addLiability}
