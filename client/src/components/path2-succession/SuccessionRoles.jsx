@@ -56,6 +56,8 @@ export default function SuccessionRoles() {
       priorServiceDetails: '',
       
       // (5) Alternate or Backup
+      willNamesBackup: null, // 'yes' | 'no' | 'not_sure'
+      willAlternateName: '', // name listed in will as backup
       alternateName: '',
       alternateRelationship: '',
       
@@ -92,6 +94,9 @@ export default function SuccessionRoles() {
       isCreditorOfEstate: null,
       hasServedBefore: null,
       priorServiceDetails: '',
+      alternateName: '',
+      willNamesBackup: null,
+      willAlternateName: '',
       alternateName: '',
       alternateRelationship: '',
       willWaivesBond: null,
@@ -368,17 +373,50 @@ export default function SuccessionRoles() {
                 {/* (5) Alternate or Backup */}
                 <div className="mb-6 pb-6 border-b border-gray-200">
                   <h4 className="text-lg font-bold text-gray-800 mb-4">(5) Alternate or Backup</h4>
-                  <p className="text-sm text-gray-600 mb-4">If the person named above is unable or unwilling to serve, who would you suggest as an alternate?</p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                      <input type="text" value={rep.alternateName} onChange={(e) => handleChange(rep.id, 'alternateName', e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Name" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
-                      <input type="text" value={rep.alternateRelationship} onChange={(e) => handleChange(rep.id, 'alternateRelationship', e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Relationship" />
+                  <p className="text-sm text-gray-600 mb-4">If the person named above is unable or unwilling to serve, is an alternate or backup identified in the will?</p>
+                  <div className="mb-4">
+                    <div className="flex space-x-6">
+                      <label className="flex items-center">
+                        <input type="radio" name={`will-backup-${rep.id}`} value="yes" checked={rep.willNamesBackup === 'yes'} onChange={(e) => handleChange(rep.id, 'willNamesBackup', 'yes')} className="mr-2" />
+                        <span>Yes</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="radio" name={`will-backup-${rep.id}`} value="no" checked={rep.willNamesBackup === 'no'} onChange={(e) => handleChange(rep.id, 'willNamesBackup', 'no')} className="mr-2" />
+                        <span>No</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input type="radio" name={`will-backup-${rep.id}`} value="not_sure" checked={rep.willNamesBackup === 'not_sure'} onChange={(e) => handleChange(rep.id, 'willNamesBackup', 'not_sure')} className="mr-2" />
+                        <span>Not Sure</span>
+                      </label>
                     </div>
                   </div>
+
+                  {/* If the will names a backup, show the name field from the will */}
+                  {rep.willNamesBackup === 'yes' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Name listed in the will (backup)</label>
+                        <input type="text" value={rep.willAlternateName} onChange={(e) => handleChange(rep.id, 'willAlternateName', e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Name as written in will" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 mt-6">This name is taken from the will. If the will provides additional identifying information (relationship, contact), add it below.</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* If the will does not name a backup, allow suggestion of an alternate (existing fields) */}
+                  {(rep.willNamesBackup === 'no' || rep.willNamesBackup === 'not_sure') && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Suggested Alternate Name</label>
+                        <input type="text" value={rep.alternateName} onChange={(e) => handleChange(rep.id, 'alternateName', e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Name" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
+                        <input type="text" value={rep.alternateRelationship} onChange={(e) => handleChange(rep.id, 'alternateRelationship', e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Relationship" />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* (6) Bond Requirement */}

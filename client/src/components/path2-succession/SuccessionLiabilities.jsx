@@ -31,6 +31,7 @@ export default function Liabilities() {
       type: 'mortgage',
       description: '',
       amount: '',
+      currentAmount: '',
       monthlyPayment: '',
       associatedAssetId: null,
       creditor: '',
@@ -49,6 +50,7 @@ export default function Liabilities() {
       type: 'mortgage',
       description: '',
       amount: '',
+      currentAmount: '',
       monthlyPayment: '',
       associatedAssetId: null,
       creditor: '',
@@ -218,17 +220,44 @@ export default function Liabilities() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Outstanding Balance
+                          Outstanding Balance <span className="text-sm font-normal text-gray-600">(as of decedent's date of death)</span>
                         </label>
-                        <input
-                          type="number"
-                          value={liability.amount}
-                          onChange={(e) => handleLiabilityChange(liability.id, 'amount', e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
-                          placeholder="0.00"
-                          min="0"
-                          step="0.01"
-                        />
+                        <div className="flex space-x-2">
+                          <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={liability.amount}
+                            onChange={(e) => handleLiabilityChange(liability.id, 'amount', e.target.value)}
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Balance outstanding as of date of death</p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Current Balance <span className="text-sm font-normal text-gray-600">(Today's balance)</span>
+                        </label>
+                        <div className="flex space-x-2">
+                          <span className="flex items-center px-3 py-3 bg-gray-100 border border-gray-300 rounded-l-lg text-gray-700">
+                            $
+                          </span>
+                          <input
+                            type="number"
+                            value={liability.currentAmount}
+                            onChange={(e) => handleLiabilityChange(liability.id, 'currentAmount', e.target.value)}
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Current outstanding balance</p>
                       </div>
 
                       <div>

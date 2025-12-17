@@ -259,7 +259,12 @@ export default function SuccessionAboutYou() {
             currentAddress: '',
             isDeceased: false,
             dateOfDeath: '',
-            isForcedHeir: false // under age 24 or permanently disabled
+            isForcedHeir: false, // under age 24 or permanently disabled
+            // New fields
+            relationType: '', // biological | stepchild | adopted
+            whoseChild: '', // decedent | spouse | both | other
+            isRelatedToSpouse: null, // true | false
+            otherParentName: ''
           }] }
         : d
     ))
@@ -1151,6 +1156,80 @@ export default function SuccessionAboutYou() {
                               onChange={(e) => handleChildChange(decedent.id, child.id, 'currentAddress', e.target.value)}
                               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                             />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Child Type</label>
+                            <select
+                              value={child.relationType}
+                              onChange={(e) => handleChildChange(decedent.id, child.id, 'relationType', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none appearance-none bg-white"
+                            >
+                              <option value="">Select type...</option>
+                              <option value="biological">Biological</option>
+                              <option value="stepchild">Stepchild</option>
+                              <option value="adopted">Adopted</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Whose child is this?</label>
+                            <select
+                              value={child.whoseChild}
+                              onChange={(e) => handleChildChange(decedent.id, child.id, 'whoseChild', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none appearance-none bg-white"
+                            >
+                              <option value="">Select...</option>
+                              <option value="decedent">Decedent's child</option>
+                              <option value="spouse">Spouse's child</option>
+                              <option value="both">Child of both</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700">Is this child related to the decedent's current spouse?</label>
+                            <div className="flex space-x-6 mt-2">
+                              <label className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`related-spouse-${child.id}`}
+                                  checked={child.isRelatedToSpouse === true}
+                                  onChange={() => handleChildChange(decedent.id, child.id, 'isRelatedToSpouse', true)}
+                                  className="mr-2"
+                                />
+                                <span>Yes</span>
+                              </label>
+                              <label className="flex items-center">
+                                <input
+                                  type="radio"
+                                  name={`related-spouse-${child.id}`}
+                                  checked={child.isRelatedToSpouse === false}
+                                  onChange={() => handleChildChange(decedent.id, child.id, 'isRelatedToSpouse', false)}
+                                  className="mr-2"
+                                />
+                                <span>No</span>
+                              </label>
+                            </div>
+                            {child.isRelatedToSpouse === false && (
+                              <div className="mt-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Name of other parent / guardian</label>
+                                <input
+                                  type="text"
+                                  value={child.otherParentName}
+                                  onChange={(e) => handleChildChange(decedent.id, child.id, 'otherParentName', e.target.value)}
+                                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </div>
+                            )}
+                            {child.whoseChild === 'other' && !child.otherParentName && (
+                              <div className="mt-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">If "Other", please name the parent/guardian</label>
+                                <input
+                                  type="text"
+                                  value={child.otherParentName}
+                                  onChange={(e) => handleChildChange(decedent.id, child.id, 'otherParentName', e.target.value)}
+                                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                />
+                              </div>
+                            )}
                           </div>
                           <div className="space-y-2">
                             <label className="flex items-center">

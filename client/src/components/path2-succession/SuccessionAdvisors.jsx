@@ -30,7 +30,18 @@ export default function Advisors() {
       advisorType: 'attorney',
       firmName: '',
       specializations: [],
-      notes: ''
+      notes: '',
+      // contact info
+      phone: '',
+      email: '',
+      address: {
+        line1: '',
+        line2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: 'US'
+      }
     }
   ])
 
@@ -90,22 +101,30 @@ export default function Advisors() {
       advisorType: 'attorney',
       firmName: '',
       specializations: [],
-      notes: ''
+      notes: '',
+      phone: '',
+      email: '',
+      address: { line1: '', line2: '', city: '', state: '', zipCode: '', country: 'US' }
     }])
   }
 
   const handleAdvisorChange = (advisorId, field, value) => {
-    if (field === 'specializations') {
-      setAdvisors(advisors.map(a => 
-        a.id === advisorId 
-          ? { ...a, [field]: value }
-          : a
-      ))
+    if (field.includes('.')) {
+      const parts = field.split('.')
+      setAdvisors(advisors.map(a => {
+        if (a.id !== advisorId) return a
+        let newObj = { ...a }
+        let current = newObj
+        for (let i = 0; i < parts.length - 1; i++) {
+          current[parts[i]] = { ...current[parts[i]] }
+          current = current[parts[i]]
+        }
+        current[parts[parts.length - 1]] = value
+        return newObj
+      }))
     } else {
       setAdvisors(advisors.map(a => 
-        a.id === advisorId 
-          ? { ...a, [field]: value }
-          : a
+        a.id === advisorId ? { ...a, [field]: value } : a
       ))
     }
   }
@@ -115,7 +134,26 @@ export default function Advisors() {
       setShowNewPersonForm(advisorId)
     } else {
       setShowNewPersonForm(null)
-      handleAdvisorChange(advisorId, 'personId', parseInt(value) || null)
+      const pid = parseInt(value) || null
+      handleAdvisorChange(advisorId, 'personId', pid)
+      if (pid) {
+        const person = people.find(p => p.id === pid)
+        if (person) {
+          // copy contact info if available
+          if (person.contactInfo) {
+            handleAdvisorChange(advisorId, 'phone', person.contactInfo.phone || '')
+            handleAdvisorChange(advisorId, 'email', person.contactInfo.email || '')
+            if (person.contactInfo.address) {
+              handleAdvisorChange(advisorId, 'address.line1', person.contactInfo.address.line1 || '')
+              handleAdvisorChange(advisorId, 'address.line2', person.contactInfo.address.line2 || '')
+              handleAdvisorChange(advisorId, 'address.city', person.contactInfo.address.city || '')
+              handleAdvisorChange(advisorId, 'address.state', person.contactInfo.address.state || '')
+              handleAdvisorChange(advisorId, 'address.zipCode', person.contactInfo.address.zipCode || '')
+              handleAdvisorChange(advisorId, 'address.country', person.contactInfo.address.country || 'US')
+            }
+          }
+        }
+      }
     }
   }
 
@@ -159,6 +197,15 @@ export default function Advisors() {
       })
 
       handleAdvisorChange(advisorId, 'personId', newPersonId)
+      // also copy contact info into advisor entry
+      handleAdvisorChange(advisorId, 'phone', newPersonData.phone || '')
+      handleAdvisorChange(advisorId, 'email', newPersonData.email || '')
+      handleAdvisorChange(advisorId, 'address.line1', newPersonData.address.line1 || '')
+      handleAdvisorChange(advisorId, 'address.line2', newPersonData.address.line2 || '')
+      handleAdvisorChange(advisorId, 'address.city', newPersonData.address.city || '')
+      handleAdvisorChange(advisorId, 'address.state', newPersonData.address.state || '')
+      handleAdvisorChange(advisorId, 'address.zipCode', newPersonData.address.zipCode || '')
+      handleAdvisorChange(advisorId, 'address.country', newPersonData.address.country || 'US')
       setShowNewPersonForm(null)
       setNewPersonData({
         firstName: '',
@@ -323,6 +370,59 @@ export default function Advisors() {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
                       placeholder="Law firm, financial company, etc."
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <input
+                      type="tel"
+                      value={advisor.phone}
+                      onChange={(e) => handleAdvisorChange(advisor.id, 'phone', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input
+                      type="email"
+                      value={advisor.email}
+                      onChange={(e) => handleAdvisorChange(advisor.id, 'email', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                      placeholder="email@example.com"
+                    />
+                  </div>
+                  <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                      <input
+                        type="text"
+                        value={advisor.address.line1}
+                        onChange={(e) => handleAdvisorChange(advisor.id, 'address.line1', e.target.value)}
+                        className="col-span-3 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="Street address"
+                      />
+                      <input
+                        type="text"
+                        value={advisor.address.city}
+                        onChange={(e) => handleAdvisorChange(advisor.id, 'address.city', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="City"
+                      />
+                      <input
+                        type="text"
+                        value={advisor.address.state}
+                        onChange={(e) => handleAdvisorChange(advisor.id, 'address.state', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="State"
+                      />
+                      <input
+                        type="text"
+                        value={advisor.address.zipCode}
+                        onChange={(e) => handleAdvisorChange(advisor.id, 'address.zipCode', e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                        placeholder="Zip Code"
+                      />
+                    </div>
                   </div>
                 </div>
 
